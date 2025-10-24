@@ -17,6 +17,8 @@ async def test_account_summary():
     print("✅ Account summary:")
     print(summary)
 
+    some  = await account.quote("sadfsf");
+
     async for tick in account.on_symbol_tick(["EURUSD", "GBPUSD", "BTCUSD"]):
         print(tick)
 

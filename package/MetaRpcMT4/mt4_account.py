@@ -101,7 +101,7 @@ class MT4Account:
                 await self.reconnect(deadline)
                 continue
 
-            if res.HasField("error") and res.error.message:
+            if res.HasField("error") and res.error.error_message:
                 raise ApiExceptionMT4(res.error)
 
             return res
@@ -139,7 +139,7 @@ class MT4Account:
             timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
         
-        if res.HasField("error") and res.error.message:
+        if res.HasField("error") and res.error.error_message:
             raise ApiExceptionMT4(res.error)
 
         # Save state
@@ -175,7 +175,7 @@ class MT4Account:
             timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
 
-        if res.HasField("error") and res.error.message:
+        if res.HasField("error") and res.error.error_message:
             raise ApiExceptionMT4(res.error)
 
         # Save state
