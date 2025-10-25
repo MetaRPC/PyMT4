@@ -37,7 +37,6 @@ Use this before any “sugary” method (`buy`, `sell`, `close_all`, …) so you
 Call it right before any networked action:
 
 ```py
-# comments in English only
 
 async def buy(self, symbol: str, volume: float):
     await self.ensure_connected()           # guarantee live session
