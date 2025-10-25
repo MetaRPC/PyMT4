@@ -47,7 +47,6 @@ async def buy(self, symbol: str, volume: float):
 Or as a universal pre‑hook in your orchestrations:
 
 ```py
-# comments in English only
 
 async def place_bracket(self, symbol: str, side: str, entry: float, sl_pips: int, tp_pips: int):
     await self.ensure_connected()
@@ -58,10 +57,10 @@ async def place_bracket(self, symbol: str, side: str, entry: float, sl_pips: int
 
 ---
 
-## Sketch implementation (matches current code)
+## Sketch implementation
 
 ```py
-# comments in English only
+
 from typing import Any
 
 class MT4Sugar:
