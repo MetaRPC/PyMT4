@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://metarpc.github.io/PyMT4/</loc>
+         <lastmod>2025-10-25</lastmod>
+    </url>
+    <url>
+         <loc>https://metarpc.github.io/PyMT4/Service/Connections_Contexts_Timeouts/ensure_connected/</loc>
+         <lastmod>2025-10-25</lastmod>
+    </url>
+    <url>
+         <loc>https://metarpc.github.io/PyMT4/Service/Connections_Contexts_Timeouts/using_account/</loc>
+         <lastmod>2025-10-25</lastmod>
+    </url>
+    <url>
+         <loc>https://metarpc.github.io/PyMT4/Service/Connections_Contexts_Timeouts/with_timeout/</loc>
+         <lastmod>2025-10-25</lastmod>
+    </url>
+    <url>
+         <loc>https://metarpc.github.io/PyMT4/Service/Symbols_and_Prices/ensure_symbol/</loc>
+         <lastmod>2025-10-25</lastmod>
+    </url>
+</urlset>
