@@ -1,7 +1,8 @@
 # ensure_symbol(symbol)
 
+
 **TL;DR:** Make sure the symbol exists and is ready; optionally preload/cache its trading params and (optionally) enforce that it’s tradeable. Caches per session for speed. ✅
- ensure_symbol(symbol, *, preload_params=True, require_trade_allowed=False, force_refresh=False)
+ 
 ---
 
 ## What it does
