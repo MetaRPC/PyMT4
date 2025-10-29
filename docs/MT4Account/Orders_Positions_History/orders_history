@@ -1,0 +1,201 @@
+# ✅ Getting Orders History
+
+> **Request:** retrieve closed orders/positions history as a structured payload (`OrdersHistoryData`) with optional time range, sorting, and pagination.
+> Use this to build PnL reports, trade logs, and analytics.
+
+**Source files (SDK):**
+
+* `MetaRpcMT4/mt4_account.py` — method `orders_history(...)`
+* `MetaRpcMT4/mt4_term_api_account_helper_pb2.py` — `OrdersHistory*`, `EnumOrderHistorySortType`, `OpenedOrderType`
+
+### RPC
+
+* **Service:** `mt4_term_api.AccountHelper`
+* **Method:** `OrdersHistory(OrdersHistoryRequest) → OrdersHistoryReply`
+* **Low‑level client:** `AccountHelperStub.OrdersHistory(request, metadata, timeout)`
+* **SDK wrapper:** `MT4Account.orders_history(sort_mode=EnumOrderHistorySortType.HISTORY_SORT_BY_CLOSE_TIME_DESC, from_time=None, to_time=None, page_number=None, items_per_page=None, deadline=None, cancellation_event=None) → OrdersHistoryData`
+
+**Request message:** `OrdersHistoryRequest { input_sort_mode, input_from?, input_to?, page_number?, items_per_page? }`
+**Reply message:** `OrdersHistoryReply { data: OrdersHistoryData }`
+
+---
+
+### 🔗 Code Example
+
+```python
+from datetime import datetime, timedelta, timezone
+
+# Last 7 days, newest first
+end = datetime.now(timezone.utc)
+start = end - timedelta(days=7)
+
+hist = await acct.orders_history(
+    from_time=start,
+    to_time=end,
+)
+
+# Print compact ledger
+for it in hist.orders_info:  # list[HistoryOrderInfo]
+    print(
+        f"#{it.ticket} {it.symbol} {it.order_type} lots={it.lots:.2f} "
+        f"open={it.open_price:.5f} → close={it.close_price:.5f} "
+        f"PnL={it.profit:.2f} swap={it.swap:.2f}"
+    )
+```
+
+---
+
+### Method Signature
+
+```python
+async def orders_history(
+    self,
+    sort_mode: account_helper_pb2.EnumOrderHistorySortType = account_helper_pb2.EnumOrderHistorySortType.HISTORY_SORT_BY_CLOSE_TIME_DESC,
+    from_time: datetime | None = None,
+    to_time: datetime | None = None,
+    page_number: int | None = None,
+    items_per_page: int | None = None,
+    deadline: datetime | None = None,
+    cancellation_event: asyncio.Event | None = None,
+) -> account_helper_pb2.OrdersHistoryData
+```
+
+---
+
+## 💬 Just the essentials
+
+* **What it is.** A paginable, server‑sorted list of **closed** orders/positions in the requested time window.
+* **Why.** Perfect for statements, audits, tax exports, and performance analytics.
+* **Sorting.** Controlled by `sort_mode` (see enum below). Defaults to most‑recent by close time.
+* **Windowing.** Provide `from_time` / `to_time` (UTC `datetime`) to bound the query; both optional.
+* **Pagination.** Use `page_number` + `items_per_page` to iterate large histories deterministically.
+
+---
+
+## 🔽 Input
+
+| Parameter            | Type                       | Description               |                                                    |
+| -------------------- | -------------------------- | ------------------------- | -------------------------------------------------- |
+| `sort_mode`          | `EnumOrderHistorySortType` | Server‑side sorting mode. |                                                    |
+| `from_time`          | `datetime                  | None`                     | Start of time range (UTC).                         |
+| `to_time`            | `datetime                  | None`                     | End of time range (UTC).                           |
+| `page_number`        | `int                       | None`                     | 1‑based page index.                                |
+| `items_per_page`     | `int                       | None`                     | Page size (be reasonable to avoid large payloads). |
+| `deadline`           | `datetime                  | None`                     | Absolute per‑call deadline.                        |
+| `cancellation_event` | `asyncio.Event             | None`                     | Cooperative cancel for the retry wrapper.          |
+
+> The SDK builds `OrdersHistoryRequest(input_sort_mode=..., input_from=..., input_to=..., page_number=..., items_per_page=...)` and executes via `execute_with_reconnect(...)`.
+
+---
+
+## ⬆️ Output
+
+### Payload: `OrdersHistoryData`
+
+Contains `orders_info: list[HistoryOrderInfo]` (plus optional aggregates).
+
+| Field            | Proto Type                          | Description                                 |
+| ---------------- | ----------------------------------- | ------------------------------------------- |
+| `ticket`         | `int32`                             | Unique ID of the order/position.            |
+| `symbol`         | `string`                            | Trading symbol (e.g., `EURUSD`).            |
+| `order_type`     | `enum mt4_term_api.OpenedOrderType` | Order type (BUY/SELL/LIMIT/STOP, etc.).     |
+| `lots`           | `double`                            | Volume in lots.                             |
+| `magic_number`   | `int32`                             | EA magic.                                   |
+| `open_price`     | `double`                            | Entry price.                                |
+| `close_price`    | `double`                            | Exit price.                                 |
+| `profit`         | `double`                            | Realized P/L.                               |
+| `swap`           | `double`                            | Swap charged/credited.                      |
+| `stop_loss`      | `double`                            | SL at the time of close (if reported).      |
+| `take_profit`    | `double`                            | TP at the time of close (if reported).      |
+| `position_index` | `int32`                             | Terminal position index (if applicable).    |
+| `open_time`      | `google.protobuf.Timestamp`         | Position open time (UTC).                   |
+| `close_time`     | `google.protobuf.Timestamp`         | Position close time (UTC).                  |
+| `comment`        | `string`                            | User/system comment (if any).               |
+| `commision`      | `double`                            | Commission (spelled as in pb: `commision`). |
+| `account_login`  | `int64`                             | Useful in multi‑account contexts.           |
+
+> Note the `commision` spelling mirrors the protobuf field name.
+
+---
+
+## 🧱 Related enums (from pb)
+
+### `EnumOrderHistorySortType`
+
+* `HISTORY_SORT_BY_OPEN_TIME_ASC`
+* `HISTORY_SORT_BY_OPEN_TIME_DESC`
+* `HISTORY_SORT_BY_CLOSE_TIME_ASC`
+* `HISTORY_SORT_BY_CLOSE_TIME_DESC`
+* `HISTORY_SORT_BY_ORDER_TICKET_ID_ASC`
+* `HISTORY_SORT_BY_ORDER_TICKET_ID_DESC`
+
+### `OpenedOrderType`
+
+* `OO_OP_BUY`
+* `OO_OP_SELL`
+* `OO_OP_BUYLIMIT`
+* `OO_OP_SELLLIMIT`
+* `OO_OP_BUYSTOP`
+* `OO_OP_SELLSTOP`
+
+---
+
+### 🎯 Purpose
+
+Use this method to:
+
+* Build statements and realized PnL reports.
+* Export trade logs for accounting/taxation.
+* Analyze performance by symbol, direction, holding time, etc.
+
+### 🧩 Notes & Tips
+
+* Uses `execute_with_reconnect(...)` → automatic retry on transient gRPC errors.
+* Prefer pagination for large histories; avoid massive single‑page pulls.
+* Align your `from_time`/`to_time` with broker server time if needed; the reply also includes `open_time`/`close_time` in UTC.
+
+**See also:**
+
+* `opened_orders(...)` — current active positions.
+* `opened_orders_tickets(...)` — ticket IDs only.
+* Trading actions: `order_close_delete(...)`, `order_close_by(...)`, `order_modify(...)`.
+
+---
+
+## Usage Examples
+
+### 1) Last month, newest first
+
+```python
+from datetime import datetime, timedelta, timezone
+
+end = datetime.now(timezone.utc)
+start = end - timedelta(days=30)
+
+hist = await acct.orders_history(from_time=start, to_time=end)
+print(f"Closed trades: {len(hist.orders_info)}")
+```
+
+### 2) Paginate through large history
+
+```python
+page = 1
+page_size = 200
+all_rows = []
+while True:
+    h = await acct.orders_history(page_number=page, items_per_page=page_size)
+    all_rows.extend(h.orders_info)
+    if len(h.orders_info) < page_size:
+        break
+    page += 1
+```
+
+### 3) Aggregate realized PnL by symbol
+
+```python
+from collections import defaultdict
+pnl = defaultdict(float)
+for it in (await acct.orders_history()).orders_info:
+    pnl[it.symbol] += it.profit
+print(sorted(pnl.items(), key=lambda kv: kv[1], reverse=True)[:10])
+```
