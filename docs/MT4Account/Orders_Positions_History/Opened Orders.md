@@ -1,4 +1,4 @@
-# ✅ Getting Opened Orders (MT4)
+# ✅ Getting Opened Orders
 
 > **Request:** retrieve the full list of currently opened **orders/positions** as a single payload (`OpenedOrdersData`).
 > Filtering and sorting are applied server‑side.
