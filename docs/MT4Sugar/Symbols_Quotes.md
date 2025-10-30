@@ -1,10 +1,10 @@
-# Symbols & Quotes
+# Symbols & Quotes (8)
 
 ## 📈 `digits(symbol=None)`
 
 **What it does:** Returns the number of decimal places for a symbol.
 **Used in:** price formatting, level normalization, SL/TP calculations.
-**Related to:** `docs/MT4Account/Market_quota_symbols/symbol_params_many.md` (symbol parameters)
+**Related to:** [symbol_params_many.md](../docs/MT4Account/Market_quota_symbols/symbol_params_many.md) (symbol parameters)
 
 **Example**
 
@@ -18,7 +18,7 @@ d = sugar.digits("EURUSD")  # -> 5
 
 **What it does:** Ensures the symbol is available in the terminal (loaded/enabled).
 **Used in:** before quotes/orders, during strategy initialization.
-**Related to:** `docs/MT4Account/Market_quota_symbols/symbols.md` (symbol list and availability)
+**Related to:** [symbols.md](../docs/MT4Account/Market_quota_symbols/symbols.md) (symbol list and availability)
 
 **Example**
 
@@ -32,7 +32,7 @@ sugar.ensure_symbol("EURUSD")
 
 **What it does:** Returns the latest quote (bid/ask/time) for the symbol.
 **Used in:** logging, diagnostics, fetching current price before order placement.
-**Related to:** `docs/MT4Account/Market_quota_symbols/quote.md` (single quote)
+**Related to:** [quote.md](../docs/MT4Account/Market_quota_symbols/quote.md) (single quote)
 
 **Example**
 
@@ -47,7 +47,7 @@ print(q.bid, q.ask, q.time)
 
 **What it does:** Returns the mid price = (bid + ask) / 2.
 **Used in:** analytics without spread bias, fair price estimation.
-**Related to:** `docs/MT4Account/Market_quota_symbols/quote.md` (bid/ask base fields)
+**Related to:** [quote.md](../docs/MT4Account/Market_quota_symbols/quote.md) (bid/ask base fields)
 
 **Example**
 
@@ -61,7 +61,7 @@ m = sugar.mid_price("EURUSD")
 
 **What it does:** Returns the pip size for the symbol.
 **Used in:** converting pips to price and back, SL/TP and risk calculations.
-**Related to:** `docs/MT4Account/Market_quota_symbols/tick_value_with_size.md` (tick size/value)
+**Related to:** [tick_value_with_size.md](../docs/MT4Account/Market_quota_symbols/tick_value_with_size.md) (tick size/value)
 
 **Example**
 
@@ -75,7 +75,7 @@ pip = sugar.pip_size("EURUSD")  # -> 0.0001 for most majors
 
 **What it does:** Returns the smallest possible price increment (point). Often equals `pip_size / 10` depending on the broker.
 **Used in:** price rounding, normalization, internal calculations.
-**Related to:** `docs/MT4Account/Market_quota_symbols/symbol_params_many.md` (symbol parameters)
+**Related to:** [symbol_params_many.md](../docs/MT4Account/Market_quota_symbols/symbol_params_many.md) (symbol parameters)
 
 **Example**
 
@@ -89,7 +89,7 @@ pt = sugar.point("EURUSD")
 
 **What it does:** Retrieves quotes for multiple symbols (or all active ones).
 **Used in:** bulk data refresh, dashboards, pre-decision analytics.
-**Related to:** `docs/MT4Account/Market_quota_symbols/quote_many.md` (multi-quote)
+**Related to:** [quote_many.md](../docs/MT4Account/Market_quota_symbols/quote_many.md) (multi-quote)
 
 **Example**
 
@@ -104,7 +104,7 @@ for q in sugar.quotes(["EURUSD","GBPUSD","USDJPY"]):
 
 **What it does:** Returns the current spread in pips for the symbol.
 **Used in:** market quality filters, alerts, entry conditions.
-**Related to:** `docs/MT4Account/Market_quota_symbols/quote.md` (bid/ask source)
+**Related to:** [quote.md](../docs/MT4Account/Market_quota_symbols/quote.md) (bid/ask source)
 
 **Example**
 
@@ -112,4 +112,3 @@ for q in sugar.quotes(["EURUSD","GBPUSD","USDJPY"]):
 sp = sugar.spread_pips("EURUSD")
 print("Spread:", sp, "pips")
 ```
-
