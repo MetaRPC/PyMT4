@@ -1,153 +1,65 @@
 # 🍭 Core & Defaults — Sugar Methods
-
-> Short reference auto-generated from `app/MT4Sugar.py`. English-only comments inside code blocks.
-
-||||
-
-## 🧩 `set_defaults(symbol=None, magic=None, deviation_pips=None, slippage_pips=None, risk_percent=None)`
-
+_Auto-generated from code; examples enriched with `main_sugar.py` excerpts._
+## `set_defaults(symbol=None, magic=None, deviation_pips=None, slippage_pips=None, risk_percent=None)`
 Set user-friendly defaults for subsequent operations.
-
-
-### Parameters
-
-| Param | Default | Description |
-|---|---|---|
-| `symbol` | `None` |  |
-| `magic` | `None` |  |
-| `deviation_pips` | `None` |  |
-| `slippage_pips` | `None` |  |
-| `risk_percent` | `None` |  |
-
-
-### Usage
-
+**Usage**
 ```python
 sugar.set_defaults(symbol="EURUSD", magic=1001, deviation_pips=5, risk_percent=1.0)
-# Tip: call once at app startup; overrides can be passed per-call later.
 ```
+**Call Flow**
+- `main_sugar.py` → `MT4Sugar.set_defaults` → in-memory defaults store
+- Low-level: [PyMT4/app/MT4Sugar.py](../../PyMT4/app/MT4Sugar.py)
 
-
-### Notes
-
-- Keep defaults minimal and explicit. Avoid hidden magic in business logic.
-
-- These helpers are safe to call many times; latest values take precedence.
-
-
-||||
-
-## 🧪 `with_defaults(**overrides)`
-
+---
+## `with_defaults(**overrides)`
 Temporarily override defaults within a context block.
-
-
-### Parameters
-
-| Param | Default | Description |
-|---|---|---|
-| `**overrides` | `` |  |
-
-
-### Usage
-
+**Usage**
 ```python
-# English comments only (as requested):
-# Fill missing keyword-args using stored defaults.
+# English comments only:
 params = sugar.with_defaults(symbol=None, magic=None, deviation_pips=None)
-# Now you can safely pass `params` to other sugar/service methods.
 ```
+**Call Flow**
+- `main_sugar.py` → `MT4Sugar.with_defaults` → in-memory defaults store
+- Low-level: [PyMT4/app/MT4Sugar.py](../../PyMT4/app/MT4Sugar.py)
 
-
-### Notes
-
-- Keep defaults minimal and explicit. Avoid hidden magic in business logic.
-
-- These helpers are safe to call many times; latest values take precedence.
-
-
-||||
-
-## 🔎 `get_default(key, fallback=None)`
-
+---
+## `get_default(key, fallback=None)`
 Return a default value by key with fallback.
+**Parameters**
+| Param | Description |
+|---|---|
+| `key` |  |
+| `fallback` |  |
 
-
-### Parameters
-
-| Param | Default | Description |
-|---|---|---|
-| `key` | `` |  |
-| `fallback` | `None` |  |
-
-
-### Usage
-
+**Usage**
 ```python
-# Retrieve a single default value by key.
 magic = sugar.get_default("magic")
-assert isinstance(magic, int)
 ```
+**Call Flow**
+- `main_sugar.py` → `MT4Sugar.get_default` → in-memory defaults store
+- Low-level: [PyMT4/app/MT4Sugar.py](../../PyMT4/app/MT4Sugar.py)
 
-
-### Notes
-
-- Keep defaults minimal and explicit. Avoid hidden magic in business logic.
-
-
-||||
-
-## 🔌 `async ensure_connected()`
-
+---
+## `async ensure_connected()`
 Reconnect if needed to guarantee an active session.
-
-
-### Parameters
-
-_No parameters._
-
-
-### Usage
-
+**Usage**
 ```python
-# Ensure connection is alive; auto-reconnect if supported by backend.
 sugar.ensure_connected()
 ```
+**Call Flow**
+- `main_sugar.py` → `MT4Sugar.ensure_connected()` → connection service
+- Low-level: _(file not found in tree)_
 
-
-### Notes
-
-- Keep defaults minimal and explicit. Avoid hidden magic in business logic.
-
-- Consider calling before any market operations; combine with `ping()` in long-running loops.
-
-
-||||
-
-## 📡 `async ping()`
-
+---
+## `async ping()`
 Lightweight connectivity probe returning True/False.
-
-
-### Parameters
-
-_No parameters._
-
-
-### Usage
-
+**Usage**
 ```python
-# Lightweight round-trip check; returns latency or raises on failure.
-ok = sugar.ping()
-print("Ping:", ok)
+if sugar.ping():
+    print("OK")
 ```
+**Call Flow**
+- `main_sugar.py` → `MT4Sugar.ping()` → connection/health RPC
+- Low-level: _(file not found in tree)_
 
-
-### Notes
-
-- Keep defaults minimal and explicit. Avoid hidden magic in business logic.
-
-- Use for health checks and metrics dashboards.
-
-
-||||
+---
