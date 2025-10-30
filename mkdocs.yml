@@ -29,8 +29,7 @@ theme:
     - toc.follow
 
 extra:
-  # Маленькая синяя плашка по центру с кнопкой API (на всех страницах)
-extra:
+  # Маленькая синяя плашка по центру с кнопкой API (видна на всех страницах)
   announcement: |
     <div class="top-api-pill">
       <a class="top-api-btn" href="{{ base_url }}/api/">
@@ -46,7 +45,6 @@ extra:
 
 extra_css:
   - styles/custom.css
-
 
 extra_javascript:
   - javascripts/ux.js
