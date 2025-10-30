@@ -49,17 +49,3 @@
 * **Close By** not available on netting accounts
 * On retry (reconnect) events may duplicate — keep UI actions idempotent
 
----
-
-## 🟢 Minimal snippets
-
-```python
-# Market BUY 0.1 + SL/TP
-from MetaRpcMT4 import mt4_term_api_trading_helper_pb2 as trade_pb
-await acct.order_send(
-    "EURUSD",
-    trade_pb.OrderSendOperationType.OC_OP_BUY,
-    volume=0.10,
-    stoploss=1.0820,
-    takeprofit=1.0870,
-)
