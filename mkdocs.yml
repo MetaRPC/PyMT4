@@ -9,7 +9,6 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: en
-  custom_dir: docs/overrides
   font:
     text: Inter
     code: JetBrains Mono
@@ -17,270 +16,62 @@ theme:
     logo: material/chart-line-variant
     repo: fontawesome/brands/github
   palette:
-    # Light mode - Teal/Cyan theme (different from MT5's indigo)
-    - scheme: default
-      primary: teal
-      accent: cyan
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-    # Dark mode
     - scheme: slate
-      primary: teal
-      accent: cyan
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light mode
+      primary: indigo
+      accent: indigo
   features:
-    - announce.dismiss
     - navigation.instant
-    - navigation.instant.progress
     - navigation.tracking
-    - navigation.sections
     - navigation.expand
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.top
     - navigation.footer
-    - navigation.indexes
-    - toc.follow
-    - toc.integrate
     - content.code.copy
-    - content.code.annotate
-    - content.action.edit
-    - content.action.view
-    - content.tabs.link
-    - search.highlight
-    - search.suggest
-    - search.share
+    - toc.follow
 
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/MetaRPC/PyMT4
-      name: PyMT4 on GitHub
-    - icon: fontawesome/brands/python
-      link: https://pypi.org/project/PyMT4/
-      name: PyMT4 on PyPI
-  generator: false
-  version:
-    provider: mike
-    default: latest
-  consent:
-    title: Cookie consent
-    description: >
-      We use cookies to recognize your repeated visits and preferences, as well
-      as to measure the effectiveness of our documentation and whether users
-      find what they're searching for. With your consent, you're helping us to
-      make our documentation better.
-  analytics:
-    feedback:
-      title: Was this page helpful?
-      ratings:
-        - icon: material/emoticon-happy-outline
-          name: This page was helpful
-          data: 1
-          note: Thanks for your feedback!
-        - icon: material/emoticon-sad-outline
-          name: This page could be improved
-          data: 0
-          note: Thanks for your feedback! Help us improve by using our feedback form.
+extra_css:
+  - styles/custom.css      # наш файл стилей
 
-copyright: >
-  Copyright &copy; 2024-2025 MetaRPC. MT4 is a trademark of MetaQuotes Software Corp.
-  This documentation is community-maintained and not affiliated with MetaQuotes.
-
-nav:
-  - Home:
-    - Welcome: index.md
-    - Quick Start: quick-start.md
-    - Installation: installation.md
-    - Project Map: PROJECT_MAP.md
-    - Architecture: ARCHITECTURE.md
-    - Glossary: GLOSSARY.md
-
-  - 📚 Examples:
-    - Overview: Examples/All_about_examples.md
-    - Demo Scripts:
-      - Low-Level Calls: Main/main_low_level.md
-      - Sugar API: Main/main_sugar.md
-      - Streaming: Main/main_streams.md
-      - Trade Modifications: Main/main_trade_mod.md
-
-  - 🍬 Sugar API:
-    - Overview: MT4Sugar/Overview.md
-    - Market Data: MT4Sugar/Market_Data.md
-    - Order Placement: MT4Sugar/Order_Placement.md
-    - Order Management: MT4Sugar/Order_Management.md
-    - Automation: MT4Sugar/Automation.md
-    - Math & Risk: MT4Sugar/Math_Risk.md
-    - Symbols & Quotes: MT4Sugar/Symbols_Quotes.md
-
-  - 🎭 Strategy System:
-    - Orchestrators:
-      - Overview: Strategy/All_about_orchestrator.md
-      - Core:
-        - Market One Shot: Strategy/orchestrator/market_one_shot.md
-        - Pending Bracket: Strategy/orchestrator/pending_bracket.md
-        - Spread Guard: Strategy/orchestrator/spread_guard.md
-        - Session Guard: Strategy/orchestrator/session_guard.md
-      - Advanced:
-        - OCO Straddle: Strategy/orchestrator/oco_straddle.md
-        - Bracket Trailing: Strategy/orchestrator/bracket_trailing_activation.md
-        - Equity Circuit Breaker: Strategy/orchestrator/equity_circuit_breaker.md
-        - Dynamic Deviation: Strategy/orchestrator/dynamic_deviation_guard.md
-        - Rollover Avoidance: Strategy/orchestrator/rollover_avoidance.md
-        - Grid DCA: Strategy/orchestrator/grid_dca_common_sl.md
-        - Kill Switch: Strategy/orchestrator/kill_switch_review.md
-        - Ladder Builder: Strategy/orchestrator/ladder_builder.md
-        - Cleanup: Strategy/orchestrator/cleanup.md
-    - Presets:
-      - Overview: Strategy/All_about_presets.md
-      - Risk:
-        - Basic Risk: Strategy/presets/risk.md
-        - ATR Risk: Strategy/presets/risk_atr.md
-        - Risk Profiles: Strategy/presets/risk_profiles.md
-        - Session Risk: Strategy/presets/risk_session.md
-      - Strategy Symbols: Strategy/presets/strategy_symbols.md
-
-  - 🔧 Low-Level API:
-    - Overview: MT4Account/BASE.md
-    - Connection:
-      - Server Setup: MT4Account/Connection/Server_setup.md
-      - Server Connect: MT4Account/Connection/server_connect.md
-    - Account Info:
-      - Account Summary: MT4Account/Account_Info/account_summary.md
-    - Market Data & Symbols:
-      - Symbols: MT4Account/Market_quota_symbols/symbols.md
-      - Quote: MT4Account/Market_quota_symbols/quote.md
-      - Quote Many: MT4Account/Market_quota_symbols/quote_many.md
-      - Quote History: MT4Account/Market_quota_symbols/quote_history.md
-      - Bars: MT4Account/Market_quota_symbols/bars.md
-      - Symbol Params Many: MT4Account/Market_quota_symbols/symbol_params_many.md
-      - Tick Value with Size: MT4Account/Market_quota_symbols/tick_value_with_size.md
-    - Orders & Positions:
-      - Opened Orders: MT4Account/Orders_Positions_History/opened_orders.md
-      - Orders History: MT4Account/Orders_Positions_History/orders_history.md
-      - Deals History: MT4Account/Orders_Positions_History/deals_history.md
-    - Trading Actions:
-      - Order Send: MT4Account/Trading_Actions/order_send.md
-      - Order Modify: MT4Account/Trading_Actions/order_modify.md
-      - Order Close/Delete: MT4Account/Trading_Actions/order_close_delete.md
-      - Order Close By: MT4Account/Trading_Actions/order_close_by.md
-    - Streaming:
-      - Symbol Tick Stream: MT4Account/Streaming/on_symbol_tick.md
-      - Trade Stream: MT4Account/Streaming/on_trade.md
-      - Opened Orders Stream: MT4Account/Streaming/on_opened_orders_tickets.md
-      - Account Summary Stream: MT4Account/Streaming/on_account_summary.md
-
-  - 📖 Reference:
-    - API Documentation: api.md
-    - Configuration: configuration.md
-    - Error Handling: error-handling.md
-    - Best Practices: best-practices.md
-    - FAQ: faq.md
-    - Migration Guide: migration.md
-    - Contributing: CONTRIBUTING.md
-    - Changelog: CHANGELOG.md
+extra_javascript:
+  - javascripts/ux.js      # js (hover/focus и т.п.)
 
 markdown_extensions:
   - admonition
-  - pymdownx.details
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
   - md_in_html
   - tables
+  - attr_list
+  - pymdownx.details
+  - pymdownx.superfences
   - toc:
       permalink: "¶"
-      permalink_title: Anchor link to this section
       toc_depth: 3
-  - pymdownx.inlinehilite
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.snippets:
-      auto_append:
-        - includes/abbreviations.md
-  - pymdownx.tabbed:
-      alternate_style: true
-  - attr_list
-  - def_list
-  - abbr
-  - footnotes
-  - pymdownx.tasklist:
-      custom_checkbox: true
-      clickable_checkbox: true
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.keys
-  - pymdownx.mark
-  - pymdownx.caret
-  - pymdownx.tilde
-  - pymdownx.smartsymbols
-  - pymdownx.critic:
-      mode: view
 
 plugins:
-  - search:
-      lang: en
-      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
-      prebuild_index: true
-  - mkdocstrings:
-      default_handler: python
-      handlers:
-        python:
-          paths: [app, Strategy]
-          options:
-            docstring_style: google
-            docstring_section_style: table
-            show_source: true
-            show_root_heading: true
-            show_root_toc_entry: true
-            show_root_full_path: true
-            show_object_full_path: false
-            show_category_heading: true
-            show_symbol_type_heading: true
-            show_symbol_type_toc: true
-            members_order: source
-            group_by_category: true
-            show_signature: true
-            show_signature_annotations: true
-            separate_signature: true
-            line_length: 80
-            merge_init_into_class: true
-            filters: ["!^_"]
-  - glightbox:
-      touchNavigation: true
-      loop: false
-      effect: zoom
-      slide_effect: slide
-      width: 100%
-      height: auto
-      zoomable: true
-      draggable: true
-      skip_classes:
-        - custom-skip-class-name
-      auto_caption: true
-      caption_position: bottom
-  - git-revision-date-localized:
-      enable_creation_date: true
-      type: timeago
-  - minify:
-      minify_html: true
-      minify_js: true
-      minify_css: true
-      htmlmin_opts:
-        remove_comments: true
-      cache_safe: true
+  - search
 
-extra_css:
-  - styles/overrides.css
-  - styles/custom.css
+copyright: >
+  Copyright © 2024–2025 MetaRPC. MT4 is a trademark of MetaQuotes Software Corp.
+  This documentation is community-maintained and not affiliated with MetaQuotes.
 
-extra_javascript:
-  - javascripts/extra.js
+nav:
+  - Home: index.md
+
+  
+  - Quick Access:
+    - Account Info: MT4Account/Account_Information/account_summary.md
+    - Market Quota — Overview: MT4Account/Market_quota_symbols/Market_Quota.Overview.md
+    - Positions History — Overview: MT4Account/Orders_Positions_History/Positions_History_Overview.md
+    - Streams — Overview: MT4Account/Streams/Streams_Overview.md
+    - Trading Actions — Overview: MT4Account/Trading_Actions/Trading_Actions_Overview.md
+    - API: api.md
+
+  
+  - Guides:
+    - BASE: BASE.md
+    - Project Map: PROJECT_MAP.md
+    - Architecture: ARCHITECTURE.md
+    - MT4Sugar — Overview: MT4Sugar/Overview.md
+    - Main — Overview: Main/Overview.md
+    - Glossary: GLOSSARY.md
+    - Examples — Overview: Examples/All_about_examples.md
+    - Orchestrator — Overview: Strategy/All_about_orchestrator.md
+    - Presets — Overview: Strategy/All_about_presets.md
