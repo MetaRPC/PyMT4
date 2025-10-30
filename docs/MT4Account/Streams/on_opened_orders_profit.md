@@ -1,4 +1,4 @@
-# ✅ Streaming Aggregated P/L — `on_opened_orders_profit`
+# ✅ Streaming Aggregated P/L
 
 > **Stream:** subscribe to **real‑time aggregated profit/loss** for the current set of opened orders/positions.
 > Yields `OnOpenedOrdersProfitData` messages continuously until cancelled.
