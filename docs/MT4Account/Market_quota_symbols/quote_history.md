@@ -1,4 +1,4 @@
-# ✅ Getting Historical Quotes — `quote_history`
+# ✅ Getting Historical Quotes
 
 > **Request:** retrieve **OHLCV bars** for a symbol and timeframe within a time range as `QuoteHistoryData`.
 > Use this for charts, backtests, and indicators.
