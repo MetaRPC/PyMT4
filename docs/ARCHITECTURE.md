@@ -411,31 +411,6 @@ async def safe_operation():
 
 ---
 
-## 🧩 Compatibility Patches
-
-MT4 has quirks. We patch them in `app/Helper/patch_mt4_account.py`.
-
-### Common Patches
-
-1. **Symbol params normalization** — some symbols return null/zero values
-2. **Quote time conversion** — ensure UTC timestamps
-3. **Tick size fallbacks** — calculate from digits when missing
-4. **Spread calculation** — handle negative spreads
-5. **Magic number validation** — ensure valid range
-
-### How Patches Work
-
-```python
-# Before patch
-result = await acct.symbol_params_many(["EURUSD"])
-# result.point might be 0 or null
-
-# After patch (automatic)
-result = await svc.symbol_params_many(["EURUSD"])
-# result.point is calculated from digits if missing
-```
-
----
 
 ## 📊 Request/Response Examples
 
