@@ -44,7 +44,7 @@ body::before{
   body::before{ animation: none !important; }
 }
 
-/* 3) Главная сетка 3×3 */
+/* 3) Main grid 3×3 */
 .home-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
