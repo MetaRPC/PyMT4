@@ -74,9 +74,9 @@ await sugar.buy_market(lots=0.1)  # Uses EURUSD, magic=1001
 ```
 
 ### When to use
-✅ Start of every script - set defaults
-✅ Before long operations - ensure connection
-✅ Monitoring systems - ping for health checks
+✅ Start of every script - set defaults.
+✅ Before long operations - ensure connection.
+✅ Monitoring systems - ping for health checks.
 
 ---
 
@@ -461,40 +461,4 @@ with sugar.with_defaults(symbol="GBPUSD"):
 
 ---
 
-## 🎓 Learning Path
-
-### Beginner
-1. Read [Core & Defaults](Core_Defaults.md) - Setup
-2. Study [Order Placement](Order_Placement.md) - Basic trades
-3. Practice [Order Management](Order_Management.md) - Modify/close
-
-### Intermediate
-4. Master [Math & Risk](Math_Risk.md) - Position sizing
-5. Explore [Symbols & Quotes](Symbols_Quotes.md) - Market info
-6. Learn [Market Data](Market_Data.md) - Historical data
-
-### Advanced
-7. Implement [Automation](Automation.md) - Trailing stops
-8. Combine with [Orchestrators](../Strategy/All_about_orchestrator.md)
-9. Use [Presets](../Strategy/All_about_presets.md) for scaling
-
----
-
-## 🔗 Related Documentation
-
-### Getting Started
-- [Main Demo Scripts](../Main/Overview.md) - Runnable examples
-- [Examples Guide](../Examples/All_about_examples.md) - Complete examples
-
-### Advanced Topics
-- [Low-Level API](../MT4Account/BASE.md) - Raw RPC methods
-- [Orchestrators](../Strategy/All_about_orchestrator.md) - Trading workflows
-- [Presets](../Strategy/All_about_presets.md) - Risk configurations
-
-### Reference
-- [Architecture](../ARCHITECTURE.md) - How it works
-- [Glossary](../GLOSSARY.md) - All terms explained
-- [Project Map](../PROJECT_MAP.md) - Project structure
-
----
 **Happy Trading with Sugar!** 📈
