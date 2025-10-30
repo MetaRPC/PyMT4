@@ -9,8 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  
-   const onHome = /\/(?:index\.html)?$/.test(location.pathname) || location.pathname.endsWith("/");
-   const pill = document.querySelector(".top-api-pill");
-   if (pill && !onHome) pill.style.display = "none";
+  const onHome = /\/(?:index\.html)?$/.test(location.pathname) || location.pathname.endsWith("/");
+  const pill = document.querySelector('.top-api-pill');
+  if (pill && !onHome) pill.style.display = "none"; // оставляем как есть
 });
