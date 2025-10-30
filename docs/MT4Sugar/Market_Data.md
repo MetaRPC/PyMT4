@@ -14,7 +14,6 @@
 **Example**
 
 ```python
-# English comments only
 bars = sugar.await sugar.bars("EURUSD", timeframe="H1", count=500)
 for b in bars:
     print(b.time, b.open, b.high, b.low, b.close)
