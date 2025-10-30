@@ -1,5 +1,4 @@
-# ✅ Streaming Trade Events — `on_trade`
-
+# ✅ Streaming Trade Events
 > **Stream:** subscribe to **all trade‑related events** (orders, deals, positions) for the current account.
 > Yields `OnTradeData` messages continuously until cancelled.
 
