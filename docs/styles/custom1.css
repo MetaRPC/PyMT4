@@ -1,0 +1,38 @@
+/* === Cosmic Data Grid background on hero === */
+/* Apply to top banner section */
+.md-header, .md-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle animated grid */
+.md-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1000px 350px at 10% -20%, rgba(255,255,255,0.04), transparent 60%) no-repeat,
+    radial-gradient(800px 300px at 90% 120%, rgba(0,180,255,0.06), transparent 60%) no-repeat,
+    /* grid lines */
+    linear-gradient(transparent 23px, rgba(255,255,255,0.07) 24px, transparent 25px) repeat,
+    linear-gradient(90deg, transparent 23px, rgba(255,255,255,0.07) 24px, transparent 25px) repeat;
+  background-size:
+    100% 100%,
+    100% 100%,
+    25px 25px,
+    25px 25px;
+  mix-blend-mode: lighten;
+  animation: grid-drift 60s linear infinite;
+  pointer-events: none;
+  opacity: 0.25; /* keep it subtle */
+}
+
+@keyframes grid-drift {
+  0%   { transform: translate3d(0,0,0); }
+  100% { transform: translate3d(-50px, -30px, 0); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .md-hero::before { animation: none; }
+}
