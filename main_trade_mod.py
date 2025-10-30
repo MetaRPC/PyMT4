@@ -1,5 +1,5 @@
 # main_trade_mod.py — TRADE MOD API DEMO (MT4ServiceTrade shortcuts)
-# Intermediate level: shortcuts + defaults + rate-limiting, NO pips/sugar
+#Intermediate level: shortcuts + defaults + rate-limiting, NO pips/sugar
 from __future__ import annotations
 import sys
 from pathlib import Path
@@ -69,16 +69,16 @@ def build_account(conf: dict) -> MT4Account:
 # ═════════════════════════
 
 async def run_trade_mod_demo(svc: MT4Service, conf: dict) -> None:
-    """Демонстрация MT4ServiceTrade - промежуточный уровень с шорткатами."""
+    """MT4ServiceTrade Demo - Intermediate Level with Shortcuts."""
 
     demo = conf.get("demo", {})
     symbol: str = demo.get("symbol", "EURUSD")
     test_lots: float = demo.get("test_lots", 0.02)  # Changed from 0.01 to support partial close
 
-    # Создаём Trade wrapper
+    # We create Trade wrapper
     trade = MT4ServiceTrade(svc)
 
-    # ── 1) Установка дефолтов ────────────────────────────────────────────────
+# ── 1) Setting defaults ────────────────────────────────────────────────
     hdr("[TRADE_MOD] SET DEFAULTS")
     print(f"{FG_YELLOW}Setting trade defaults: magic=8001, deviation=2.0 pips, comment='TradeMod-Demo'{RESET}")
 
@@ -88,21 +88,21 @@ async def run_trade_mod_demo(svc: MT4Service, conf: dict) -> None:
         comment="TradeMod-Demo"
     )
 
-    # Показываем установленные дефолты
+    # Showing the installed defaults
     show_defaults(trade._defaults)
 
     # ── 2) Market Orders ──────────────────────────────────────────────────────
     hdr("[TRADE_MOD] MARKET ORDERS")
     print(f"{FG_YELLOW}Opening BUY MARKET order...{RESET}")
 
-    # Получаем текущую цену для расчёта SL/TP
+    # We get the current price for calculating SL/TP
     quote = await svc.quote(symbol)
     ask = float(quote.ask)
     bid = float(quote.bid)
 
-    # BUY market с абсолютными SL/TP
-    sl_price = bid - 0.0015  # 15 пипсов ниже
-    tp_price = bid + 0.0050  # 50 пипсов выше
+# BUY market with absolute SL/TP
+    sl_price = bid - 0.0015 # 15 pips lower
+    tp_price = bid + 0.0050 # 50 pips higher
 
     ticket1 = await trade.buy_market(
         symbol=symbol,
@@ -116,7 +116,7 @@ async def run_trade_mod_demo(svc: MT4Service, conf: dict) -> None:
     hdr("[TRADE_MOD] MODIFY ORDER")
     print(f"{FG_YELLOW}Modifying Stop Loss to 10 pips...{RESET}")
 
-    new_sl = bid - 0.0010  # 10 пипсов
+    new_sl = bid - 0.0010  # 10 pips
     await trade.modify_sl_tp(ticket=ticket1, sl_price=new_sl)
     show_modify_result(ticket1, sl=new_sl)
 
@@ -124,7 +124,7 @@ async def run_trade_mod_demo(svc: MT4Service, conf: dict) -> None:
     hdr("[TRADE_MOD] PENDING ORDERS")
     print(f"{FG_YELLOW}Placing BUY LIMIT order...{RESET}")
 
-    limit_price = bid - 0.0010  # 10 пипсов ниже текущей цены
+    limit_price = bid - 0.0010  # 10 pips below the current price
     ticket2 = await trade.buy_limit(
         symbol=symbol,
         price=limit_price,
@@ -191,11 +191,9 @@ async def run_trade_mod_demo(svc: MT4Service, conf: dict) -> None:
 
     # ── 9) View Current Positions ─────────────────────────────────────────────
     hdr("[TRADE_MOD] CURRENT POSITIONS")
-    positions = await svc.opened_orders()
+    positions = await svc.orders_open()
 
-    if hasattr(positions, 'order_infos'):
-        positions_list = list(positions.order_infos)
-    elif hasattr(positions, 'orders'):
+    if hasattr(positions, 'orders'):
         positions_list = list(positions.orders)
     elif hasattr(positions, 'Orders'):
         positions_list = list(positions.Orders)
@@ -207,15 +205,7 @@ async def run_trade_mod_demo(svc: MT4Service, conf: dict) -> None:
     # Convert protobuf to dict for display
     positions_dicts = []
     for pos in positions_list:
-        if hasattr(pos, 'ticket'):
-            positions_dicts.append({
-                'Ticket': pos.ticket,
-                'Symbol': pos.symbol,
-                'Lots': pos.lots,
-                'OpenPrice': pos.open_price,
-                'Profit': pos.profit
-            })
-        elif hasattr(pos, 'Ticket'):
+        if hasattr(pos, 'Ticket'):
             positions_dicts.append({
                 'Ticket': pos.Ticket,
                 'Symbol': pos.Symbol,
@@ -334,4 +324,58 @@ if __name__ == "__main__":
 
 #endregion
 
-# 
+# Command to run:
+# python main_trade_mod.py
+
+"""
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ FILE main_trade_mod.py — TRADE MOD API DEMO (MT4ServiceTrade shortcuts)      ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║ Purpose:                                                                     ║
+║   Demonstrate an intermediate trading layer via MT4ServiceTrade:             ║
+║   convenient shortcuts, sane defaults, and light rate-limiting —             ║
+║   without “pips/sugar” helpers.                                              ║
+║                                                                              ║
+║ Step-by-step behavior:                                                       ║
+║   1) Prepare PYTHONPATH (adds package/, app/, project root).                 ║
+║   2) Load config (appsettings.json) + ENV overrides.                         ║
+║   3) Create MT4Account(user, password, grpc_server).                         ║
+║   4) Connect using priorities: appsettings host:port → server_name → ENV.    ║
+║   5) Wrap into MT4Service, then create MT4ServiceTrade(svc).                 ║
+║   6) Set trade defaults (magic=8001, deviation_pips=2.0, comment=…).         ║
+║   7) MARKET BUY with absolute SL/TP (from current quote) → print result.     ║
+║   8) MODIFY SL only (new absolute price) → print result.                     ║
+║   9) PENDING BUY LIMIT (absolute SL/TP) → cancel it → print results.         ║
+║  10) PARTIAL CLOSE half of the initial position → print result.              ║
+║  11) FULL CLOSE remaining position (handles post-partial ticket change).     ║
+║  12) SELL MARKET, then open opposite BUY MARKET and try close_by;            ║
+║      if unsupported, close both individually.                                ║
+║  13) Query current open orders via svc.orders_open() → summarize.            ║
+║                                                                              ║
+║ Public API / Entry Points:                                                   ║
+║   - amain() — main async entrypoint                                          ║
+║   - run_trade_mod_demo(svc, conf) — orchestrates trade-mod flow              ║
+║   - build_account(conf) — construct MT4Account with ENV support              ║
+║                                                                              ║
+║ Dependencies used in this file:                                              ║
+║   - MetaRpcMT4.mt4_account.MT4Account                                        ║
+║   - app.MT4Service.MT4Service                                                ║
+║   - app.MT4Service_Trade_mod.MT4ServiceTrade                                 ║
+║   - app.Helper.Design.Trade_Mod_Styling:                                     ║
+║       show_defaults, show_trade_result, show_modify_result,                  ║
+║       show_close_result, show_positions_summary, BOLD/RESET/FG_*             ║
+║                                                                              ║
+║ Config & ENV references:                                                     ║
+║   - appsettings.json → mt4.login, mt4.password, mt4.access[],                ║
+║                         mt4.server_name, mt4.base_symbol, timeout            ║
+║   - ENV → MT4_LOGIN, MT4_PASSWORD, GRPC_SERVER,                              ║
+║            MT4_SERVER, MT4_HOST, MT4_PORT                                    ║
+║                                                                              ║
+║ RPC used during demo (via MT4ServiceTrade / MT4Service):                     ║
+║   - Quotes: svc.quote                                                        ║
+║   - Orders (market/pending): buy_market, sell_market, buy_limit              ║
+║   - Modify/Close: modify_sl_tp, close, close_partial, close_by               ║
+║   - Query: svc.orders_open                                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+"""
