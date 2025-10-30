@@ -35,12 +35,12 @@ Visual Hierarchy:
 ┌─────────────────────────────────────────────────────────────┐
 │ RiskPreset (Base Dataclass)                                 │
 ├─────────────────────────────────────────────────────────────┤
-│ • risk_percent: % of equity to risk (e.g., 1.0 = 1%)       │
-│ • sl_pips: Stop loss in pips (e.g., 20)                    │
-│ • tp_pips: Take profit in pips (e.g., 40) [optional]       │
-│ • trailing_pips: Trailing distance in pips [optional]      │
-│ • be_trigger_pips: Profit to trigger breakeven [optional]  │
-│ • be_plus_pips: Extra pips above BE level [optional]       │
+│ • risk_percent: % of equity to risk (e.g., 1.0 = 1%)        │
+│ • sl_pips: Stop loss in pips (e.g., 20)                     │
+│ • tp_pips: Take profit in pips (e.g., 40) [optional]        │
+│ • trailing_pips: Trailing distance in pips [optional]       │
+│ • be_trigger_pips: Profit to trigger breakeven [optional]   │
+│ • be_plus_pips: Extra pips above BE level [optional]        │
 └─────────────────────────────────────────────────────────────┘
          ↓ Ready-to-Use Presets ↓
 ┌──────────────┬─────────┬────────┬────────┬──────────────┐

@@ -22,13 +22,13 @@ Why Common Stop/TP?
 
 Grid Parameters:
 ┌─────────────────────┬──────────────────────────────────────────────────────┐
-│ steps               │ Number of limit orders in grid (e.g., 5 steps)      │
+│ steps               │ Number of limit orders in grid (e.g., 5 steps)       │
 ├─────────────────────┼──────────────────────────────────────────────────────┤
-│ step_pips           │ Distance between each grid level (e.g., 10 pips)    │
+│ step_pips           │ Distance between each grid level (e.g., 10 pips)     │
 ├─────────────────────┼──────────────────────────────────────────────────────┤
-│ base_price          │ Starting price (None = use mid/last price)          │
+│ base_price          │ Starting price (None = use mid/last price)           │
 ├─────────────────────┼──────────────────────────────────────────────────────┤
-│ arm_when_filled     │ Start common SL after N fills (default: 1)          │
+│ arm_when_filled     │ Start common SL after N fills (default: 1)           │
 └─────────────────────┴──────────────────────────────────────────────────────┘
 
 Risk Modes:

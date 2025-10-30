@@ -46,11 +46,11 @@ Features:
 ┌──────────────────────┬─────────────────────────────────────────────────┐
 │ Time Window Block    │ Prevents execution in rollover ± buffer window  │
 ├──────────────────────┼─────────────────────────────────────────────────┤
-│ Timezone Support     │ Server time, UTC, or any timezone (e.g. NY)    │
+│ Timezone Support     │ Server time, UTC, or any timezone (e.g. NY)     │
 ├──────────────────────┼─────────────────────────────────────────────────┤
-│ Configurable Buffer  │ Adjust safety margin (default ±30 minutes)     │
+│ Configurable Buffer  │ Adjust safety margin (default ±30 minutes)      │
 ├──────────────────────┼─────────────────────────────────────────────────┤
-│ Server Time Sync     │ Prefers broker's server time (if available)    │
+│ Server Time Sync     │ Prefers broker's server time (if available)     │
 ├──────────────────────┼─────────────────────────────────────────────────┤
 │ Wrapper Design       │ Works with any orchestrator strategy            │
 └──────────────────────┴─────────────────────────────────────────────────┘

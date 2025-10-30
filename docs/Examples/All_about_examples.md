@@ -1,93 +1,92 @@
+# 📚 MT4 API Examples
 
-# MT4 API Examples
+Examples demonstrating PyMT4 usage across four levels of abstraction.
 
-Примеры использования PyMT4 с четырьмя уровнями абстракции.
+## 🎬 Demo Files
 
-## Демонстрационные файлы
-
-### 1. **Low_level_call.py** - Low-Level API (19 методов)
-Прямые gRPC вызовы без оберток, максимальный контроль.
+### 1. 🔧 **Low_level_call.py** - Low-Level API (19 methods)
+Direct gRPC calls without wrappers, maximum control.
 
 ```bash
 python examples/Low_level_call.py
 ```
 
-**Демонстрирует:**
-- Connection (2 метода): `connect_by_server_name()`, `connect_by_host_port()`
-- Account (1 метод): `account_summary()`
-- Market Data (6 методов): `symbols()`, `quote()`, `quote_many()`, `quote_history()`, etc.
-- Orders (3 метода): `opened_orders()`, `orders_history()`, etc.
-- Trading (4 метода): `order_send()`, `order_modify()`, `order_close_delete()`, `order_close_by()`
-- Streaming (4 метода): `on_symbol_tick()`, `on_trade()`, `on_opened_orders_tickets()`, etc.
+**Demonstrates:**
+- 🔌 Connection (2 methods): `connect_by_server_name()`, `connect_by_host_port()`
+- 👤 Account (1 method): `account_summary()`
+- 📊 Market Data (6 methods): `symbols()`, `quote()`, `quote_many()`, `quote_history()`, etc.
+- 📋 Orders (3 methods): `opened_orders()`, `orders_history()`, etc.
+- 💼 Trading (4 methods): `order_send()`, `order_modify()`, `order_close_delete()`, `order_close_by()`
+- 🌊 Streaming (4 methods): `on_symbol_tick()`, `on_trade()`, `on_opened_orders_tickets()`, etc.
 
-**Особенности:**
-- Принудительные таймауты для стримов (решена проблема зависания)
-- 3-приоритетная система подключения
-- По умолчанию торговля выключена (`ENABLE_TRADING=0`)
+**Features:**
+- ⏱️ Enforced timeouts for streams (freezing issue resolved)
+- 🎯 3-priority connection system
+- 🔒 Trading disabled by default (`ENABLE_TRADING=0`)
 
 ---
 
-### 2. **Call_sugar.py** - Sugar API (~20 методов)
-Высокоуровневые обертки с удобным интерфейсом и пипсами.
+### 2. 🍬 **Call_sugar.py** - Sugar API (~20 methods)
+High-level wrappers with convenient interface and pip-based operations.
 
 ```bash
 python examples/Call_sugar.py
 ```
 
-**Демонстрирует:**
-- Connection: `ensure_connected()`, `ping()`
-- Symbol Info: `digits()`, `point()`, `pip_size()`, `spread_pips()`, `mid_price()`
-- Risk Management: `calc_lot_by_risk()`, `calc_cash_risk()`
-- Exposure: `exposure_summary()`, `opened_orders()`
-- Trading: `buy_market()`, `sell_market()`, `buy_limit()`, `sell_stop()`
-- Order Management: `modify_sl_tp_by_pips()`, `close()`, `close_partial()`
+**Demonstrates:**
+- 🔌 Connection: `ensure_connected()`, `ping()`
+- 📐 Symbol Info: `digits()`, `point()`, `pip_size()`, `spread_pips()`, `mid_price()`
+- 🎲 Risk Management: `calc_lot_by_risk()`, `calc_cash_risk()`
+- 📊 Exposure: `exposure_summary()`, `opened_orders()`
+- 💰 Trading: `buy_market()`, `sell_market()`, `buy_limit()`, `sell_stop()`
+- ⚙️ Order Management: `modify_sl_tp_by_pips()`, `close()`, `close_partial()`
 
-**Особенности:**
-- Все SL/TP задаются в пипсах
-- Автоматический расчет лотов по риску
-- Удобные хелперы для работы с ценами
+**Features:**
+- 📏 All SL/TP specified in pips
+- 🤖 Automatic lot calculation based on risk
+- 🛠️ Convenient price helpers
 
 ---
 
-### 3. **Orchestrator_demo.py** - Strategy Orchestrators
-Модульные торговые сценарии с пресетами и гвардами.
+### 3. 🎭 **Orchestrator_demo.py** - Strategy Orchestrators
+Modular trading scenarios with presets and guards.
 
 ```bash
 python examples/Orchestrator_demo.py
 ```
 
-**Демонстрирует 4 оркестра:**
+**Demonstrates 4 orchestrators:**
 
-#### 1. `market_one_shot` - Рыночный ордер с автоматикой
+#### 1. 🎯 `market_one_shot` - Market order with automation
 ```python
 from Strategy.presets import MarketEURUSD, Balanced
 from Strategy.orchestrator.market_one_shot import run_market_one_shot
 
 result = await run_market_one_shot(svc, MarketEURUSD, Balanced)
-# Открывает рыночный ордер + trailing stop + auto-breakeven
+# Opens market order + trailing stop + auto-breakeven
 ```
 
-#### 2. `pending_bracket` - Отложенный ордер с таймаутом
+#### 2. ⏰ `pending_bracket` - Pending order with timeout
 ```python
 from Strategy.presets import LimitEURUSD, Conservative
 from Strategy.orchestrator.pending_bracket import run_pending_bracket
 
 strategy = LimitEURUSD(price=1.0850)
 result = await run_pending_bracket(svc, strategy, Conservative, timeout_s=900)
-# Ждет исполнения, если не сработал - отменяет
+# Waits for execution, cancels if not triggered
 ```
 
-#### 3. `spread_guard` - Фильтр по спреду
+#### 3. 📊 `spread_guard` - Spread filter
 ```python
 from Strategy.orchestrator.spread_guard import market_with_spread_guard
 
 result = await market_with_spread_guard(
     svc, strategy, risk,
-    max_spread_pips=1.5  # Торгует только если спред <= 1.5 пипсов
+    max_spread_pips=1.5  # Trades only if spread <= 1.5 pips
 )
 ```
 
-#### 4. `session_guard` - Торговые окна
+#### 4. 🕐 `session_guard` - Trading windows
 ```python
 from Strategy.orchestrator.session_guard import run_with_session_guard
 
@@ -97,46 +96,46 @@ result = await run_with_session_guard(
     runner_coro_factory=lambda: run_market_one_shot(svc, strategy, risk),
     windows=windows,
     tz='Europe/London',
-    weekdays=[0,1,2,3,4]  # Пн-Пт
+    weekdays=[0,1,2,3,4]  # Mon-Fri
 )
 ```
 
-**Доступные пресеты:**
+**Available presets:**
 
-**Strategy Presets:**
-- `MarketEURUSD` - рыночный ордер
-- `LimitEURUSD(price)` - лимитный ордер
-- `BreakoutBuy(symbol, offset_pips)` - пробой уровня
+**📋 Strategy Presets:**
+- `MarketEURUSD` - market order
+- `LimitEURUSD(price)` - limit order
+- `BreakoutBuy(symbol, offset_pips)` - level breakout
 
-**Risk Presets:**
-- `Conservative` - 0.5% риск, SL=25p, TP=50p
-- `Balanced` - 1.0% риск, SL=20p, TP=40p
-- `Aggressive` - 2.0% риск, SL=15p, TP=30p
-- `Scalper` - 1.0% риск, SL=8p, TP=12p, trailing=6p
-- `Walker` - 0.75% риск, SL=30p, TP=60p, breakeven=20p+2p
+**🎲 Risk Presets:**
+- `Conservative` - 0.5% risk, SL=25p, TP=50p
+- `Balanced` - 1.0% risk, SL=20p, TP=40p
+- `Aggressive` - 2.0% risk, SL=15p, TP=30p
+- `Scalper` - 1.0% risk, SL=8p, TP=12p, trailing=6p
+- `Walker` - 0.75% risk, SL=30p, TP=60p, breakeven=20p+2p
 
-**Другие оркестры (доступны в коде):**
-- `oco_straddle` - двухсторонний вход (OCO)
-- `bracket_trailing_activation` - активация трейлинга по условию
-- `equity_circuit_breaker` - аварийная остановка при просадке
-- `dynamic_deviation_guard` - адаптивный девиейшн
-- `rollover_avoidance` - избежание времени свопа
-- `grid_dca_common_sl` - сетка с общим SL
+**🎭 Other orchestrators (available in code):**
+- `oco_straddle` - two-way entry (OCO)
+- `bracket_trailing_activation` - conditional trailing activation
+- `equity_circuit_breaker` - emergency stop on drawdown
+- `dynamic_deviation_guard` - adaptive deviation
+- `rollover_avoidance` - swap time avoidance
+- `grid_dca_common_sl` - grid with common SL
 
 ---
 
-## Запуск
+## 🚀 Running Examples
 
-### Через appsettings.json (рекомендуется)
+### Via appsettings.json (recommended)
 ```bash
 python examples/Low_level_call.py
 python examples/Call_sugar.py
 python examples/Orchestrator_demo.py
 ```
 
-Скрипты автоматически читают `appsettings.json` из корня проекта.
+Scripts automatically read `appsettings.json` from project root.
 
-### Через переменные окружения (PowerShell)
+### Via environment variables (PowerShell)
 ```powershell
 $env:MT4_LOGIN="12345678"
 $env:MT4_PASSWORD="your_password"
@@ -144,131 +143,131 @@ $env:MT4_SERVER="MetaQuotes-Demo"
 python examples/Low_level_call.py
 ```
 
-### Включить реальную торговлю
+### Enable real trading
 ```bash
 export ENABLE_TRADING=1
 python examples/Call_sugar.py
 ```
 
-⚠️ **ВНИМАНИЕ**: По умолчанию торговля выключена (`ENABLE_TRADING=0`) - показывается только синтаксис!
+⚠️ **WARNING**: Trading is disabled by default (`ENABLE_TRADING=0`) - only syntax demonstration!
 
 ---
 
-## Сравнение уровней
+## 📊 Level Comparison
 
-| Уровень | Файл | Компонентов | Использование | Гибкость |
+| Level | File | Components | Usage | Flexibility |
 |---------|------|-------------|---------------|----------|
-| **Low-Level** | `Low_level_call.py` | 19 методов | Прямые gRPC вызовы | Максимальная |
-| **Sugar** | `Call_sugar.py` | ~20 методов | Удобные обертки | Высокая |
-| **Orchestrator** | `Orchestrator_demo.py` | 4+ оркестра | Готовые сценарии | Модульная |
-| **Presets** | `Presets_demo.py` | 40+ пресетов | Конфигурации | Композиция |
+| **🔧 Low-Level** | `Low_level_call.py` | 19 methods | Direct gRPC calls | Maximum |
+| **🍬 Sugar** | `Call_sugar.py` | ~20 methods | Convenient wrappers | High |
+| **🎭 Orchestrator** | `Orchestrator_demo.py` | 4+ orchestrators | Ready scenarios | Modular |
+| **⚙️ Presets** | `Presets_demo.py` | 40+ presets | Configurations | Composition |
 
 ---
 
-### 4. **Presets_demo.py** - Reusable Configurations (40+ presets)
-Все доступные пресеты для стратегий и риск-менеджмента.
+### 4. ⚙️ **Presets_demo.py** - Reusable Configurations (40+ presets)
+All available presets for strategies and risk management.
 
 ```bash
 python examples/Presets_demo.py
 ```
 
-**Демонстрирует 5 категорий пресетов:**
+**Demonstrates 5 preset categories:**
 
-#### 1. Basic Risk Presets (5 профилей)
+#### 1. 🎯 Basic Risk Presets (5 profiles)
 ```python
 from Strategy.presets.risk import Conservative, Balanced, Aggressive, Scalper, Walker
 
 result = await run_market_one_shot(svc, MarketEURUSD, Balanced)
 ```
 
-#### 2. ATR-Based Risk (3 динамических профиля)
+#### 2. 📈 ATR-Based Risk (3 dynamic profiles)
 ```python
 from Strategy.presets.risk_atr import ATR_Scalper, ATR_Balanced, ATR_Swing
 
 risk = await ATR_Balanced(svc, "EURUSD", risk_percent=1.0)
-# SL/TP автоматически рассчитываются от ATR (волатильности)
+# SL/TP automatically calculated from ATR (volatility)
 ```
 
-#### 3. Risk Profiles (8+ профилей)
+#### 3. 🎲 Risk Profiles (8+ profiles)
 ```python
 from Strategy.presets.risk_profiles import ScalperEURUSD, SwingXAUUSD
 
-# Специализированные под символ и стиль торговли
+# Specialized for symbol and trading style
 result = await run_market_one_shot(svc, MarketXAUUSD, SwingXAUUSD())
 ```
 
-#### 4. Session-Based Risk (4 сессии)
+#### 4. 🕐 Session-Based Risk (4 sessions)
 ```python
 from Strategy.presets.risk_session import session_risk_auto
 
-# Автоматический выбор по текущей сессии
+# Automatic selection by current session
 risk = await session_risk_auto(svc, "EURUSD", tz="Europe/London")
 # Asia / London / NewYork / Overlap
 ```
 
-#### 5. Strategy Symbol Presets (30+ символов)
+#### 5. 💱 Strategy Symbol Presets (30+ symbols)
 ```python
 from Strategy.presets.strategy_symbols import (
     MarketEURUSD, MarketXAUUSD, MarketBTCUSD,
     LimitGBPUSD, BreakoutEURUSD
 )
 
-# Символы: Forex, Metals, Indices, Crypto
-# Типы: Market, Limit, Breakout
+# Symbols: Forex, Metals, Indices, Crypto
+# Types: Market, Limit, Breakout
 ```
 
-**Все пресеты:**
-- Forex: EURUSD, GBPUSD, USDJPY
-- Metals: XAUUSD, XAGUSD
-- Indices: US100, US500, GER40
-- Crypto: BTCUSD
+**All presets:**
+- 💱 Forex: EURUSD, GBPUSD, USDJPY
+- 🥇 Metals: XAUUSD, XAGUSD
+- 📊 Indices: US100, US500, GER40
+- ₿ Crypto: BTCUSD
 
 ---
 
-## Структура examples/
+## 📁 examples/ Structure
 
 ```
 examples/
-├── Low_level_call.py          # Low-level API demo (19 методов)
-├── Call_sugar.py              # Sugar API demo (~20 методов)
-├── Orchestrator_demo.py       # Orchestrators demo (4 оркестра)
-├── Presets_demo.py            # Presets demo (40+ пресетов)
+├── Low_level_call.py          # Low-level API demo (19 methods)
+├── Call_sugar.py              # Sugar API demo (~20 methods)
+├── Orchestrator_demo.py       # Orchestrators demo (4 orchestrators)
+├── Presets_demo.py            # Presets demo (40+ presets)
 ├── .env.example               # Environment variables template
 └── README.md                  # This file
 ```
 
 ---
 
-## Переменные окружения
+## 🔧 Environment Variables
 
-| Переменная | Обязательна | По умолчанию | Описание |
+| Variable | Required | Default | Description |
 |------------|-------------|--------------|----------|
-| `MT4_LOGIN` | ✓* | - | Логин MT4 |
-| `MT4_PASSWORD` | ✓* | - | Пароль MT4 |
-| `MT4_SERVER` | ✗ | MetaQuotes-Demo | Имя сервера |
-| `MT4_HOST` | ✗ | - | Хост для прямого подключения |
-| `MT4_PORT` | ✗ | 443 | Порт |
-| `BASE_SYMBOL` | ✗ | EURUSD | Базовый символ |
-| `SYMBOL` | ✗ | EURUSD | Символ для тестов |
-| `ENABLE_TRADING` | ✗ | 0 | Включить торговлю (1=да) |
-| `CONNECT_TIMEOUT` | ✗ | 30 | Таймаут подключения |
+| `MT4_LOGIN` | ✓* | - | MT4 login |
+| `MT4_PASSWORD` | ✓* | - | MT4 password |
+| `MT4_SERVER` | ✗ | MetaQuotes-Demo | Server name |
+| `MT4_HOST` | ✗ | - | Host for direct connection |
+| `MT4_PORT` | ✗ | 443 | Port |
+| `BASE_SYMBOL` | ✗ | EURUSD | Base symbol |
+| `SYMBOL` | ✗ | EURUSD | Test symbol |
+| `ENABLE_TRADING` | ✗ | 0 | Enable trading (1=yes) |
+| `CONNECT_TIMEOUT` | ✗ | 30 | Connection timeout |
 
-*если не задан в `appsettings.json`
+*if not set in `appsettings.json`
 
 ---
 
-## Решение проблем
+## 🔧 Troubleshooting
 
-### Ошибка подключения
-1. Проверьте `appsettings.json` - должен быть список `access` с host:port
-2. Проверьте логин/пароль
-3. Проверьте имя сервера (`MT4_SERVER`)
+### 🔴 Connection error
+1. Check `appsettings.json` - must have `access` list with host:port
+2. Verify login/password
+3. Check server name (`MT4_SERVER`)
 
-### Зависание стримов
-Исправлено в `Low_level_call.py` - добавлены принудительные таймауты (1 сек).
+### ⏸️ Stream freezing
+Fixed in `Low_level_call.py` - enforced timeouts added (1 sec).
 
-### Ошибка импорта
-Убедитесь что запускаете из корня проекта:
+### 📦 Import error
+Make sure you run from project root:
 ```bash
 cd /path/to/PyMT4
 python examples/Low_level_call.py
@@ -276,8 +275,8 @@ python examples/Low_level_call.py
 
 ---
 
-## Дополнительные ресурсы
+## 📖 Additional Resources
 
-- [Документация MT4Sugar](../app/MT4Sugar.py)
-- [Стратегические оркестры](../Strategy/orchestrator/)
-- [Пресеты стратегий](../Strategy/presets/)
+- [MT4Sugar Documentation](../app/MT4Sugar.py)
+- [Strategy Orchestrators](../Strategy/orchestrator/)
+- [Strategy Presets](../Strategy/presets/)

@@ -29,7 +29,7 @@ Features:
 ├──────────────────────┼────────────────────────────────────────────────────┤
 │ Post-Action Review   │ Detailed snapshot + aggregated summary             │
 ├──────────────────────┼────────────────────────────────────────────────────┤
-│ Error Safety         │ Errors collected but don't stop execution         │
+│ Error Safety         │ Errors collected but don't stop execution          │
 └──────────────────────┴────────────────────────────────────────────────────┘
 
 Parameters:

@@ -41,5 +41,6 @@ Use it to understand the raw RPC surface — quotes, symbols, order actions, and
 ## Output
 
 You should see structured prints in your terminal (quotes, order results, etc.).
-Скрин LL с выводом терминалом
+
+![Low Level Output](../Examples_of_illustrations/LL.bmp)
 

@@ -58,17 +58,17 @@ Visual Example:
 
 Features:
 ┌────────────────────────┬────────────────────────────────────────────────┐
-│ Dynamic SL Calculation │ SL = atr_mult × ATR (adapts to volatility)    │
+│ Dynamic SL Calculation │ SL = atr_mult × ATR (adapts to volatility)     │
 ├────────────────────────┼────────────────────────────────────────────────┤
-│ Safety Clamps          │ min_sl_pips / max_sl_pips prevent extremes    │
+│ Safety Clamps          │ min_sl_pips / max_sl_pips prevent extremes     │
 ├────────────────────────┼────────────────────────────────────────────────┤
-│ RR-Based TP            │ TP = rr × SL (maintain risk:reward ratio)     │
+│ RR-Based TP            │ TP = rr × SL (maintain risk:reward ratio)      │
 ├────────────────────────┼────────────────────────────────────────────────┤
-│ Adaptive BE/Trailing   │ Derived from SL (proportional to volatility)  │
+│ Adaptive BE/Trailing   │ Derived from SL (proportional to volatility)   │
 ├────────────────────────┼────────────────────────────────────────────────┤
-│ Fallback Protection    │ Uses fallback_sl_pips if ATR unavailable      │
+│ Fallback Protection    │ Uses fallback_sl_pips if ATR unavailable       │
 ├────────────────────────┼────────────────────────────────────────────────┤
-│ Ready-to-Use Presets   │ ATR_Scalper, ATR_Balanced, ATR_Swing          │
+│ Ready-to-Use Presets   │ ATR_Scalper, ATR_Balanced, ATR_Swing           │
 └────────────────────────┴────────────────────────────────────────────────┘
 
 ATR Multiplier Guidelines:

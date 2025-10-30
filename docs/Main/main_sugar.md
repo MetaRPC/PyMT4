@@ -36,6 +36,7 @@ It’s meant for quick onboarding: readable calls, sane defaults, and concise ex
 
 ## Output
 
-You should see readable prints for each sugar call (quotes, placements, modifications, etc.).  
-Будущий скрин Sugar 
+You should see readable prints for each sugar call (quotes, placements, modifications, etc.).
+
+![Sugar Output](../Examples_of_illustrations/Sugar.bmp) 
 

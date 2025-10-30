@@ -27,5 +27,6 @@ It shows common sequences like `order_send → order_modify → order_close` wit
 
 ## Output
 
-Expect a short log of placement → modification → close results (ticket, prices, statuses).  
-Будущий скрин Mod
+Expect a short log of placement → modification → close results (ticket, prices, statuses).
+
+![Trade Modification Output](../Examples_of_illustrations/Mod.bmp)

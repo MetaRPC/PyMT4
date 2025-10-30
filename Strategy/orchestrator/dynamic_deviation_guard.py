@@ -16,17 +16,17 @@ Solution: Calculate deviation_pips dynamically based on current market condition
 
 Deviation Sources:
 ┌─────────┬────────────────────────────────────────────────────────────────────┐
-│ spread  │ deviation = spread_pips * spread_mult + spread_add                │
-│         │ Use when: Fast-moving markets, scalping, tight spreads important  │
+│ spread  │ deviation = spread_pips * spread_mult + spread_add                 │
+│         │ Use when: Fast-moving markets, scalping, tight spreads important   │
 ├─────────┼────────────────────────────────────────────────────────────────────┤
-│ atr     │ deviation = atr_pips(period) * atr_mult + atr_add                 │
-│         │ Use when: Volatility-based adjustment, swing trading              │
+│ atr     │ deviation = atr_pips(period) * atr_mult + atr_add                  │
+│         │ Use when: Volatility-based adjustment, swing trading               │
 ├─────────┼────────────────────────────────────────────────────────────────────┤
-│ hybrid  │ Combine spread + ATR via 'max' (default) or 'sum'                 │
-│         │ Use when: Best of both worlds - adapts to spread AND volatility   │
+│ hybrid  │ Combine spread + ATR via 'max' (default) or 'sum'                  │
+│         │ Use when: Best of both worlds - adapts to spread AND volatility    │
 ├─────────┼────────────────────────────────────────────────────────────────────┤
-│ fixed   │ Force constant deviation regardless of market conditions          │
-│         │ Use when: Testing, backtesting, or broker-specific requirements   │
+│ fixed   │ Force constant deviation regardless of market conditions           │
+│         │ Use when: Testing, backtesting, or broker-specific requirements    │
 └─────────┴────────────────────────────────────────────────────────────────────┘
 
 Parameters:

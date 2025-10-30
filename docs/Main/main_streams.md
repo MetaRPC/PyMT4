@@ -21,5 +21,6 @@ Shows how to consume async streams and handle cooperative cancellation.
 
 ## Output
 
-You should see a rolling log of streamed updates (ticks, trades, tickets, etc.).  
-скрин будущий Stream вывод терминала
+You should see a rolling log of streamed updates (ticks, trades, tickets, etc.).
+
+![Streams Output](../Examples_of_illustrations/Stream.bmp)

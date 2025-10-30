@@ -48,15 +48,15 @@ Features:
 ├─────────────────────┼──────────────────────────────────────────────────┤
 │ Weekday Filter      │ Trade only on specific days (Mon-Fri by default) │
 ├─────────────────────┼──────────────────────────────────────────────────┤
-│ Timezone Support    │ Server, UTC, or any timezone (e.g., London/NY)  │
+│ Timezone Support    │ Server, UTC, or any timezone (e.g., London/NY)   │
 ├─────────────────────┼──────────────────────────────────────────────────┤
-│ Window Inversion    │ enforce_windows=False → trade OUTSIDE windows   │
+│ Window Inversion    │ enforce_windows=False → trade OUTSIDE windows    │
 ├─────────────────────┼──────────────────────────────────────────────────┤
-│ Rollover Buffer     │ Optional swap-time avoidance within guard       │
+│ Rollover Buffer     │ Optional swap-time avoidance within guard        │
 ├─────────────────────┼──────────────────────────────────────────────────┤
-│ Overnight Windows   │ Support 22:00-03:00 cross-midnight windows      │
+│ Overnight Windows   │ Support 22:00-03:00 cross-midnight windows       │
 ├─────────────────────┼──────────────────────────────────────────────────┤
-│ Preset Sessions     │ Built-in SESSIONS dict (London, NewYork, etc.)  │
+│ Preset Sessions     │ Built-in SESSIONS dict (London, NewYork, etc.)   │
 └─────────────────────┴──────────────────────────────────────────────────┘
 
 Parameters:

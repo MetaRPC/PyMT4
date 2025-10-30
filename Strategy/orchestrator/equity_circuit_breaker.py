@@ -17,10 +17,10 @@ Protection Mechanisms (5 Layers):
 │ 1. Equity Floor           │ Block if equity < min_equity                     │
 │                           │ Use: Preserve minimum account balance            │
 ├───────────────────────────┼──────────────────────────────────────────────────┤
-│ 2. Daily Drawdown %       │ Block if daily_dd_pct <= -max_daily_drawdown_pct│
+│ 2. Daily Drawdown %       │ Block if daily_dd_pct <= -max_daily_drawdown_pct │
 │                           │ Use: Stop trading after X% loss from day start   │
 ├───────────────────────────┼──────────────────────────────────────────────────┤
-│ 3. Daily Loss Money       │ Block if daily_pl_money <= -max_daily_loss_money│
+│ 3. Daily Loss Money       │ Block if daily_pl_money <= -max_daily_loss_money │
 │                           │ Use: Hard dollar limit per day (e.g., -$150)     │
 ├───────────────────────────┼──────────────────────────────────────────────────┤
 │ 4. Max Open Positions     │ Block if open_positions_count >= max_open        │
