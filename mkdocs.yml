@@ -28,6 +28,23 @@ theme:
     - content.code.copy
     - toc.follow
 
+    extra:
+  # Баннер сразу под фиолетовой шапкой – наша верхняя панель быстрого доступа
+  announcement: |
+    <nav class="quickbar quickbar--banner">
+      <a class="quickbar-item home" href="{{ base_url }}/">
+        <span class="ms">home</span><span>Home</span>
+      </a>
+      <a class="quickbar-item" href="{{ base_url }}/MT4Account/Account_Information/account_summary/">Account Info</a>
+      <a class="quickbar-item" href="{{ base_url }}/MT4Account/Market_quota_symbols/Market_Quota.Overview/">Market Quota</a>
+      <a class="quickbar-item" href="{{ base_url }}/MT4Account/Orders_Positions_History/Positions_History_Overview/">Positions History</a>
+      <a class="quickbar-item" href="{{ base_url }}/MT4Account/Streams/Streams_Overview/">Streams</a>
+      <a class="quickbar-item" href="{{ base_url }}/MT4Account/Trading_Actions/Trading_Actions_Overview/">Trading Actions</a>
+      <span class="quickbar-sep"></span>
+      <a class="quickbar-item" href="{{ base_url }}/api/">API</a>
+      <a class="quickbar-item" href="{{ base_url }}/configuration/">Reference</a>
+    </nav>
+
 extra_css:
   - styles/custom.css      # наш файл стилей
 
