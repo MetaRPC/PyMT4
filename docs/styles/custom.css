@@ -1,52 +1,19 @@
-/* ---- Minimal Material Icons fallback (text icon) ---- */
-.mi { font-family: 'Material Icons', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; font-weight: 400; margin-right: .4rem; }
-
-/* ---- Quick Access Bar ---- */
-.quickbar {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: .5rem;
-  background: #3f51b5;            /* brand blue */
-  border-radius: 10px;
-  padding: .6rem .6rem;
-  margin: .8rem 0 1.2rem;
+/* ===== Global dark grid background (subtle) ===== */
+.md-main {
+  background-image:
+    linear-gradient(transparent 23px, rgba(255,255,255,.05) 24px, transparent 25px),
+    linear-gradient(90deg, transparent 23px, rgba(255,255,255,.05) 24px, transparent 25px);
+  background-size: 25px 25px, 25px 25px;
+  background-attachment: fixed;
+  background-position: top center;
 }
 
-.quickbar-item {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: .4rem;
-  height: 40px;
-  padding: 0 .75rem;
-  color: #fff !important;
-  text-decoration: none;
-  font-weight: 600;
-  border-radius: 8px;
-  transition: color .2s ease, background .2s ease, transform .2s ease;
-}
-
-.quickbar-item.home { background: rgba(0,0,0,.12); }
-
-.quickbar-item:hover { color: #E3F2FD !important; }
-.quickbar-item:hover::after {
-  content:"";
-  position:absolute; left:16%; right:16%; bottom:6px; height:2px;
-  background:#90CAF9; border-radius:2px; transform:scaleX(1);
-}
-.quickbar-item::after {
-  content:""; position:absolute; left:16%; right:16%; bottom:6px; height:2px;
-  background:#90CAF9; border-radius:2px; transform:scaleX(0); transition:transform .25s ease;
-}
-
-/* ---- 3×3 Home Grid ---- */
+/* ===== 3×3 Home Grid ===== */
 .home-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin: 1.2rem 0 2.2rem;
 }
 
 @media (max-width: 960px) {
@@ -56,21 +23,50 @@
   .home-grid { grid-template-columns: 1fr; }
 }
 
-/* ---- Cards ---- */
+/* ===== Cards (centered icon layout) ===== */
 .card {
   display: block;
-  padding: 1.1rem 1.2rem;
-  border-radius: 14px;
+  position: relative;
+  padding: 1.25rem 1.2rem;
+  border-radius: 16px;
   text-decoration: none;
   background: rgba(255,255,255,.03);
   border: 1px solid rgba(255,255,255,.08);
   box-shadow: 0 10px 24px rgba(0,0,0,.22);
-  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
   color: inherit;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
 }
 
-.card h3 { margin: 0 0 .35rem; font-weight: 700; }
-.card p  { margin: 0; opacity: .85; }
+.card.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 180px;
+}
+
+/* Big emoji/icon in the middle */
+.card-icon {
+  display: inline-block;
+  line-height: 1;
+  /* responsive size: 40–60px */
+  font-size: clamp(2.2rem, 3.5vw, 3.6rem);
+  margin: .25rem 0 .55rem;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,.25));
+}
+
+/* Typography */
+.card h3 {
+  margin: 0 0 .35rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.card p {
+  margin: 0;
+  font-size: .95rem;
+  line-height: 1.35rem;
+  opacity: .85;
+}
 
 /* Hover micro-interaction */
 .card:hover {
@@ -78,47 +74,35 @@
   box-shadow: 0 16px 36px rgba(0,0,0,.32);
 }
 
-/* Row color accents */
+/* ===== Color accents by row ===== */
 .card.infra {
-  --accent: #5C6BC0; /* indigo */
-  border-color: rgba(92,107,192,.45);
-  box-shadow: 0 10px 24px rgba(92,107,192,.18), 0 8px 16px rgba(0,0,0,.22);
+  --accent: 92,107,192; /* #5C6BC0 */
+  border-color: rgba(var(--accent), .45);
+  box-shadow: 0 10px 24px rgba(var(--accent), .18), 0 8px 16px rgba(0,0,0,.22);
 }
 .card.infra:hover {
-  background: radial-gradient(120% 120% at 20% -10%, rgba(92,107,192,.18), transparent 60%);
+  background: radial-gradient(120% 120% at 50% 30%, rgba(var(--accent),.16), transparent 65%);
 }
 
 .card.practical {
-  --accent: #26A69A; /* teal */
-  border-color: rgba(38,166,154,.45);
-  box-shadow: 0 10px 24px rgba(38,166,154,.18), 0 8px 16px rgba(0,0,0,.22);
+  --accent: 38,166,154; /* #26A69A */
+  border-color: rgba(var(--accent), .45);
+  box-shadow: 0 10px 24px rgba(var(--accent), .18), 0 8px 16px rgba(0,0,0,.22);
 }
 .card.practical:hover {
-  background: radial-gradient(120% 120% at 20% -10%, rgba(38,166,154,.18), transparent 60%);
+  background: radial-gradient(120% 120% at 50% 30%, rgba(var(--accent),.16), transparent 65%);
 }
 
 .card.strategy {
-  --accent: #FB8C00; /* amber/orange */
-  border-color: rgba(251,140,0,.45);
-  box-shadow: 0 10px 24px rgba(251,140,0,.18), 0 8px 16px rgba(0,0,0,.22);
+  --accent: 251,140,0; /* #FB8C00 */
+  border-color: rgba(var(--accent), .45);
+  box-shadow: 0 10px 24px rgba(var(--accent), .18), 0 8px 16px rgba(0,0,0,.22);
 }
 .card.strategy:hover {
-  background: radial-gradient(120% 120% at 20% -10%, rgba(251,140,0,.18), transparent 60%);
-}
-
-/* Optional subtle cosmic grid at page background (hero feel) */
-.md-main {
-  background-image:
-    linear-gradient(transparent 23px, rgba(255,255,255,.05) 24px, transparent 25px),
-    linear-gradient(90deg, transparent 23px, rgba(255,255,255,.05) 24px, transparent 25px);
-  background-size: 25px 25px, 25px 25px;
-  background-attachment: fixed;
-  background-position: top center;
-  opacity: .99;
+  background: radial-gradient(120% 120% at 50% 30%, rgba(var(--accent),.16), transparent 65%);
 }
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .quickbar-item, .card { transition: none !important; }
-  .quickbar-item::after { display: none; }
+  .card { transition: none !important; }
 }
