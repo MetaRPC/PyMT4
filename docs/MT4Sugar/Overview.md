@@ -74,9 +74,9 @@ await sugar.buy_market(lots=0.1)  # Uses EURUSD, magic=1001
 ```
 
 ### When to use
-✅ Start of every script - set defaults.
-✅ Before long operations - ensure connection.
-✅ Monitoring systems - ping for health checks.
+ ✅ Start of every script - set defaults.
+ ✅ Before long operations - ensure connection.
+ ✅ Monitoring systems - ping for health checks.
 
 ---
 
