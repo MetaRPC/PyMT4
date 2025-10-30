@@ -1,10 +1,10 @@
-# 📚 MT4 API Examples
+# MT4 API Examples
 
 Examples demonstrating PyMT4 usage across four levels of abstraction.
 
-## 🎬 Demo Files
+## Demo Files
 
-### 1. 🔧 **Low_level_call.py** - Low-Level API (19 methods)
+### 1. **Low_level_call.py** - Low-Level API (19 methods)
 Direct gRPC calls without wrappers, maximum control.
 
 ```bash
@@ -26,7 +26,7 @@ python examples/Low_level_call.py
 
 ---
 
-### 2. 🍬 **Call_sugar.py** - Sugar API (~20 methods)
+### 2. **Call_sugar.py** - Sugar API (~20 methods)
 High-level wrappers with convenient interface and pip-based operations.
 
 ```bash
@@ -48,7 +48,7 @@ python examples/Call_sugar.py
 
 ---
 
-### 3. 🎭 **Orchestrator_demo.py** - Strategy Orchestrators
+### 3. **Orchestrator_demo.py** - Strategy Orchestrators
 Modular trading scenarios with presets and guards.
 
 ```bash
@@ -164,7 +164,7 @@ python examples/Call_sugar.py
 
 ---
 
-### 4. ⚙️ **Presets_demo.py** - Reusable Configurations (40+ presets)
+### 4. **Presets_demo.py** - Reusable Configurations (40+ presets)
 All available presets for strategies and risk management.
 
 ```bash
@@ -217,10 +217,10 @@ from Strategy.presets.strategy_symbols import (
 ```
 
 **All presets:**
-- 💱 Forex: EURUSD, GBPUSD, USDJPY
-- 🥇 Metals: XAUUSD, XAGUSD
-- 📊 Indices: US100, US500, GER40
-- ₿ Crypto: BTCUSD
+-  Forex: EURUSD, GBPUSD, USDJPY
+-  Metals: XAUUSD, XAGUSD
+-  Indices: US100, US500, GER40
+-  Crypto: BTCUSD
 
 ---
 
@@ -231,9 +231,7 @@ examples/
 ├── Low_level_call.py          # Low-level API demo (19 methods)
 ├── Call_sugar.py              # Sugar API demo (~20 methods)
 ├── Orchestrator_demo.py       # Orchestrators demo (4 orchestrators)
-├── Presets_demo.py            # Presets demo (40+ presets)
-├── .env.example               # Environment variables template
-└── README.md                  # This file
+└── Presets_demo.py            # Presets demo (40+ presets)
 ```
 
 ---
@@ -272,11 +270,3 @@ Make sure you run from project root:
 cd /path/to/PyMT4
 python examples/Low_level_call.py
 ```
-
----
-
-## 📖 Additional Resources
-
-- [MT4Sugar Documentation](../app/MT4Sugar.py)
-- [Strategy Orchestrators](../Strategy/orchestrator/)
-- [Strategy Presets](../Strategy/presets/)
