@@ -1,4 +1,4 @@
-# ✅ Getting All Symbols — `symbols`
+# ✅ Getting All Symbols
 
 > **Request:** retrieve the full list of **tradable symbols** from the connected terminal as `SymbolsData`.
 > Use it to populate dropdowns, build watchlists, and validate symbol names.
