@@ -153,13 +153,4 @@ Timestamps = **UTC** (`google.protobuf.Timestamp`). For long‑lived streams, pa
 
 ---
 
-## 📖 Related High-Level Documentation
-
-* **[MT4Sugar API](../MT4Sugar/)** — High-level wrappers with pip-based operations
-* **[Strategy Orchestrators](../Strategy/All_about_orchestrator.md)** — Ready-to-use trading scenarios
-* **[Strategy Presets](../Strategy/All_about_presets.md)** — Pre-configured risk and symbol profiles
-* **[Examples Overview](../Examples/All_about_examples.md)** — See all APIs in action
-
----
-
 "May your pips stack high and your drawdowns stay low."
