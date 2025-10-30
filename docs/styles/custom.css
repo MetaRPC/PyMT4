@@ -19,46 +19,64 @@
   white-space: nowrap;
 }
 
-/* 2) Тёмно-фиолетовый ребристый «дышащий» фон (волны на весь экран)
-      — полосы искажены шумом, мягко «дышат» внутри SVG */
-body { background-color: #0d0f13; } /* базовый тон на всякий случай */
+/* === DARK PURPLE WAVES (parallax, smooth) === */
+body { background-color:#0b0b12; } /* базовый тон на случай фейла */
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: .55;
-  mix-blend-mode: normal;
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:0; pointer-events:none; opacity:1;
   background-image: url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' preserveAspectRatio='none'>\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='none'>\
   <defs>\
-    <pattern id='stripes' width='1' height='32' patternUnits='userSpaceOnUse'>\
-      <rect x='0' y='0' width='1200' height='20' fill='%231A1631'/>\
-      <rect x='0' y='20' width='1200' height='12' fill='transparent'/>\
-    </pattern>\
-    <filter id='warp'>\
-      <feTurbulence type='fractalNoise' baseFrequency='0.004 0.012' numOctaves='2' seed='7' result='noise'>\
-        <animate attributeName='baseFrequency' values='0.004 0.012;0.006 0.016;0.004 0.012' dur='28s' repeatCount='indefinite'/>\
-      </feTurbulence>\
-      <feDisplacementMap in='SourceGraphic' in2='noise' scale='18' xChannelSelector='R' yChannelSelector='G'/>\
-    </filter>\
-    <linearGradient id='tint' x1='0' y1='0' x2='0' y2='1'>\
-      <stop offset='0%' stop-color='%236336F1' stop-opacity='0.18'/>\
-      <stop offset='100%' stop-color='%239333EA' stop-opacity='0.02'/>\
+    <linearGradient id='g1' x1='0' y1='0' x2='0' y2='1'>\
+      <stop offset='0%'  stop-color='%23131227'/>\
+      <stop offset='100%' stop-color='%230e0c1a'/>\
+    </linearGradient>\
+    <linearGradient id='p1' x1='0' y1='0' x2='1' y2='0'>\
+      <stop offset='0%'  stop-color='%2338257a'/>\
+      <stop offset='100%' stop-color='%23502aa1'/>\
+    </linearGradient>\
+    <linearGradient id='p2' x1='0' y1='0' x2='1' y2='0'>\
+      <stop offset='0%'  stop-color='%23351f6e'/>\
+      <stop offset='100%' stop-color='%236233c7'/>\
+    </linearGradient>\
+    <linearGradient id='p3' x1='0' y1='0' x2='1' y2='0'>\
+      <stop offset='0%'  stop-color='%23301660'/>\
+      <stop offset='100%' stop-color='%237340d9'/>\
     </linearGradient>\
   </defs>\
-  <rect width='1200' height='800' fill='url(%23tint)'/>\
-  <rect width='1200' height='800' fill='url(%23stripes)' filter='url(%23warp)' opacity='0.9'/>\
+  <!-- глубокий фон -->\
+  <rect width='1440' height='900' fill='url(%23g1)'/>\
+  <!-- волна 1 (дальняя) -->\
+  <g opacity='0.45'>\
+    <path id='w1' fill='url(%23p1)' d='M0,520 C240,480 360,560 600,520 C840,480 1000,560 1440,510 L1440,900 L0,900 Z'/>\
+  </g>\
+  <!-- волна 2 (средняя) -->\
+  <g opacity='0.55'>\
+    <path id='w2' fill='url(%23p2)' d='M0,560 C220,600 420,520 700,560 C980,600 1180,520 1440,570 L1440,900 L0,900 Z'/>\
+  </g>\
+  <!-- волна 3 (ближняя) -->\
+  <g opacity='0.65'>\
+    <path id='w3' fill='url(%23p3)' d='M0,610 C260,650 420,590 720,630 C1020,670 1200,600 1440,640 L1440,900 L0,900 Z'/>\
+  </g>\
 </svg>");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-size: cover; background-position:center; background-repeat:no-repeat;
+  /* плавный дрейф трёх слоёв через filter:drop-shadow — имитируем параллакс */
+  animation: wavesShift 38s ease-in-out infinite;
+}
+/* Параллакс движением фона (чуть-чуть) */
+@keyframes wavesShift{
+  0%   { background-position: 0% 0%;   }
+  50%  { background-position: 20% 0%;  }
+  100% { background-position: 0% 0%;   }
 }
 
-/* Контент поверх фона */
 .md-container, .md-main, .md-content { position: relative; z-index: 1; }
+
+/* Если надо полностью без движения: просто отключи анимацию */
+@media (prefers-reduced-motion: reduce){
+  body::before{ animation: none !important; }
+}
 
 /* 3) Главная сетка 3×3 */
 .home-grid{
