@@ -1,4 +1,4 @@
-# ✅ Close by Opposite Position — `order_close_by`
+# ✅ Close by Opposite Position
 
 > **Request:** close one **open position** using an **opposite position** on the **same symbol** (MT4 *Close By* operation).
 > This reduces commissions/swaps vs two separate closes and can net residual volume automatically.
