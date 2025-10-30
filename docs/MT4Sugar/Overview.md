@@ -497,13 +497,4 @@ with sugar.with_defaults(symbol="GBPUSD"):
 - [Project Map](../PROJECT_MAP.md) - Project structure
 
 ---
-
-## 🆘 Need Help?
-
-- 🐛 [Report Issues](https://github.com/MetaRPC/PyMT4/issues)
-- 💬 [Discussions](https://github.com/MetaRPC/PyMT4/discussions)
-- 📧 [Contact Support](mailto:support@metarpc.com)
-
----
-
-**Happy Trading with Sugar!** 🍬📈
+**Happy Trading with Sugar!** 📈
