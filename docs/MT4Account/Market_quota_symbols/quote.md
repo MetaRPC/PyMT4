@@ -68,22 +68,14 @@ async def quote(
 
 ### Payload: `QuoteData`
 
-Typical fields (per pb):
-
-| Field         | Proto Type                  | Description                            |
-| ------------- | --------------------------- | -------------------------------------- |
-| `symbol`      | `string`                    | Symbol name.                           |
-| `bid`         | `double`                    | Best bid price.                        |
-| `ask`         | `double`                    | Best ask price.                        |
-| `open`        | `double`                    | Session open price.                    |
-| `high`        | `double`                    | Session high.                          |
-| `low`         | `double`                    | Session low.                           |
-| `spread`      | `int32`                     | Spread (if provided by the server).    |
-| `date_time`   | `google.protobuf.Timestamp` | Server timestamp of the quote (UTC).   |
-| `tick_volume` | `int64`                     | Tick volume in the session/window.     |
-| `real_volume` | `int64`                     | Actual volume (if broker supplies it). |
-
-> The exact field list can vary by integration; consult `mt4_term_api_market_info_pb2.py` for the authoritative schema.
+| Field       | Proto Type                  | Description                          |
+| ----------- | --------------------------- | ------------------------------------ |
+| `symbol`    | `string`                    | Symbol name.                         |
+| `bid`       | `double`                    | Best bid price.                      |
+| `ask`       | `double`                    | Best ask price.                      |
+| `high`      | `double`                    | Session high.                        |
+| `low`       | `double`                    | Session low.                         |
+| `date_time` | `google.protobuf.Timestamp` | Server timestamp of the quote (UTC). |
 
 ---
 

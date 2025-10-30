@@ -75,30 +75,16 @@ async def quote_many(
 
 ### Payload: `QuoteManyData`
 
-The concrete shape depends on the pb schema used in your build. Two common layouts:
+| Field    | Type          | Description                                         |
+| -------- | ------------- | --------------------------------------------------- |
+| `quotes` | `QuoteData[]` | Array of quotes in the **same order** as requested. |
 
-**A) Contiguous list of `QuoteData`**
-
-| Field   | Type          | Description                                |
-| ------- | ------------- | ------------------------------------------ |
-| `items` | `QuoteData[]` | Quotes in the **same order** as requested. |
-
-**B) Name+Quote tuples (e.g., `SymbolNameInfos`)**
-
-| Field             | Type                                              | Description                                                                   |
-| ----------------- | ------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `SymbolNameInfos` | array of `{ index, symbolName, data: QuoteData }` | Each element holds the requested index, the symbol name, and the `QuoteData`. |
-
-`QuoteData` fields (from `mt4_term_api_market_info_pb2.py`) typically include:
+Each `QuoteData` element contains (from `mt4_term_api_market_info_pb2.py`):
 
 * `symbol: string`
 * `bid: double`, `ask: double`
-* `open: double`, `high: double`, `low: double`
-* `spread: int32` (if provided)
+* `high: double`, `low: double`
 * `date_time: google.protobuf.Timestamp`
-* `tick_volume: int64`, `real_volume: int64`
-
-> Check your `mt4_term_api_market_info_pb2.py` for the exact layout; both variants are used across builds.
 
 ---
 

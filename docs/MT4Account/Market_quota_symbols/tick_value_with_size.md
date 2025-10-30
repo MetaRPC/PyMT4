@@ -69,20 +69,19 @@ async def tick_value_with_size(
 
 ### Payload: `TickValueWithSizeData`
 
-Contains `items: list[TickValueWithSizeInfo]`.
+| Field   | Type                          | Description                                           |
+| ------- | ----------------------------- | ----------------------------------------------------- |
+| `infos` | `SymbolTickValueWithSizeInfo[]` | Array of tick value info for requested symbols. |
 
-| Field            | Proto Type | Description                                            |
-| ---------------- | ---------- | ------------------------------------------------------ |
-| `index`          | `int32`    | Position in the reply list (maps to request order).    |
-| `symbolName`     | `string`   | Symbol name.                                           |
-| `TradeTickValue` | `double`   | Tick value in **deposit currency** for 1 contract lot. |
-| `TradeTickSize`  | `double`   | Minimal price increment (tick size).                   |
-| `ContractSize`   | `double`   | Contract size (e.g., 100000 for FX majors).            |
-| `CurrencyBase`   | `string`   | Base currency code for the symbol.                     |
-| `CurrencyProfit` | `string`   | Profit currency code used for PnL.                     |
-| `CurrencyMargin` | `string`   | Margin currency code.                                  |
+Each `SymbolTickValueWithSizeInfo` element contains:
 
-> Field names reflect `mt4_term_api_account_helper_pb2.py` (`TickValueWithSize*`). Exact list may include additional metadata fields depending on integration.
+| Field                | Proto Type | Description                                             |
+| -------------------- | ---------- | ------------------------------------------------------- |
+| `index`              | `int32`    | Position in the reply list (maps to request order).     |
+| `symbolName`         | `string`   | Symbol name.                                            |
+| `TradeTickValue`     | `double`   | Tick value in **deposit currency** for 1 contract lot. |
+| `TradeTickSize`      | `double`   | Minimal price increment (tick size).                    |
+| `TradeContractSize`  | `double`   | Contract size (e.g., 100000 for FX majors).            |
 
 ---
 

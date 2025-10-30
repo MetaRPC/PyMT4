@@ -132,11 +132,14 @@ class MT4Account:
         headers = []
         if self.id:
             headers.append(("id", str(self.id)))
-        
+
+        # FIX: Use timeout_seconds parameter instead of hardcoded 30.0
+        grpc_timeout = timeout_seconds + 15.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds()
+
         res = await self.connection_client.Connect(
             request,
             metadata=headers,
-            timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
+            timeout=grpc_timeout,
         )
         
         if res.HasField("error") and res.error.error_message:
@@ -147,7 +150,7 @@ class MT4Account:
         self.port = port
         self.base_chart_symbol = base_chart_symbol
         self.connect_timeout_seconds = timeout_seconds
-        self.id = res.data.terminalInstanceGuid
+        self.id = res.data.terminal_instance_guid  # FIX: snake_case, not camelCase
 
     async def connect_by_server_name(
         self,
@@ -169,10 +172,14 @@ class MT4Account:
         headers = []
         if self.id:
             headers.append(("id", str(self.id)))
+
+        # FIX: Use timeout_seconds parameter instead of hardcoded 30.0
+        grpc_timeout = timeout_seconds + 15.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds()
+
         res = await self.connection_client.ConnectEx(
             request,
             metadata=headers,
-            timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
+            timeout=grpc_timeout,
         )
 
         if res.HasField("error") and res.error.error_message:

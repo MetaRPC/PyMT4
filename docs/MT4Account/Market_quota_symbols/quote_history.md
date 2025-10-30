@@ -86,19 +86,24 @@ async def quote_history(
 
 ### Payload: `QuoteHistoryData`
 
-Contains `items: list[QuoteBar]`.
+| Field               | Type             | Description                                        |
+| ------------------- | ---------------- | -------------------------------------------------- |
+| `historical_quotes` | `HistoryQuote[]` | Array of historical bars for the requested period. |
+
+Each `HistoryQuote` element contains:
 
 | Field         | Proto Type                  | Description                                |
 | ------------- | --------------------------- | ------------------------------------------ |
-| `date_time`   | `google.protobuf.Timestamp` | Bar timestamp (UTC, aligned to timeframe). |
+| `symbol`      | `string`                    | Symbol name.                               |
+| `index`       | `int32`                     | Bar index in the sequence.                 |
+| `time`        | `google.protobuf.Timestamp` | Bar timestamp (UTC, aligned to timeframe). |
 | `open`        | `double`                    | Open price.                                |
 | `high`        | `double`                    | High price.                                |
 | `low`         | `double`                    | Low price.                                 |
 | `close`       | `double`                    | Close price.                               |
 | `tick_volume` | `int64`                     | Tick volume for the bar.                   |
 | `real_volume` | `int64`                     | Real volume (if broker provides).          |
-
-> The exact field list can vary slightly by integration; check `mt4_term_api_market_info_pb2.py` for the authoritative schema.
+| `spread`      | `int32`                     | Spread value for the bar.                  |
 
 ---
 
@@ -106,17 +111,17 @@ Contains `items: list[QuoteBar]`.
 
 ### `ENUM_QUOTE_HISTORY_TIMEFRAME`
 
-Common members:
+Timeframe values:
 
-* `QH_PERIOD_M1`
-* `QH_PERIOD_M5`
-* `QH_PERIOD_M15`
-* `QH_PERIOD_M30`
-* `QH_PERIOD_H1`
-* `QH_PERIOD_H4`
-* `QH_PERIOD_D1`
-* `QH_PERIOD_W1`
-* `QH_PERIOD_MN1`
+* `QH_PERIOD_M1 = 0` — 1 minute bars
+* `QH_PERIOD_M5 = 1` — 5 minute bars
+* `QH_PERIOD_M15 = 2` — 15 minute bars
+* `QH_PERIOD_M30 = 3` — 30 minute bars
+* `QH_PERIOD_H1 = 4` — 1 hour bars
+* `QH_PERIOD_H4 = 5` — 4 hour bars
+* `QH_PERIOD_D1 = 6` — Daily bars
+* `QH_PERIOD_W1 = 7` — Weekly bars
+* `QH_PERIOD_MN1 = 8` — Monthly bars
 
 > Use `market_info_pb2.ENUM_QUOTE_HISTORY_TIMEFRAME.Name(value)` to map numbers → labels.
 

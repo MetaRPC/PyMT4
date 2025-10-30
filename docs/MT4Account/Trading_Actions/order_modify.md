@@ -104,15 +104,9 @@ async def order_modify(
 
 ### Payload: `OrderModifyData`
 
-Common fields in reply (exact list depends on pb build):
-
-| Field                | Proto Type                   | Description                              |
-| -------------------- | ---------------------------- | ---------------------------------------- |
-| `order_was_modified` | `bool`                       | Whether the server applied a change.     |
-| `new_stop_loss`      | `double?`                    | Echoed/normalized SL after modification. |
-| `new_take_profit`    | `double?`                    | Echoed/normalized TP after modification. |
-| `new_expiration`     | `google.protobuf.Timestamp?` | Echoed expiration (server view).         |
-| `date_time`          | `google.protobuf.Timestamp?` | Server timestamp of the modification.    |
+| Field                | Proto Type | Description                          |
+| -------------------- | ---------- | ------------------------------------ |
+| `order_was_modified` | `bool`     | Whether the server applied a change. |
 
 > On error, the wrapper raises per `error_selector` inside `execute_with_reconnect(...)`.
 

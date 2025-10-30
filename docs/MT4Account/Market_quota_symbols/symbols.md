@@ -25,14 +25,8 @@
 ```python
 # Fetch every tradable symbol from the terminal
 s = await acct.symbols()
-# Depending on pb layout:
-# (A) If the reply exposes a flat list of entries with name+index
-for e in s.items:  # or s.SymbolNameInfos
-    # e.symbol (str), e.index (int)
-    print(e.symbol, e.index)
-
-# (B) If the reply is just names and you need a set for fast lookups
-names = { getattr(e, 'symbol', None) or getattr(e, 'symbolName', None) for e in getattr(s, 'items', []) }
+for e in s.SymbolNameInfos:
+    print(e.symbol_name, e.symbol_index)
 ```
 
 ---
@@ -72,13 +66,16 @@ No required parameters.
 
 ### Payload: `SymbolsData`
 
-Typical layout (per pb build): a list of name/index pairs.
+| Field             | Type               | Description                                           |
+| ----------------- | ------------------ | ----------------------------------------------------- |
+| `SymbolNameInfos` | `SymbolNameInfo[]` | Array of symbols with names and terminal indices. |
 
-| Field   | Type                               | Description                                  |
-| ------- | ---------------------------------- | -------------------------------------------- |
-| `items` | `[{ symbol: string, index: int }]` | Symbol name and terminal index for each row. |
+Each `SymbolNameInfo` element contains:
 
-> Field container name may vary (`items`, `SymbolNameInfos`, etc.). The SDK returns `res.data`.
+| Field          | Proto Type | Description                     |
+| -------------- | ---------- | ------------------------------- |
+| `symbol_name`  | `string`   | Symbol name (e.g., "EURUSD").   |
+| `symbol_index` | `int32`    | Terminal index for this symbol. |
 
 ---
 
@@ -115,7 +112,7 @@ Use this method to:
 
 ```python
 s = await acct.symbols()
-name_set = { getattr(e, 'symbol', None) or getattr(e, 'symbolName', None) for e in getattr(s, 'items', []) }
+name_set = {e.symbol_name for e in s.SymbolNameInfos}
 
 def known(sym: str) -> bool:
     return sym in name_set
@@ -125,9 +122,8 @@ def known(sym: str) -> bool:
 
 ```python
 s = await acct.symbols()
-rows = getattr(s, 'items', [])
-names = [getattr(e, 'symbol', None) or getattr(e, 'symbolName', None) for e in rows]
-ui_model = sorted(filter(None, names))  # feed into your UI
+names = [e.symbol_name for e in s.SymbolNameInfos]
+ui_model = sorted(names)  # feed into your UI
 ```
 
 ### 3) Refresh on demand

@@ -70,32 +70,38 @@ async def symbol_params_many(
 
 ### Payload: `SymbolParamsManyData`
 
-Contains `params_info: list[SymbolParamsManyInfo]` (naming per pb). Typical fields include:
+| Field          | Type                    | Description                                   |
+| -------------- | ----------------------- | --------------------------------------------- |
+| `symbol_infos` | `SymbolParamsManyInfo[]` | Array of symbol parameters for each requested symbol. |
 
-| Field             | Proto Type / Enum                | Description                                         |
-| ----------------- | -------------------------------- | --------------------------------------------------- |
-| `Symbol`          | `string`                         | Symbol name (e.g., `EURUSD`).                       |
-| `Digits`          | `int32`                          | Price digits.                                       |
-| `Point`           | `double`                         | Minimal price increment.                            |
-| `Spread`          | `int32` or `double`              | Current spread.                                     |
-| `SpreadFloat`     | `bool`                           | Whether spread is floating.                         |
-| `TradeMode`       | `SP_ENUM_SYMBOL_TRADE_MODE`      | Symbol trade mode (enabled/close‑only/disabled).    |
-| `TradeExeMode`    | `SP_ENUM_SYMBOL_TRADE_EXECUTION` | Execution mode (Instant/Market/Exchange).           |
-| `TradeCalcMode`   | `SP_ENUM_TRADE_CALC_MODE`        | Margin calculation mode (Forex/CFD/Futures…).       |
-| `StopsLevel`      | `int32`                          | Min distance for SL/TP from current price (points). |
-| `FreezeLevel`     | `int32`                          | Freeze level in points.                             |
-| `VolumeMin`       | `double`                         | Minimal volume.                                     |
-| `VolumeMax`       | `double`                         | Maximal volume.                                     |
-| `VolumeStep`      | `double`                         | Volume step.                                        |
-| `VolumeLow`       | `int64` (server stat)            | Session low volume metric (if provided).            |
-| `VolumeHigh`      | `int64` (server stat)            | Session high volume metric (if provided).           |
-| `ContractSize`    | `double`                         | Contract size (e.g., 100000 for FX).                |
-| `TickSize`        | `double`                         | Minimal tick size.                                  |
-| `TickValue`       | `double`                         | Tick value in deposit currency.                     |
-| `MarginStop`      | `double`                         | Margin requirement for Stop orders.                 |
-| `MarginStopLimit` | `double`                         | Margin requirement for Stop‑Limit orders.           |
+Each `SymbolParamsManyInfo` element contains (typical fields):
 
-> **Note:** Field names/types reflect the pb. The exact set can vary by integration; consult `mt4_term_api_account_helper_pb2.py` for the authoritative list.
+| Field                  | Proto Type / Enum                | Description                                         |
+| ---------------------- | -------------------------------- | --------------------------------------------------- |
+| `SymbolName`           | `string`                         | Symbol name (e.g., `EURUSD`).                       |
+| `Digits`               | `int32`                          | Price digits.                                       |
+| `Point`                | `double`                         | Minimal price increment.                            |
+| `SpreadFloat`          | `bool`                           | Whether spread is floating.                         |
+| `TradeMode`            | `SP_ENUM_SYMBOL_TRADE_MODE`      | Symbol trade mode (enabled/close‑only/disabled).    |
+| `TradeExeMode`         | `SP_ENUM_SYMBOL_TRADE_EXECUTION` | Execution mode (Instant/Market/Exchange).           |
+| `TradeCalcMode`        | `SP_ENUM_TRADE_CALC_MODE`        | Margin calculation mode (Forex/CFD/Futures…).       |
+| `TradeStopsLevel`      | `int32`                          | Min distance for SL/TP from current price (points). |
+| `TradeFreezeLevel`     | `int32`                          | Freeze level in points.                             |
+| `VolumeMin`            | `double`                         | Minimal volume.                                     |
+| `VolumeMax`            | `double`                         | Maximal volume.                                     |
+| `VolumeStep`           | `double`                         | Volume step.                                        |
+| `VolumeLow`            | `int64`                          | Session low volume metric.                          |
+| `volume_high`          | `int64`                          | Session high volume metric.                         |
+| `TradeContractSize`    | `double`                         | Contract size (e.g., 100000 for FX).                |
+| `TradeTickSize`        | `double`                         | Minimal tick size.                                  |
+| `TradeTickValue`       | `double`                         | Tick value in deposit currency.                     |
+| `MarginStop`           | `double`                         | Margin requirement for Stop orders.                 |
+| `MarginStopLimit`      | `double`                         | Margin requirement for Stop‑Limit orders.           |
+| `CurrencyBase`         | `string`                         | Base currency (e.g., "EUR" for EURUSD).             |
+| `CurrencyProfit`       | `string`                         | Profit currency.                                    |
+| `CurrencyMargin`       | `string`                         | Margin currency.                                    |
+
+> **Note:** Field names use CamelCase as per protobuf schema. Consult `mt4_term_api_account_helper_pb2.py` for the complete authoritative list.
 
 ---
 
@@ -105,17 +111,32 @@ These enums are present in the pb and are relevant to `symbol_params_many`:
 
 ### `SP_ENUM_SYMBOL_TRADE_MODE`
 
-Describes whether the symbol is tradable.
+Describes whether the symbol is tradable:
+
+* `SYMBOL_TRADE_MODE_DISABLED = 0` — Trading disabled
+* `SYMBOL_TRADE_MODE_LONGONLY = 1` — Only long positions allowed
+* `SYMBOL_TRADE_MODE_SHORTONLY = 2` — Only short positions allowed
+* `SYMBOL_TRADE_MODE_CLOSEONLY = 3` — Only closing existing positions allowed
+* `SYMBOL_TRADE_MODE_FULL = 4` — Full trading enabled
 
 ### `SP_ENUM_SYMBOL_TRADE_EXECUTION`
 
-Execution regime for orders on the symbol.
+Execution regime for orders on the symbol:
+
+* `SYMBOL_TRADE_EXECUTION_REQUEST = 0` — Request execution
+* `SYMBOL_TRADE_EXECUTION_INSTANT = 1` — Instant execution
+* `SYMBOL_TRADE_EXECUTION_MARKET = 2` — Market execution
+* `SYMBOL_TRADE_EXECUTION_EXCHANGE = 3` — Exchange execution
 
 ### `SP_ENUM_TRADE_CALC_MODE`
 
-Defines how margin is calculated for the symbol class (Forex/CFD/Futures/etc.).
+Defines how margin is calculated for the symbol class:
 
-> Use these enums to map numeric values → human‑readable labels in your UI.
+* `SYMBOL_TRADE_MARGINE_CALC_MODE_FOREX = 0` — Forex calculation
+* `SYMBOL_TRADE_MARGINE_CALC_MODE_FUTURES = 1` — Futures calculation
+* `SYMBOL_TRADE_MARGINE_CALC_MODE_CFD = 2` — CFD calculation
+
+> Use `account_helper_pb2.SP_ENUM_SYMBOL_TRADE_MODE.Name(value)` to map numeric values → human‑readable labels in your UI.
 
 ---
 
@@ -146,7 +167,7 @@ Use this method to:
 
 ```python
 params = await acct.symbol_params_many("XAUUSD")
-p = params.params_info[0]
+p = params.symbol_infos[0]
 
 # Clamp and snap volume to step
 def snap_volume(vol: float, min_v: float, max_v: float, step: float) -> float:

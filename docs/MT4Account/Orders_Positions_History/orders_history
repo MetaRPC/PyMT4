@@ -92,27 +92,34 @@ async def orders_history(
 
 ### Payload: `OrdersHistoryData`
 
-Contains `orders_info: list[HistoryOrderInfo]` (plus optional aggregates).
+| Field         | Type                  | Description                                        |
+| ------------- | --------------------- | -------------------------------------------------- |
+| `orders_info` | `HistoryOrderInfo[]`  | Array of historical orders and positions.          |
+| `total_count` | `int32`               | Total number of records matching query (for pagination). |
 
-| Field            | Proto Type                          | Description                                 |
-| ---------------- | ----------------------------------- | ------------------------------------------- |
-| `ticket`         | `int32`                             | Unique ID of the order/position.            |
-| `symbol`         | `string`                            | Trading symbol (e.g., `EURUSD`).            |
-| `order_type`     | `enum mt4_term_api.OpenedOrderType` | Order type (BUY/SELL/LIMIT/STOP, etc.).     |
-| `lots`           | `double`                            | Volume in lots.                             |
-| `magic_number`   | `int32`                             | EA magic.                                   |
-| `open_price`     | `double`                            | Entry price.                                |
-| `close_price`    | `double`                            | Exit price.                                 |
-| `profit`         | `double`                            | Realized P/L.                               |
-| `swap`           | `double`                            | Swap charged/credited.                      |
-| `stop_loss`      | `double`                            | SL at the time of close (if reported).      |
-| `take_profit`    | `double`                            | TP at the time of close (if reported).      |
-| `position_index` | `int32`                             | Terminal position index (if applicable).    |
-| `open_time`      | `google.protobuf.Timestamp`         | Position open time (UTC).                   |
-| `close_time`     | `google.protobuf.Timestamp`         | Position close time (UTC).                  |
-| `comment`        | `string`                            | User/system comment (if any).               |
-| `commision`      | `double`                            | Commission (spelled as in pb: `commision`). |
-| `account_login`  | `int64`                             | Useful in multi‑account contexts.           |
+Each `HistoryOrderInfo` element contains:
+
+| Field              | Proto Type                          | Description                                 |
+| ------------------ | ----------------------------------- | ------------------------------------------- |
+| `ticket`           | `int32`                             | Unique ID of the order/position.            |
+| `symbol`           | `string`                            | Trading symbol (e.g., `EURUSD`).            |
+| `order_type`       | `enum OpenedOrderType`              | Order type (BUY/SELL/LIMIT/STOP, etc.).     |
+| `lots`             | `double`                            | Volume in lots.                             |
+| `magic_number`     | `int32`                             | EA magic.                                   |
+| `open_price`       | `double`                            | Entry price.                                |
+| `close_price`      | `double`                            | Exit price.                                 |
+| `profit`           | `double`                            | Realized P/L.                               |
+| `swap`             | `double`                            | Swap charged/credited.                      |
+| `stop_loss`        | `double`                            | SL at the time of close (if reported).      |
+| `take_profit`      | `double`                            | TP at the time of close (if reported).      |
+| `position_index`   | `int32`                             | Terminal position index (if applicable).    |
+| `sort_index`       | `int32`                             | Index for sorting results.                  |
+| `open_time`        | `google.protobuf.Timestamp`         | Position open time (UTC).                   |
+| `close_time`       | `google.protobuf.Timestamp`         | Position close time (UTC).                  |
+| `expiration_time`  | `google.protobuf.Timestamp`         | Expiration time for pending orders (if set).|
+| `comment`          | `string`                            | User/system comment (if any).               |
+| `commision`        | `double`                            | Commission (spelled as in pb: `commision`). |
+| `account_login`    | `int64`                             | Useful in multi‑account contexts.           |
 
 > Note the `commision` spelling mirrors the protobuf field name.
 
@@ -122,21 +129,21 @@ Contains `orders_info: list[HistoryOrderInfo]` (plus optional aggregates).
 
 ### `EnumOrderHistorySortType`
 
-* `HISTORY_SORT_BY_OPEN_TIME_ASC`
-* `HISTORY_SORT_BY_OPEN_TIME_DESC`
-* `HISTORY_SORT_BY_CLOSE_TIME_ASC`
-* `HISTORY_SORT_BY_CLOSE_TIME_DESC`
-* `HISTORY_SORT_BY_ORDER_TICKET_ID_ASC`
-* `HISTORY_SORT_BY_ORDER_TICKET_ID_DESC`
+* `HISTORY_SORT_BY_OPEN_TIME_ASC = 0` — Sort by open time ascending
+* `HISTORY_SORT_BY_OPEN_TIME_DESC = 1` — Sort by open time descending
+* `HISTORY_SORT_BY_CLOSE_TIME_ASC = 2` — Sort by close time ascending
+* `HISTORY_SORT_BY_CLOSE_TIME_DESC = 3` — Sort by close time descending
+* `HISTORY_SORT_BY_ORDER_TICKET_ID_ASC = 4` — Sort by ticket ID ascending
+* `HISTORY_SORT_BY_ORDER_TICKET_ID_DESC = 5` — Sort by ticket ID descending
 
 ### `OpenedOrderType`
 
-* `OO_OP_BUY`
-* `OO_OP_SELL`
-* `OO_OP_BUYLIMIT`
-* `OO_OP_SELLLIMIT`
-* `OO_OP_BUYSTOP`
-* `OO_OP_SELLSTOP`
+* `OO_OP_BUY = 0` — Market buy position
+* `OO_OP_SELL = 1` — Market sell position
+* `OO_OP_BUYLIMIT = 3` — Buy limit pending order
+* `OO_OP_BUYSTOP = 4` — Buy stop pending order
+* `OO_OP_SELLLIMIT = 5` — Sell limit pending order
+* `OO_OP_SELLSTOP = 6` — Sell stop pending order
 
 ---
 

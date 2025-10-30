@@ -78,26 +78,31 @@ async def opened_orders(
 
 ### Payload: `OpenedOrdersData`
 
-Contains `items: list[OpenedOrder]` plus optional aggregates.
+| Field         | Type              | Description                                      |
+| ------------- | ----------------- | ------------------------------------------------ |
+| `order_infos` | `OpenedOrderInfo[]` | Array of currently opened orders and positions. |
 
-| Field            | Proto Type                          | Description                              |
-| ---------------- | ----------------------------------- | ---------------------------------------- |
-| `ticket`         | `int32`                             | Unique ID of the order/position.         |
-| `symbol`         | `string`                            | Symbol (e.g., `EURUSD`).                 |
-| `order_type`     | `enum mt4_term_api.OpenedOrderType` | Order type (BUY/SELL/LIMIT/STOP, etc.).  |
-| `lots`           | `double`                            | Volume in lots.                          |
-| `magic_number`   | `int32`                             | EA magic.                                |
-| `open_price`     | `double`                            | Entry price.                             |
-| `profit`         | `double`                            | Current floating P/L.                    |
-| `stop_loss`      | `double`                            | Current SL (0 if none).                  |
-| `take_profit`    | `double`                            | Current TP (0 if none).                  |
-| `swap`           | `double`                            | Accumulated swap.                        |
-| `position_index` | `int32`                             | Terminal position index (if applicable). |
-| `open_time`      | `google.protobuf.Timestamp`         | Position open time (UTC).                |
-| `sort_index`     | `int32`                             | Sort index for the current sort mode.    |
-| `account_login`  | `int64`                             | Useful for multi‑account contexts.       |
+Each `OpenedOrderInfo` element contains:
 
-> Exact field names come from `mt4_term_api_account_helper_pb2.py` (`OpenedOrders*`). The SDK returns `res.data`.
+| Field              | Proto Type                          | Description                              |
+| ------------------ | ----------------------------------- | ---------------------------------------- |
+| `ticket`           | `int32`                             | Unique ID of the order/position.         |
+| `symbol`           | `string`                            | Symbol (e.g., `EURUSD`).                 |
+| `order_type`       | `enum OpenedOrderType`              | Order type (BUY/SELL/LIMIT/STOP, etc.).  |
+| `lots`             | `double`                            | Volume in lots.                          |
+| `magic_number`     | `int32`                             | EA magic number.                         |
+| `open_price`       | `double`                            | Entry price.                             |
+| `profit`           | `double`                            | Current floating P/L.                    |
+| `stop_loss`        | `double`                            | Current SL (0 if none).                  |
+| `take_profit`      | `double`                            | Current TP (0 if none).                  |
+| `swap`             | `double`                            | Accumulated swap.                        |
+| `commision`        | `double`                            | Commission charged.                      |
+| `comment`          | `string`                            | Order comment.                           |
+| `position_index`   | `int32`                             | Terminal position index (if applicable). |
+| `open_time`        | `google.protobuf.Timestamp`         | Position open time (UTC).                |
+| `expiration_time`  | `google.protobuf.Timestamp`         | Pending order expiration (if set).       |
+| `sort_index`       | `int32`                             | Sort index for the current sort mode.    |
+| `account_login`    | `int64`                             | Account login number.                    |
 
 ---
 
@@ -105,21 +110,25 @@ Contains `items: list[OpenedOrder]` plus optional aggregates.
 
 ### `EnumOpenedOrderSortType`
 
-* `SORT_BY_OPEN_TIME_ASC`
-* `SORT_BY_OPEN_TIME_DESC`
-* `SORT_BY_ORDER_TICKET_ID_ASC`
-* `SORT_BY_ORDER_TICKET_ID_DESC`
+Sort modes for opened orders:
+
+* `SORT_BY_OPEN_TIME_ASC = 0` — Sort by open time ascending
+* `SORT_BY_OPEN_TIME_DESC = 1` — Sort by open time descending
+* `SORT_BY_ORDER_TICKET_ID_ASC = 2` — Sort by ticket ID ascending
+* `SORT_BY_ORDER_TICKET_ID_DESC = 3` — Sort by ticket ID descending
 
 ### `OpenedOrderType`
 
-* `OO_OP_BUY`
-* `OO_OP_SELL`
-* `OO_OP_BUYLIMIT`
-* `OO_OP_SELLLIMIT`
-* `OO_OP_BUYSTOP`
-* `OO_OP_SELLSTOP`
+Order/position types:
 
-> These are the members present in the MT4 pb for opened orders and sort modes.
+* `OO_OP_BUY = 0` — Market buy position
+* `OO_OP_SELL = 1` — Market sell position
+* `OO_OP_BUYLIMIT = 3` — Buy limit pending order
+* `OO_OP_BUYSTOP = 4` — Buy stop pending order
+* `OO_OP_SELLLIMIT = 5` — Sell limit pending order
+* `OO_OP_SELLSTOP = 6` — Sell stop pending order
+
+> Use `account_helper_pb2.EnumOpenedOrderSortType.Name(value)` or `OpenedOrderType.Name(value)` to map numeric values → labels.
 
 ---
 
@@ -152,7 +161,7 @@ Use this method to:
 
 ```python
 od = await acct.opened_orders()
-for it in od.items:
+for it in od.order_infos:
     print(f"#{it.ticket} {it.symbol} lots={it.lots:.2f} PnL={it.profit:.2f}")
 ```
 

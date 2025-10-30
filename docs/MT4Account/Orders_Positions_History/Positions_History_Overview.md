@@ -47,14 +47,14 @@
 ```python
 # Count live objects
 od = await acct.opened_orders()
-print(len(od.items))  # positions + pendings together
+print(len(od.order_infos))  # positions + pendings together
 ```
 
 ```python
 # Ticket set for quick diff
 s = await acct.opened_orders_tickets()
-tickets = set(s.tickets)
-print(tickets)
+all_tickets = set(s.position_tickets) | set(s.pending_order_tickets)
+print(all_tickets)
 ```
 
 ```python
@@ -63,7 +63,7 @@ from datetime import datetime, timedelta, timezone
 end = datetime.now(timezone.utc)
 start = end - timedelta(days=1)
 h = await acct.orders_history(start, end)
-print(len(h.history))
+print(len(h.orders_info))
 ```
 
 ---

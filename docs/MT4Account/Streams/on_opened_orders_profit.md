@@ -74,16 +74,47 @@ No request fields.
 
 ### Message: `OnOpenedOrdersProfitData`
 
-Concrete fields depend on pb. Common ones:
+| Field                              | Proto Type                     | Description                                        |
+| ---------------------------------- | ------------------------------ | -------------------------------------------------- |
+| `type`                             | `enum`                         | Event type (0 = OrderProfit, 1 = OrderUpdate).     |
+| `opened_orders_with_profit_updated`| `OnOpenedOrdersProfitOrderInfo`| Order with updated profit information.             |
+| `account_info`                     | `OnEventAccountInfo`           | Account state snapshot (balance, equity, etc.).    |
+| `terminal_instance_guid_id`        | `string`                       | Terminal instance identifier.                      |
 
-| Field              | Proto Type                    | Description                                  |
-| ------------------ | ----------------------------- | -------------------------------------------- |
-| `total_profit`     | `double`                      | Sum of floating P/L across opened positions. |
-| `profit_by_symbol` | `map<string, double>` or list | Optional breakdown by symbol.                |
-| `account_login`    | `int64`                       | Account id (multi‑account setups).           |
-| `date_time`        | `google.protobuf.Timestamp`   | Server timestamp of this snapshot.           |
+### Nested: `OnOpenedOrdersProfitOrderInfo`
 
-> Some builds expose only `total_profit`. If a map is not available, the SDK still yields the total.
+| Field          | Proto Type                  | Description                              |
+| -------------- | --------------------------- | ---------------------------------------- |
+| `index`        | `int32`                     | Order index.                             |
+| `ticket`       | `int32`                     | Order/position ticket.                   |
+| `symbol`       | `string`                    | Trading symbol.                          |
+| `type`         | `enum`                      | Order type (SUB_OP_BUY, SUB_OP_SELL, etc.). |
+| `lots`         | `double`                    | Volume in lots.                          |
+| `open_price`   | `double`                    | Entry price.                             |
+| `stop_loss`    | `double`                    | Stop loss level.                         |
+| `take_profit`  | `double`                    | Take profit level.                       |
+| `open_time`    | `google.protobuf.Timestamp` | Order open time (UTC).                   |
+| `expiration`   | `google.protobuf.Timestamp` | Pending order expiration (if set).       |
+| `magic_number` | `int32`                     | EA magic number.                         |
+| `order_profit` | `double`                    | Current/realized profit.                 |
+| `swap`         | `double`                    | Swap charged/credited.                   |
+| `commission`   | `double`                    | Commission.                              |
+| `comment`      | `string`                    | Order comment.                           |
+
+### Nested: `OnEventAccountInfo`
+
+| Field          | Proto Type | Description                     |
+| -------------- | ---------- | ------------------------------- |
+| `login`        | `int64`    | Account login number.           |
+| `balance`      | `double`   | Account balance.                |
+| `credit`       | `double`   | Credit amount.                  |
+| `equity`       | `double`   | Current equity.                 |
+| `margin`       | `double`   | Used margin.                    |
+| `free_margin`  | `double`   | Free margin available.          |
+| `profit`       | `double`   | Total floating profit (use this for total P/L). |
+| `margin_level` | `double`   | Margin level percentage.        |
+
+> Total profit/loss is available in `account_info.profit`. Individual order profit is in `opened_orders_with_profit_updated.order_profit`.
 
 ---
 

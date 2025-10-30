@@ -92,24 +92,19 @@ async def order_close_delete(
 
 ### Payload: `OrderCloseDeleteData`
 
-Common fields (exact list depends on pb build):
-
-| Field               | Proto Type                   | Description                                    |
-| ------------------- | ---------------------------- | ---------------------------------------------- |
-| `order_was_closed`  | `bool?`                      | Whether a market position was closed.          |
-| `order_was_deleted` | `bool?`                      | Whether a pending order was deleted.           |
-| `close_price`       | `double?`                    | Executed close price (if available).           |
-| `lots_closed`       | `double?`                    | Closed volume for partial exits.               |
-| `close_time`        | `google.protobuf.Timestamp?` | Server timestamp of the close/delete.          |
-| `comment`           | `string?`                    | Echoed/normalized comment (if request had it). |
-
-> If your pb returns a single boolean, the action type (close vs delete) follows from the order type referenced by `order_ticket`.
+| Field                   | Proto Type | Description                                                      |
+| ----------------------- | ---------- | ---------------------------------------------------------------- |
+| `mode`                  | `enum`     | Operation mode (0 = OCD_MARKET_ORDER closed, 1 = OCD_PENDING_ORDER deleted). |
+| `history_order_comment` | `string`   | Comment from the historical order after close/delete.            |
 
 ---
 
 ## 🧱 Related enums (from pb)
 
-This RPC **does not use method‑specific enums**.
+### Mode Enum
+
+* `OCD_MARKET_ORDER = 0` — Market order/position was closed
+* `OCD_PENDING_ORDER = 1` — Pending order was deleted
 
 ---
 

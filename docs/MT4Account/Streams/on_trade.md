@@ -95,46 +95,85 @@ No request fields (server subscribes for the current account).
 
 ### Message: `OnTradeData`
 
-Depending on the subtype present, the message may expose these fields (names mirror pb):
+| Field                       | Proto Type             | Description                                        |
+| --------------------------- | ---------------------- | -------------------------------------------------- |
+| `type`                      | `enum`                 | Event type (0 = OrderProfit, 1 = OrderUpdate).     |
+| `event_data`                | `OnTadeEventData`      | Trade event details (orders, updates, removals).   |
+| `account_info`              | `OnEventAccountInfo`   | Account state snapshot (balance, equity, etc.).    |
+| `terminal_instance_guid_id` | `string`               | Terminal instance identifier.                      |
 
-| Field           | Proto Type                      | Notes                                              |
-| --------------- | ------------------------------- | -------------------------------------------------- |
-| `account_login` | `int64`                         | Account id for multi‑account setups.               |
-| `symbol`        | `string`                        | Symbol (may appear as `symbolName` in some builds) |
-| `order_ticket`  | `int32`                         | Order/position ticket (for order updates).         |
-| `deal_ticket`   | `int32`                         | Execution ticket (for fills); if present.          |
-| `type`          | `enum SUB_ORDER_OPERATION_TYPE` | Operation type (see enum below).                   |
-| `lots`          | `double`                        | Volume in lots (if applicable).                    |
-| `open_price`    | `double`                        | Order open price (if applicable).                  |
-| `close_price`   | `double`                        | Close price (on closes).                           |
-| `price`         | `double`                        | Execution price (for deals).                       |
-| `stop_loss`     | `double`                        | SL value.                                          |
-| `take_profit`   | `double`                        | TP value.                                          |
-| `order_profit`  | `double`                        | Profit reported with the event (if any).           |
-| `swap`          | `double`                        | Swap, when included.                               |
-| `magic_number`  | `int32`                         | EA magic for robots.                               |
-| `comment`       | `string`                        | Comment text.                                      |
-| `close_time`    | `google.protobuf.Timestamp`     | Time of closing, if present.                       |
-| `date_time`     | `google.protobuf.Timestamp`     | Event timestamp.                                   |
+### Nested: `OnTadeEventData`
 
-> The SDK yields `reply.data` directly; presence of fields depends on whether the event is an **order**, **deal**, **position**, or an **updated/removed order** block.
+| Field                | Type                       | Description                          |
+| -------------------- | -------------------------- | ------------------------------------ |
+| `new_orders`         | `OnTradeOrderInfo`         | Newly created orders/positions.      |
+| `updated_orders`     | `OnTradeUpdatedOrderInfo`  | Modified orders (previous/current).  |
+| `removed_orders`     | `OnTradeOrderInfo`         | Closed/deleted orders.               |
+| `new_history_orders` | `OnTradeOrderInfo`         | New historical orders.               |
+
+### Nested: `OnTradeOrderInfo`
+
+| Field          | Proto Type                  | Description                              |
+| -------------- | --------------------------- | ---------------------------------------- |
+| `index`        | `int32`                     | Order index.                             |
+| `ticket`       | `int32`                     | Order/position ticket.                   |
+| `is_history`   | `bool`                      | True if historical order.                |
+| `symbol`       | `string`                    | Trading symbol.                          |
+| `type`         | `enum`                      | Order type (SUB_OP_BUY, SUB_OP_SELL, etc.). |
+| `lots`         | `double`                    | Volume in lots.                          |
+| `open_price`   | `double`                    | Entry price.                             |
+| `close_price`  | `double`                    | Exit price (if closed).                  |
+| `stop_loss`    | `double`                    | Stop loss level.                         |
+| `take_profit`  | `double`                    | Take profit level.                       |
+| `open_time`    | `google.protobuf.Timestamp` | Order open time (UTC).                   |
+| `close_time`   | `google.protobuf.Timestamp` | Order close time (UTC, if closed).       |
+| `expiration`   | `google.protobuf.Timestamp` | Pending order expiration (if set).       |
+| `magic_number` | `int32`                     | EA magic number.                         |
+| `order_profit` | `double`                    | Current/realized profit.                 |
+| `swap`         | `double`                    | Swap charged/credited.                   |
+| `commission`   | `double`                    | Commission.                              |
+| `comment`      | `string`                    | Order comment.                           |
+| `account_login`| `int64`                     | Account login number.                    |
+
+### Nested: `OnTradeUpdatedOrderInfo`
+
+| Field      | Type              | Description                 |
+| ---------- | ----------------- | --------------------------- |
+| `previous` | `OnTradeOrderInfo`| Order state before update.  |
+| `current`  | `OnTradeOrderInfo`| Order state after update.   |
+
+### Nested: `OnEventAccountInfo`
+
+| Field          | Proto Type | Description                     |
+| -------------- | ---------- | ------------------------------- |
+| `login`        | `int64`    | Account login number.           |
+| `balance`      | `double`   | Account balance.                |
+| `credit`       | `double`   | Credit amount.                  |
+| `equity`       | `double`   | Current equity.                 |
+| `margin`       | `double`   | Used margin.                    |
+| `free_margin`  | `double`   | Free margin available.          |
+| `profit`       | `double`   | Total floating profit.          |
+| `margin_level` | `double`   | Margin level percentage.        |
+
+> The SDK yields `reply.data` directly as `OnTradeData` with nested structures for different event types.
 
 ---
 
 ## 🧱 Related enums (from pb)
 
-### `SUB_ORDER_OPERATION_TYPE`
+### Order Type (in `OnTradeOrderInfo.type`)
 
-Operation type values reported by the server, such as:
+* `SUB_OP_BUY = 0` — Market buy position
+* `SUB_OP_SELL = 1` — Market sell position
+* `SUB_OP_BUYLIMIT = 2` — Buy limit pending order
+* `SUB_OP_SELLLIMIT = 3` — Sell limit pending order
+* `SUB_OP_BUYSTOP = 4` — Buy stop pending order
+* `SUB_OP_SELLSTOP = 5` — Sell stop pending order
 
-* `OP_OPEN` — order created/opened
-* `OP_MODIFY` — order modified
-* `OP_CLOSE` — order closed
-* (exact set depends on pb; map via `SUB_ORDER_OPERATION_TYPE.Name(value)`).
+### Event Type (in `OnTradeData.type`)
 
-### `MT4_SUB_ENUM_EVENT_GROUP_TYPE`
-
-Internal event grouping used in the stream payload to distinguish blocks (orders/deals/positions).
+* `OrderProfit = 0` — Profit/account state update
+* `OrderUpdate = 1` — Order state change (new/updated/removed orders)
 
 ---
 

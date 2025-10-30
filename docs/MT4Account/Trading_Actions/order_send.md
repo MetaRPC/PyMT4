@@ -125,18 +125,12 @@ async def order_send(
 
 ### Payload: `OrderSendData`
 
-Fields vary by integration; commonly returned:
-
-| Field             | Proto Type                   | Description                                          |
-| ----------------- | ---------------------------- | ---------------------------------------------------- |
-| `ticket`          | `int32`                      | Ticket assigned to the newly created order/position. |
-| `price`           | `double`                     | Executed/placed price (market or pending).           |
-| `new_stop_loss`   | `double?`                    | Server‑normalized SL (if adjusted).                  |
-| `new_take_profit` | `double?`                    | Server‑normalized TP (if adjusted).                  |
-| `new_expiration`  | `google.protobuf.Timestamp?` | Server‑side expiration value (for pendings).         |
-| `magic_number`    | `int32`                      | Echoed magic number.                                 |
-| `comment`         | `string`                     | Echoed/normalized comment.                           |
-| `date_time`       | `google.protobuf.Timestamp?` | Server timestamp.                                    |
+| Field       | Proto Type                  | Description                                          |
+| ----------- | --------------------------- | ---------------------------------------------------- |
+| `ticket`    | `int32`                     | Ticket assigned to the newly created order/position. |
+| `volume`    | `double`                    | Volume (lots) of the order.                          |
+| `price`     | `double`                    | Executed/placed price (market or pending).           |
+| `open_time` | `google.protobuf.Timestamp` | Server timestamp of order opening.                   |
 
 > On error, the wrapper raises per `error_selector` in `execute_with_reconnect(...)`.
 
@@ -146,16 +140,12 @@ Fields vary by integration; commonly returned:
 
 ### `OrderSendOperationType`
 
-Operation choices equal to MT4 order kinds (labels may differ by build):
-
-* `OC_OP_BUY`
-* `OC_OP_SELL`
-* `OC_OP_BUYLIMIT`
-* `OC_OP_SELLLIMIT`
-* `OC_OP_BUYSTOP`
-* `OC_OP_SELLSTOP`
-
-> Map enum → label in UI via `trade_pb.OrderSendOperationType.Name(value)`.
+* `OC_OP_BUY = 0` — Market buy order
+* `OC_OP_SELL = 1` — Market sell order
+* `OC_OP_BUYLIMIT = 2` — Buy limit pending order
+* `OC_OP_SELLLIMIT = 3` — Sell limit pending order
+* `OC_OP_BUYSTOP = 4` — Buy stop pending order
+* `OC_OP_SELLSTOP = 5` — Sell stop pending order
 
 ---
 

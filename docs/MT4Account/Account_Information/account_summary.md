@@ -92,6 +92,21 @@ No required parameters.
 
 ---
 
+## 🧱 Related enums (from pb)
+
+### `EnumAccountTradeMode`
+
+Account trade mode values:
+
+* `ACCOUNT_TRADE_MODE_DEMO = 0` — Demo/practice account
+* `ACCOUNT_TRADE_MODE_CONTEST = 1` — Contest account
+* `ACCOUNT_TRADE_MODE_REAL = 2` — Real trading account
+
+> Access in Python: `account_helper_pb2.EnumAccountTradeMode.ACCOUNT_TRADE_MODE_DEMO`
+> Map enum → label in UI via `account_helper_pb2.EnumAccountTradeMode.Name(value)`.
+
+---
+
 ### 🎯 Purpose
 
 Use it to display real‑time account state and sanity‑check connectivity:

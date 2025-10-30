@@ -84,17 +84,11 @@ async def order_close_by(
 
 ### Payload: `OrderCloseByData`
 
-Concrete fields vary by pb build. Common ones:
-
-| Field                 | Proto Type                   | Description                                            |
-| --------------------- | ---------------------------- | ------------------------------------------------------ |
-| `order_was_closed_by` | `bool?`                      | Operation result flag.                                 |
-| `close_price_first`   | `double?`                    | Close price applied to the first ticket (if reported). |
-| `close_price_second`  | `double?`                    | Close price for the opposite ticket (if reported).     |
-| `lots_closed`         | `double?`                    | Net lots closed (min of two volumes).                  |
-| `date_time`           | `google.protobuf.Timestamp?` | Server timestamp of the operation.                     |
-
-> Check your `mt4_term_api_trading_helper_pb2.py` for the authoritative schema.
+| Field         | Proto Type                  | Description                              |
+| ------------- | --------------------------- | ---------------------------------------- |
+| `close_price` | `double`                    | Close price of the operation.            |
+| `profit`      | `double`                    | Profit/loss from the close-by operation. |
+| `close_time`  | `google.protobuf.Timestamp` | Server timestamp of the operation.       |
 
 ---
 

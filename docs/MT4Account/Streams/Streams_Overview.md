@@ -4,32 +4,29 @@
 
 ## 📁 What lives here
 
-* **[on_symbol_tick](./on_symbol_tick.md)** — server‑stream of **ticks** for one or more symbols (bid/ask or last, timestamp).
 * **[on_trade](./on_trade.md)** — unified stream of **trade events** (orders, deals, positions) for the current account.
 * **[on_opened_orders_tickets](./on_opened_orders_tickets.md)** — lightweight stream of the **current ticket set** (IDs only; detect opens/closes).
-* **[on_opened_orders_profit](./on_opened_orders_profit.md)** — stream of **aggregated floating P/L** (total, optionally per symbol).
+* **[on_opened_orders_profit](./on_opened_orders_profit.md)** — stream of **order profit updates** and account state.
 
 ---
 
 ## 🧭 Plain English
 
-* **on_symbol_tick** → your **price wire**. Keeps tiles and signal logic fed without polling.
 * **on_trade** → the **trade newsfeed** (opens, modifies, closes, fills, position updates).
 * **on_opened_orders_tickets** → the **change detector**. Cheap way to know when set of tickets changed.
-* **on_opened_orders_profit** → the **KPI ticker**. Live total P/L for dashboards and risk alerts.
+* **on_opened_orders_profit** → the **KPI ticker**. Live order profit updates and account state for dashboards and risk alerts.
 
-> Rule of thumb: need **prices** → `on_symbol_tick`; need **what changed in trading** → `on_trade`; need **to refresh only on structural changes** → `on_opened_orders_tickets`; need **running P/L** → `on_opened_orders_profit`.
+> Rule of thumb: need **what changed in trading** → `on_trade`; need **to refresh only on structural changes** → `on_opened_orders_tickets`; need **running P/L and account info** → `on_opened_orders_profit`.
 
 ---
 
 ## Quick choose
 
-| If you need…                              | Use                        | Yields                         | Key inputs / notes                                  |
-| ----------------------------------------- | -------------------------- | ------------------------------ | --------------------------------------------------- |
-| Live ticks for symbols                    | `on_symbol_tick`           | `OnSymbolTickData` (per tick)  | `symbols: list[str]`, optional `cancellation_event` |
-| All trade events (orders/deals/positions) | `on_trade`                 | `OnTradeData` (mixed subtypes) | *(none)* + optional `cancellation_event`            |
-| Detect open/close via ticket set changes  | `on_opened_orders_tickets` | `OnOpenedOrdersTicketsData`    | *(none)* + optional `cancellation_event`            |
-| Live aggregated floating P/L              | `on_opened_orders_profit`  | `OnOpenedOrdersProfitData`     | *(none)* + optional `cancellation_event`            |
+| If you need…                              | Use                        | Yields                         | Key inputs / notes                       |
+| ----------------------------------------- | -------------------------- | ------------------------------ | ---------------------------------------- |
+| All trade events (orders/deals/positions) | `on_trade`                 | `OnTradeData` (mixed subtypes) | optional `cancellation_event`            |
+| Detect open/close via ticket set changes  | `on_opened_orders_tickets` | `OnOpenedOrdersTicketsData`    | optional `cancellation_event`            |
+| Live order profit and account state       | `on_opened_orders_profit`  | `OnOpenedOrdersProfitData`     | optional `cancellation_event`            |
 
 ---
 
@@ -37,60 +34,45 @@
 
 * **Reconnects happen.** Wrappers use retry/reconnect under the hood; make handlers **idempotent**.
 * **Snapshots after reconnect.** For UI consistency, pull `opened_orders()` and/or `orders_history()` once streams resume.
-* **Field names vary slightly** across builds (`symbol` vs `symbolName`, `bid/ask` vs `last`). Use `getattr(...)` fallbacks.
-* **Keep symbol lists small** in `on_symbol_tick` for latency; use `quote_many(...)` for bulk refills.
-* **Totals vs details.** `on_opened_orders_profit` gives the number; use `opened_orders()` when you need the objects.
+* **Nested structures.** All stream messages have nested data (e.g., `event_data`, `account_info`).
+* **Totals vs details.** `on_opened_orders_profit` gives account info with profit; use `opened_orders()` when you need full order details.
 
 ---
 
 ## 🟢 Minimal snippets
 
 ```python
-# on_symbol_tick — debounce UI updates
-from time import monotonic
-last_ui = 0
-DEBOUNCE = 0.25
-async for t in acct.on_symbol_tick(["EURUSD","XAUUSD"]):
-    now = monotonic()
-    if now - last_ui >= DEBOUNCE:
-        last_ui = now
-        # assemble and push a compact UI snapshot
-```
-
-```python
-# on_trade — route by operation type
-from MetaRpcMT4 import mt4_term_api_subscriptions_pb2 as sub_pb
+# on_trade — check for new orders
 async for ev in acct.on_trade():
-    op = getattr(ev, 'type', None)
-    if op is None:
-        continue
-    name = sub_pb.SUB_ORDER_OPERATION_TYPE.Name(op)
-    if name.startswith('OP_OPEN'):
-        ...  # created
-    elif name.startswith('OP_MODIFY'):
-        ...  # modified
-    elif name.startswith('OP_CLOSE'):
-        ...  # closed
+    if ev.type == 1 and ev.event_data.new_orders:  # OrderUpdate with new orders
+        order = ev.event_data.new_orders
+        print(f"New order: {order.symbol} ticket={order.ticket}")
+    # Check account state
+    if ev.account_info:
+        print(f"Balance: {ev.account_info.balance}, Equity: {ev.account_info.equity}")
 ```
 
 ```python
 # on_opened_orders_tickets — diff and refresh details on change
-prev = set()
+prev_positions = set()
+prev_pendings = set()
 async for s in acct.on_opened_orders_tickets():
-    cur = set(getattr(s, 'tickets', []))
-    if cur != prev:
+    cur_pos = set(s.position_tickets)
+    cur_pend = set(s.pending_order_tickets)
+    if cur_pos != prev_positions or cur_pend != prev_pendings:
         details = await acct.opened_orders()
         # update UI list from details
-    prev = cur
+    prev_positions = cur_pos
+    prev_pendings = cur_pend
 ```
 
 ```python
 # on_opened_orders_profit — threshold alert
 THRESH = -100.0
 async for p in acct.on_opened_orders_profit():
-    if getattr(p, 'total_profit', 0.0) <= THRESH:
+    if p.account_info and p.account_info.profit <= THRESH:
         # trigger alert / hedge action
-        ...
+        print(f"Alert! Profit: {p.account_info.profit}")
 ```
 
 ---

@@ -79,13 +79,12 @@ No required parameters. (Some builds expose `pull_interval_ms`.)
 
 ### Message: `OnOpenedOrdersTicketsData`
 
-| Field       | Proto Type   | Description                                |
-| ----------- | ------------ | ------------------------------------------ |
-| `tickets`   | `int32[]`    | The **current** set of open order tickets. |
-| `index`     | `int32?`     | Optional sequence number / ordering hint.  |
-| `date_time` | `Timestamp?` | Server time of this snapshot (if present). |
-
-> The authoritative message name/fields are defined in your `mt4_term_api_subscriptions_pb2.py`. Some builds include only `tickets`.
+| Field                       | Proto Type                  | Description                                        |
+| --------------------------- | --------------------------- | -------------------------------------------------- |
+| `position_tickets`          | `int32[]`                   | Array of current market position tickets.          |
+| `pending_order_tickets`     | `int32[]`                   | Array of current pending order tickets.            |
+| `server_time`               | `google.protobuf.Timestamp` | Server timestamp of this snapshot (UTC).           |
+| `terminal_instance_guid_id` | `string`                    | Terminal instance identifier.                      |
 
 ---
 
