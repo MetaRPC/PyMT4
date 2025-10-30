@@ -1,4 +1,4 @@
-# ✅ Getting Tick Value & Tick Size — `tick_value_with_size`
+# ✅ Getting Tick Value & Tick Size
 
 > **Request:** retrieve **tick value**, **tick size**, and **contract size** for one or more symbols as a compact payload (`TickValueWithSizeData`).
 > Use this for precise PnL, risk, and margin pre‑checks.
