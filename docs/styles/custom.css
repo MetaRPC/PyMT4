@@ -1,0 +1,512 @@
+/* ============================================
+   PyMT4 Custom Styles - Enhanced Design
+   ============================================ */
+
+/* Root Variables */
+:root {
+  --pymt4-primary: #009688;
+  --pymt4-accent: #00bcd4;
+  --pymt4-success: #4caf50;
+  --pymt4-warning: #ff9800;
+  --pymt4-danger: #f44336;
+  --pymt4-info: #2196f3;
+
+  /* Gradient backgrounds */
+  --gradient-primary: linear-gradient(135deg, #00897b 0%, #00acc1 100%);
+  --gradient-success: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);
+  --gradient-info: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+
+  /* Shadow levels */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.15);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.2);
+  --shadow-xl: 0 12px 24px rgba(0,0,0,0.25);
+}
+
+/* ============================================
+   Navigation Enhancements
+   ============================================ */
+
+/* Sticky tab navigation with gradient */
+.md-tabs {
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-md);
+}
+
+/* Tab hover effects */
+.md-tabs__link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-tabs__link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.md-tabs__link--active {
+  font-weight: 600;
+  border-bottom: 3px solid var(--pymt4-accent);
+}
+
+/* Sidebar navigation improvements */
+.md-nav__item--active > .md-nav__link {
+  color: var(--pymt4-primary);
+  font-weight: 600;
+  border-left: 3px solid var(--pymt4-primary);
+  padding-left: calc(1.2rem - 3px);
+}
+
+.md-nav__link:hover {
+  background-color: rgba(0, 150, 136, 0.08);
+  border-radius: 4px;
+}
+
+/* ============================================
+   Content Cards & Sections
+   ============================================ */
+
+/* Card-style admonitions */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--pymt4-primary);
+  transition: all 0.3s ease;
+}
+
+.md-typeset .admonition:hover,
+.md-typeset details:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Admonition type colors */
+.md-typeset .admonition.note {
+  border-left-color: var(--pymt4-info);
+}
+
+.md-typeset .admonition.abstract,
+.md-typeset .admonition.summary,
+.md-typeset .admonition.tldr {
+  border-left-color: var(--pymt4-accent);
+}
+
+.md-typeset .admonition.tip,
+.md-typeset .admonition.hint,
+.md-typeset .admonition.important {
+  border-left-color: var(--pymt4-success);
+}
+
+.md-typeset .admonition.warning,
+.md-typeset .admonition.caution,
+.md-typeset .admonition.attention {
+  border-left-color: var(--pymt4-warning);
+}
+
+.md-typeset .admonition.danger,
+.md-typeset .admonition.error {
+  border-left-color: var(--pymt4-danger);
+}
+
+/* ============================================
+   Code Blocks & Syntax
+   ============================================ */
+
+/* Enhanced code blocks */
+.md-typeset pre > code {
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Code block with title */
+.md-typeset .highlight {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin: 1.5em 0;
+}
+
+/* Inline code styling */
+.md-typeset code {
+  background-color: rgba(0, 150, 136, 0.1);
+  color: var(--pymt4-primary);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+/* Copy button enhancement */
+.md-clipboard {
+  transition: all 0.2s ease;
+}
+
+.md-clipboard:hover {
+  background-color: var(--pymt4-accent);
+  transform: scale(1.1);
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+
+/* Modern table styling */
+.md-typeset table:not([class]) {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: none;
+}
+
+.md-typeset table:not([class]) thead {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.md-typeset table:not([class]) th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.5px;
+  padding: 1em;
+}
+
+.md-typeset table:not([class]) tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.md-typeset table:not([class]) tbody tr:hover {
+  background-color: rgba(0, 150, 136, 0.05);
+}
+
+.md-typeset table:not([class]) td {
+  padding: 0.8em 1em;
+}
+
+/* Striped table rows */
+.md-typeset table:not([class]) tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* ============================================
+   Buttons & Links
+   ============================================ */
+
+/* Primary button style */
+.md-button {
+  border-radius: 6px;
+  padding: 0.6em 1.2em;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.md-button--primary {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+}
+
+.md-button--primary:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Link hover effects */
+.md-typeset a {
+  transition: all 0.2s ease;
+}
+
+.md-typeset a:hover {
+  color: var(--pymt4-accent);
+  text-decoration-thickness: 2px;
+}
+
+/* ============================================
+   Hero Section (Landing Page)
+   ============================================ */
+
+.hero-section {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  margin: 2rem 0;
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  opacity: 0.95;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Feature cards grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  border-top: 4px solid var(--pymt4-primary);
+}
+
+.feature-card:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+}
+
+.feature-card h3 {
+  color: var(--pymt4-primary);
+  margin-top: 0;
+  font-size: 1.4rem;
+}
+
+.feature-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* ============================================
+   Badges & Labels
+   ============================================ */
+
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.6em;
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 12px;
+  margin: 0 0.2em;
+}
+
+.badge-success {
+  background-color: var(--pymt4-success);
+  color: white;
+}
+
+.badge-warning {
+  background-color: var(--pymt4-warning);
+  color: white;
+}
+
+.badge-danger {
+  background-color: var(--pymt4-danger);
+  color: white;
+}
+
+.badge-info {
+  background-color: var(--pymt4-info);
+  color: white;
+}
+
+.badge-primary {
+  background-color: var(--pymt4-primary);
+  color: white;
+}
+
+/* ============================================
+   Search Enhancements
+   ============================================ */
+
+.md-search__form {
+  border-radius: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.md-search__form:focus-within {
+  box-shadow: var(--shadow-md);
+  transform: scale(1.02);
+}
+
+.md-search-result__link:hover {
+  background-color: rgba(0, 150, 136, 0.1);
+}
+
+/* ============================================
+   Footer Enhancements
+   ============================================ */
+
+.md-footer {
+  background: linear-gradient(180deg, #004d40 0%, #00251a 100%);
+}
+
+.md-footer-meta {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pymt4-primary);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pymt4-accent);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .hero-section p {
+    font-size: 1rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   Dark Mode Adjustments
+   ============================================ */
+
+[data-md-color-scheme="slate"] {
+  --pymt4-primary: #26a69a;
+  --pymt4-accent: #4dd0e1;
+}
+
+[data-md-color-scheme="slate"] .feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-top-color: var(--pymt4-accent);
+}
+
+[data-md-color-scheme="slate"] .feature-card h3 {
+  color: var(--pymt4-accent);
+}
+
+[data-md-color-scheme="slate"] .feature-card p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+[data-md-color-scheme="slate"] .md-typeset code {
+  background-color: rgba(38, 166, 154, 0.15);
+  color: var(--pymt4-accent);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tbody tr:hover {
+  background-color: rgba(38, 166, 154, 0.1);
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: var(--pymt4-primary);
+}
+
+.text-accent {
+  color: var(--pymt4-accent);
+}
+
+.text-muted {
+  opacity: 0.7;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+.p-4 { padding: 2rem; }
