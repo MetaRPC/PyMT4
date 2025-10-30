@@ -124,7 +124,7 @@ result = await run_with_session_guard(
 
 ---
 
-## 🚀 Running Examples
+## Running Examples
 
 ### Via appsettings.json (recommended)
 ```bash
@@ -149,11 +149,11 @@ export ENABLE_TRADING=1
 python examples/Call_sugar.py
 ```
 
-⚠️ **WARNING**: Trading is disabled by default (`ENABLE_TRADING=0`) - only syntax demonstration!
+ **WARNING**: Trading is disabled by default (`ENABLE_TRADING=0`) - only syntax demonstration!
 
 ---
 
-## 📊 Level Comparison
+## Level Comparison
 
 | Level | File | Components | Usage | Flexibility |
 |---------|------|-------------|---------------|----------|
@@ -173,14 +173,14 @@ python examples/Presets_demo.py
 
 **Demonstrates 5 preset categories:**
 
-#### 1. 🎯 Basic Risk Presets (5 profiles)
+#### 1.  Basic Risk Presets (5 profiles)
 ```python
 from Strategy.presets.risk import Conservative, Balanced, Aggressive, Scalper, Walker
 
 result = await run_market_one_shot(svc, MarketEURUSD, Balanced)
 ```
 
-#### 2. 📈 ATR-Based Risk (3 dynamic profiles)
+#### 2.  ATR-Based Risk (3 dynamic profiles)
 ```python
 from Strategy.presets.risk_atr import ATR_Scalper, ATR_Balanced, ATR_Swing
 
@@ -188,7 +188,7 @@ risk = await ATR_Balanced(svc, "EURUSD", risk_percent=1.0)
 # SL/TP automatically calculated from ATR (volatility)
 ```
 
-#### 3. 🎲 Risk Profiles (8+ profiles)
+#### 3.  Risk Profiles (8+ profiles)
 ```python
 from Strategy.presets.risk_profiles import ScalperEURUSD, SwingXAUUSD
 
@@ -196,7 +196,7 @@ from Strategy.presets.risk_profiles import ScalperEURUSD, SwingXAUUSD
 result = await run_market_one_shot(svc, MarketXAUUSD, SwingXAUUSD())
 ```
 
-#### 4. 🕐 Session-Based Risk (4 sessions)
+#### 4.  Session-Based Risk (4 sessions)
 ```python
 from Strategy.presets.risk_session import session_risk_auto
 
@@ -205,7 +205,7 @@ risk = await session_risk_auto(svc, "EURUSD", tz="Europe/London")
 # Asia / London / NewYork / Overlap
 ```
 
-#### 5. 💱 Strategy Symbol Presets (30+ symbols)
+#### 5.  Strategy Symbol Presets (30+ symbols)
 ```python
 from Strategy.presets.strategy_symbols import (
     MarketEURUSD, MarketXAUUSD, MarketBTCUSD,
@@ -256,15 +256,15 @@ examples/
 
 ## 🔧 Troubleshooting
 
-### 🔴 Connection error
+###  Connection error
 1. Check `appsettings.json` - must have `access` list with host:port
 2. Verify login/password
 3. Check server name (`MT4_SERVER`)
 
-### ⏸️ Stream freezing
+###  Stream freezing
 Fixed in `Low_level_call.py` - enforced timeouts added (1 sec).
 
-### 📦 Import error
+###  Import error
 Make sure you run from project root:
 ```bash
 cd /path/to/PyMT4
