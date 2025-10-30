@@ -1,4 +1,4 @@
-# ✅ Modifying an Order — `order_modify`
+# ✅ Modifying an Order
 
 > **Request:** modify an existing **market position or pending order** — change price (for pendings), SL/TP, and/or expiration.
 > Safe wrapper over TradingHelper RPC with deadline + cooperative cancellation.
