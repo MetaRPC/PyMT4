@@ -1,4 +1,4 @@
-# ✅ Streaming Ticks — `on_symbol_tick`
+# ✅ Streaming Ticks
 
 > **Stream:** subscribe to **real‑time ticks** for one or more symbols.
 > Yields `OnSymbolTickData` messages continuously until cancelled.
