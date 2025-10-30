@@ -1,4 +1,4 @@
-# ✅ Getting Multiple Quotes) — `quote_many`
+# ✅ Getting Multiple Quotes
 
 > **Request:** retrieve the latest price snapshot for **multiple symbols at once** as `QuoteManyData`.
 > Fastest way to fill UI tiles or pre‑validate orders across several instruments.
