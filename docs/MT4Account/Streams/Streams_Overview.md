@@ -4,6 +4,7 @@
 
 ## 📁 What lives here
 
+* **[on_symbol_tick](./on_symbol_tick.md)** — server-stream of **real-time ticks** for one or more symbols (bid/ask/last, timestamp).
 * **[on_trade](./on_trade.md)** — unified stream of **trade events** (orders, deals, positions) for the current account.
 * **[on_opened_orders_tickets](./on_opened_orders_tickets.md)** — lightweight stream of the **current ticket set** (IDs only; detect opens/closes).
 * **[on_opened_orders_profit](./on_opened_orders_profit.md)** — stream of **order profit updates** and account state.
@@ -12,21 +13,23 @@
 
 ## 🧭 Plain English
 
+* **on_symbol_tick** → your **price wire**. Keeps tiles and signal logic fed without polling.
 * **on_trade** → the **trade newsfeed** (opens, modifies, closes, fills, position updates).
 * **on_opened_orders_tickets** → the **change detector**. Cheap way to know when set of tickets changed.
 * **on_opened_orders_profit** → the **KPI ticker**. Live order profit updates and account state for dashboards and risk alerts.
 
-> Rule of thumb: need **what changed in trading** → `on_trade`; need **to refresh only on structural changes** → `on_opened_orders_tickets`; need **running P/L and account info** → `on_opened_orders_profit`.
+> Rule of thumb: need **prices** → `on_symbol_tick`; need **what changed in trading** → `on_trade`; need **to refresh only on structural changes** → `on_opened_orders_tickets`; need **running P/L and account info** → `on_opened_orders_profit`.
 
 ---
 
 ## Quick choose
 
-| If you need…                              | Use                        | Yields                         | Key inputs / notes                       |
-| ----------------------------------------- | -------------------------- | ------------------------------ | ---------------------------------------- |
-| All trade events (orders/deals/positions) | `on_trade`                 | `OnTradeData` (mixed subtypes) | optional `cancellation_event`            |
-| Detect open/close via ticket set changes  | `on_opened_orders_tickets` | `OnOpenedOrdersTicketsData`    | optional `cancellation_event`            |
-| Live order profit and account state       | `on_opened_orders_profit`  | `OnOpenedOrdersProfitData`     | optional `cancellation_event`            |
+| If you need…                              | Use                        | Yields                         | Key inputs / notes                                  |
+| ----------------------------------------- | -------------------------- | ------------------------------ | --------------------------------------------------- |
+| Live ticks for symbols                    | `on_symbol_tick`           | `OnSymbolTickData`             | `symbols: list[str]`, optional `cancellation_event` |
+| All trade events (orders/deals/positions) | `on_trade`                 | `OnTradeData` (mixed subtypes) | optional `cancellation_event`                       |
+| Detect open/close via ticket set changes  | `on_opened_orders_tickets` | `OnOpenedOrdersTicketsData`    | optional `cancellation_event`                       |
+| Live order profit and account state       | `on_opened_orders_profit`  | `OnOpenedOrdersProfitData`     | optional `cancellation_event`                       |
 
 ---
 
@@ -34,12 +37,26 @@
 
 * **Reconnects happen.** Wrappers use retry/reconnect under the hood; make handlers **idempotent**.
 * **Snapshots after reconnect.** For UI consistency, pull `opened_orders()` and/or `orders_history()` once streams resume.
-* **Nested structures.** All stream messages have nested data (e.g., `event_data`, `account_info`).
+* **Nested structures.** All stream messages have nested data (e.g., `symbol_tick`, `event_data`, `account_info`).
+* **Keep symbol lists small** in `on_symbol_tick` for latency; use `quote_many(...)` for bulk refills.
 * **Totals vs details.** `on_opened_orders_profit` gives account info with profit; use `opened_orders()` when you need full order details.
 
 ---
 
 ## 🟢 Minimal snippets
+
+```python
+# on_symbol_tick — debounce UI updates
+from time import monotonic
+last_ui = 0
+DEBOUNCE = 0.25
+async for t in acct.on_symbol_tick(["EURUSD", "XAUUSD"]):
+    now = monotonic()
+    if now - last_ui >= DEBOUNCE:
+        last_ui = now
+        tick = t.symbol_tick
+        print(f"{tick.symbol}: {tick.bid}/{tick.ask}")
+```
 
 ```python
 # on_trade — check for new orders

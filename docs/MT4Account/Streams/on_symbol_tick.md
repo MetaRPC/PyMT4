@@ -36,14 +36,8 @@ async def consume_ticks(acct, symbols):
     asyncio.create_task(stopper())
 
     async for msg in acct.on_symbol_tick(symbols, cancellation_event=cancel):
-        d = msg  # OnSymbolTickData
-        # Typical fields (actual set depends on pb): symbol, bid/ask or last, date_time
-        sym = getattr(d, 'symbol', getattr(d, 'symbolName', None))
-        last = getattr(d, 'last', None)
-        bid  = getattr(d, 'bid', None)
-        ask  = getattr(d, 'ask', None)
-        ts   = getattr(d, 'date_time', None)
-        print(sym, last or bid, ask)
+        tick = msg.symbol_tick  # OnSymbolMqlTickInfo
+        print(f"{tick.symbol}: bid={tick.bid}, ask={tick.ask}, last={tick.last}, time={tick.time}")
 ```
 
 ---
@@ -81,18 +75,22 @@ async def on_symbol_tick(
 
 ### Message: `OnSymbolTickData`
 
-Common fields used across builds (check your pb for the authoritative list):
+| Field                       | Proto Type            | Description                          |
+| --------------------------- | --------------------- | ------------------------------------ |
+| `symbol_tick`               | `OnSymbolMqlTickInfo` | Tick information for the symbol.     |
+| `terminal_instance_guid_id` | `string`              | Terminal instance identifier.        |
 
-| Field         | Proto Type                  | Description                             |
-| ------------- | --------------------------- | --------------------------------------- |
-| `symbol`      | `string`                    | Symbol name.                            |
-| `bid`         | `double`                    | Best bid price (when provided).         |
-| `ask`         | `double`                    | Best ask price (when provided).         |
-| `last`        | `double`                    | Last traded price (if broker supplies). |
-| `date_time`   | `google.protobuf.Timestamp` | Tick server timestamp (UTC).            |
-| `tick_volume` | `int64`                     | Tick volume counter (optional).         |
+### Nested: `OnSymbolMqlTickInfo`
 
-> Some integrations send `symbolName` instead of `symbol`, or omit `bid/ask` in favor of `last`. Prefer `getattr(...)` fallbacks.
+| Field      | Proto Type                  | Description                              |
+| ---------- | --------------------------- | ---------------------------------------- |
+| `symbol`   | `string`                    | Symbol name.                             |
+| `time`     | `google.protobuf.Timestamp` | Tick server timestamp (UTC).             |
+| `bid`      | `double`                    | Best bid price.                          |
+| `ask`      | `double`                    | Best ask price.                          |
+| `last`     | `double`                    | Last traded price (if broker supplies).  |
+| `volume`   | `uint64`                    | Volume for the tick.                     |
+| `time_msc` | `int64`                     | Tick timestamp in milliseconds.          |
 
 ---
 

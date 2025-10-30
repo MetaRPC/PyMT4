@@ -84,6 +84,6 @@ v = (await acct.tick_value_with_size('GBPUSD', volume=0.2)).tick_value
 
 ## See also
 
-* **Streams:** [`on_trade`](../Streams/on_trade.md), [`on_opened_orders_profit`](../Streams/on_opened_orders_profit.md) — real‑time updates
+* **Streams:** [`on_symbol_tick`](../Streams/on_symbol_tick.md) — real-time ticks without polling
 * **Trading actions:** [`order_send`](../Trading_Actions/order_send.md), [`order_modify`](../Trading_Actions/order_modify.md)
 * **Live state & history:** [`opened_orders`](../Orders_Positions_History/opened_orders.md), [`orders_history`](../Orders_Positions_History/orders_history.md)
