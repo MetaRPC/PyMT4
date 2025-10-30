@@ -30,6 +30,7 @@ theme:
 
 extra:
   # Маленькая синяя плашка по центру с кнопкой API (на всех страницах)
+extra:
   announcement: |
     <div class="top-api-pill">
       <a class="top-api-btn" href="{{ base_url }}/api/">
@@ -37,6 +38,7 @@ extra:
         <span>API</span>
       </a>
     </div>
+
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MetaRPC/PyMT4
