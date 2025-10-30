@@ -1,4 +1,4 @@
-# ✅ Closing / Deleting an Order — `order_close_delete`
+# ✅ Closing / Deleting an Order
 
 > **Request:** close a **market position** (full or partial) or **delete a pending order** by ticket.
 > Thin wrapper over TradingHelper RPC with deadline + cooperative cancellation.
