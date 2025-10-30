@@ -1,4 +1,4 @@
-# ✅ Sending an Order — `order_send`
+# ✅ Sending an Order
 
 > **Request:** place a **market or pending order** on a given symbol.
 > Wrapper around the TradingHelper RPC that accepts volume, optional price (for pending), SL/TP, slippage, comment, magic, and expiration.
