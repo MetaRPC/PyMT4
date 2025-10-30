@@ -230,13 +230,3 @@ Use git to track your experiments. You'll want to roll back changes sometimes.
 | Project Structure | [PROJECT_MAP.md](../PROJECT_MAP.md) |
 
 ---
-
-## 🆘 Need Help?
-
-- 🐛 [Report Issues](https://github.com/MetaRPC/PyMT4/issues)
-- 💬 [Discussions](https://github.com/MetaRPC/PyMT4/discussions)
-- 📧 [Contact Support](mailto:support@metarpc.com)
-
----
-
-**Happy Trading!** 🚀📈
