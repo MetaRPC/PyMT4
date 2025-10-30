@@ -1,4 +1,4 @@
-# ✅ Streaming Opened Order Tickets — `on_opened_orders_tickets`
+# ✅ Streaming Opened Order Tickets
 
 > **Stream:** subscribe to **real‑time updates of the set of opened order/position tickets**.
 > Yields `OnOpenedOrdersTicketsData` messages continuously until cancelled.
