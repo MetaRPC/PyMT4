@@ -1,4 +1,4 @@
-# Symbols & Quotes (8)
+# Symbols & Quotes
 
 ## 📈 `digits(symbol=None)`
 
