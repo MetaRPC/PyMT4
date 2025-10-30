@@ -1,4 +1,4 @@
-# ✅ Getting Symbol Parameters — `symbol_params_many`
+# ✅ Getting Symbol Parameters
 
 > **Request:** retrieve trading parameters for **one symbol or all symbols** as a structured payload (`SymbolParamsManyData`).
 > Ideal for pre‑trade validation, UI forms, and margin/risk calculations.
