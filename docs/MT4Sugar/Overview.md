@@ -148,10 +148,10 @@ if reached:
 ```
 
 ### When to use
-✅ Indicators - calculate from bars
-✅ Backtesting - historical data analysis
-✅ Price alerts - wait for specific levels
-✅ HFT strategies - tick-level data
+✅ Indicators - calculate from bars<br>
+✅ Backtesting - historical data analysis<br>
+✅ Price alerts - wait for specific levels<br>
+✅ HFT strategies - tick-level data<br>
 
 ---
 
@@ -195,10 +195,10 @@ ticket = await sugar.buy_limit(
 ```
 
 ### When to use
-✅ Strategy entries - market/pending orders
-✅ Quick trades - minimal parameters
-✅ SL/TP in pips - easy risk management
-✅ Comments - track trade reasons
+✅ Strategy entries - market/pending orders<br>
+✅ Quick trades - minimal parameters<br>
+✅ SL/TP in pips - easy risk management<br>
+✅ Comments - track trade reasons<br>
 
 ---
 
@@ -235,10 +235,10 @@ await sugar.close_all(symbol="EURUSD")
 ```
 
 ### When to use
-✅ Trailing stops - manual or automated
-✅ Scaling out - partial closes
-✅ Emergency exits - close_all
-✅ Breakeven moves - modify SL
+✅ Trailing stops - manual or automated<br>
+✅ Scaling out - partial closes<br>
+✅ Emergency exits - close_all<br>
+✅ Breakeven moves - modify SL<br>
 
 ---
 
@@ -280,11 +280,11 @@ await sugar.auto_breakeven(ticket=123456, trigger_pips=15, plus_pips=1.0)
 ```
 
 ### When to use
-✅ Every trade - calculate proper lot size
-✅ Risk management - validate exposure
-✅ Price conversions - pip↔price
-✅ Normalization - ensure valid values
-✅ Automation - auto-breakeven
+✅ Every trade - calculate proper lot size<br>
+✅ Risk management - validate exposure<br>
+✅ Price conversions - pip↔price<br>
+✅ Normalization - ensure valid values<br>
+✅ Automation - auto-breakeven<br>
 
 ---
 
@@ -319,9 +319,9 @@ await sugar.unset_trailing_stop(trail_id)
 ```
 
 ### When to use
-✅ Trend following - trail behind price
-✅ Breakouts - protect running profits
-✅ Hands-free trading - automated management
+✅ Trend following - trail behind price<br>
+✅ Breakouts - protect running profits<br>
+✅ Hands-free trading - automated management<br>
 
 ---
 
