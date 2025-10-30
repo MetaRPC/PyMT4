@@ -74,9 +74,9 @@ await sugar.buy_market(lots=0.1)  # Uses EURUSD, magic=1001
 ```
 
 ### When to use
--✅ Start of every script - set defaults.
--✅ Before long operations - ensure connection.
--✅ Monitoring systems - ping for health checks.
+✅ Start of every script - set defaults<br>
+✅ Before long operations - ensure connection<br>
+✅ Monitoring systems - ping for health checks<br>
 
 ---
 
@@ -113,10 +113,10 @@ print(f"Bid: {quote.bid}, Ask: {quote.ask}")
 ```
 
 ### When to use
-✅ Before order placement - check spread
-✅ Symbol validation - ensure symbol exists
-✅ Price formatting - use digits/point
-✅ Analytics - mid_price for fair value
+✅ Before order placement - check spread<br>
+✅ Symbol validation - ensure symbol exists<br>
+✅ Price formatting - use digits/point<br>
+✅ Analytics - mid_price for fair value<br>
 
 ---
 
