@@ -252,21 +252,3 @@ examples/
 
 *if not set in `appsettings.json`
 
----
-
-## 🔧 Troubleshooting
-
-###  Connection error
-1. Check `appsettings.json` - must have `access` list with host:port
-2. Verify login/password
-3. Check server name (`MT4_SERVER`)
-
-###  Stream freezing
-Fixed in `Low_level_call.py` - enforced timeouts added (1 sec).
-
-###  Import error
-Make sure you run from project root:
-```bash
-cd /path/to/PyMT4
-python examples/Low_level_call.py
-```
