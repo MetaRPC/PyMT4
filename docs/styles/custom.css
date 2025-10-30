@@ -1,4 +1,4 @@
-/* === Material Symbols (Rounded) — шрифт иконок через CSS @import === */
+/* === Material Symbols (Rounded) — font === */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:wght,FILL,GRAD@400..700,0..1,0..200');
 
 .material-symbols-rounded{
@@ -8,7 +8,6 @@
   font-size: 1.25rem;
   line-height: 1;
   display: inline-block;
-  /* важное — включаем лигатуры и вариативность, иначе будет просто текст */
   font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 48;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -16,22 +15,24 @@
   white-space: nowrap;
 }
 
-/* === ТЁМНЫЙ РЕБРИСТЫЙ ФОН — поверх контента, но под текстом === */
+/* === Тёмный ребристый фон (чётче) === */
 body::before{
   content:"";
   position: fixed;
   inset: 0;
-  z-index: 0;                   /* ниже всего контента темы */
-  background-color:#0f1217;
+  z-index: 0;
+  background-color:#0e1116; /* глубже, чем #0f1217 */
   background-image:
-    linear-gradient(transparent 23px, rgba(255,255,255,.035) 24px, transparent 25px),
-    linear-gradient(90deg, transparent 23px, rgba(255,255,255,.035) 24px, transparent 25px);
+    linear-gradient(transparent 23px, rgba(255,255,255,.055) 24px, transparent 25px),
+    linear-gradient(90deg, transparent 23px, rgba(255,255,255,.055) 24px, transparent 25px);
   background-size:25px 25px,25px 25px;
+  background-position: top center;
+  background-attachment: fixed;
   pointer-events:none;
 }
 .md-container, .md-main, .md-content { position: relative; z-index: 1; }
 
-/* === БАННЕР-ПАНЕЛЬ ПОД ШАПКОЙ === */
+/* === (Опционально) Баннер-панель под шапкой. Удаляй, если не нужна === */
 .quickbar--banner{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -42,20 +43,10 @@ body::before{
   border-bottom: 1px solid rgba(0,0,0,.22);
 }
 .md-banner .quickbar--banner{ max-width: var(--md-screen-xl); margin: 0 auto; }
-
 .quickbar-item{
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: .45rem;
-  height: 38px;
-  padding: 0 .85rem;
-  color: #fff !important;
-  text-decoration: none;
-  font-weight: 700;
-  border-radius: 8px;
-  transition: color .2s ease, background .2s ease;
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  gap: .45rem; height: 38px; padding: 0 .85rem; color: #fff !important; text-decoration: none;
+  font-weight: 700; border-radius: 8px; transition: color .2s ease, background .2s ease;
 }
 .quickbar-item.home{ background: rgba(0,0,0,.14); }
 .quickbar-item:hover{ color:#E3F2FD !important; }
@@ -70,7 +61,7 @@ body::before{
   .quickbar-sep{ display:block; width:1px; height:22px; background:rgba(255,255,255,.2); margin:0 .35rem; }
 }
 
-/* === ГЛАВНАЯ СЕТКА 3×3 (как раньше, с центровкой иконки) === */
+/* === Главная сетка 3×3 === */
 .home-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -80,13 +71,18 @@ body::before{
 @media (max-width: 960px){ .home-grid{ grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 620px){ .home-grid{ grid-template-columns: 1fr; } }
 
+/* === Карточки (градиентная палитра + стекло) === */
 .card{
-  display:block; position:relative;
+  position:relative; display:block;
   padding:1.25rem 1.2rem; min-height:200px;
   border-radius:16px; text-decoration:none; color:inherit;
-  background: rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.09);
+  /* Двухслойный фон: тёмное стекло (padding-box) + градиентная рамка (border-box) */
+  background:
+    linear-gradient(180deg, rgba(13,17,23,.86), rgba(13,17,23,.82)) padding-box,
+    linear-gradient(135deg, rgb(var(--g1)), rgb(var(--g2))) border-box;
+  border:1px solid transparent;
   box-shadow:0 10px 24px rgba(0,0,0,.22);
+  backdrop-filter: blur(4px);
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
 }
 .card.centered{ display:flex; flex-direction:column; align-items:center; text-align:center; }
@@ -94,25 +90,43 @@ body::before{
 .card h3{ margin:0 0 .35rem; font-weight:800; letter-spacing:.2px; }
 .card p{ margin:0; font-size:.95rem; line-height:1.35rem; opacity:.9; }
 
-/* большая иконка по центру, цвет от акцента */
+/* Большая иконка по центру с ГРАДИЕНТНОЙ заливкой */
 .card .material-symbols-rounded{
   font-size: clamp(2.6rem, 4vw, 3.6rem);
   margin: .25rem 0 .6rem;
-  color: rgb(var(--accent));
-  text-shadow: 0 10px 28px rgba(var(--accent), .15);
+  background: linear-gradient(135deg, rgb(var(--g1)), rgb(var(--g2)));
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;                     /* делаем текст прозрачным, виден градиент */
+  filter: drop-shadow(0 10px 24px rgba(var(--g1), .28));
 }
 
-.card:hover{ transform: translateY(-3px); box-shadow:0 16px 36px rgba(0,0,0,.32); }
+/* Hover: больше объёма и внутреннего оттенка */
+.card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0,0,0,.36);
+  background:
+    linear-gradient(180deg, rgba(13,17,23,.9), rgba(13,17,23,.86)) padding-box,
+    linear-gradient(135deg, rgb(var(--g1)), rgb(var(--g2))) border-box;
+}
 
-/* акценты по рядам */
-.card.infra     { --accent: 92,107,192;  border-color: rgba(var(--accent), .42); }
-.card.practical { --accent: 38,166,154;  border-color: rgba(var(--accent), .42); }
-.card.strategy  { --accent: 251,140,0;   border-color: rgba(var(--accent), .42); }
+/* === Палитра по рядам (градиенты) === */
+/* Row 1 — Core/Infra: индиго → фиолет */
+.card.infra{
+  --g1: 99,102,241;   /* #6366F1 indigo-500 */
+  --g2: 147,51,234;   /* #9333EA purple-600 */
+}
 
-.card.infra:hover,
-.card.practical:hover,
-.card.strategy:hover{
-  background: radial-gradient(120% 120% at 50% 30%, rgba(var(--accent),.16), transparent 65%);
+/* Row 2 — Practical: бирюза → зелёный */
+.card.practical{
+  --g1: 45,212,191;   /* #2DD4BF teal-400 */
+  --g2: 34,197,94;    /* #22C55E green-500 */
+}
+
+/* Row 3 — Strategy: янтарь → розово-оранжевый */
+.card.strategy{
+  --g1: 251,146,60;   /* #FB923C orange-400 */
+  --g2: 236,72,153;   /* #EC4899 pink-500 */
 }
 
 /* a11y */
