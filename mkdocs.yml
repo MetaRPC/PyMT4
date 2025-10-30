@@ -28,8 +28,8 @@ theme:
     - content.code.copy
     - toc.follow
 
-    extra:
-  # Баннер сразу под фиолетовой шапкой – наша верхняя панель быстрого доступа
+extra:
+  # Баннер сразу под шапкой – панель быстрого доступа (на всех страницах)
   announcement: |
     <nav class="quickbar quickbar--banner">
       <a class="quickbar-item home" href="{{ base_url }}/">
@@ -46,10 +46,10 @@ theme:
     </nav>
 
 extra_css:
-  - styles/custom.css      # наш файл стилей
+  - styles/custom.css
 
 extra_javascript:
-  - javascripts/ux.js      # js (hover/focus и т.п.)
+  - javascripts/ux.js
 
 markdown_extensions:
   - admonition
@@ -72,7 +72,6 @@ copyright: >
 nav:
   - Home: index.md
 
-  
   - Quick Access:
     - Account Info: MT4Account/Account_Information/account_summary.md
     - Market Quota — Overview: MT4Account/Market_quota_symbols/Market_Quota.Overview.md
@@ -81,9 +80,8 @@ nav:
     - Trading Actions — Overview: MT4Account/Trading_Actions/Trading_Actions_Overview.md
     - API: api.md
 
-  
   - Guides:
-    - BASE: BASE.md
+    - BASE: MT4Account/BASE.md
     - Project Map: PROJECT_MAP.md
     - Architecture: ARCHITECTURE.md
     - MT4Sugar — Overview: MT4Sugar/Overview.md
