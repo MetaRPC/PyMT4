@@ -1,5 +1,5 @@
 # main_trade_mod.py — TRADE MOD API DEMO (MT4ServiceTrade shortcuts)
-# Промежуточный уровень: шорткаты + дефолты + rate-limiting, БЕЗ пипсов/сахара
+# Intermediate level: shortcuts + defaults + rate-limiting, NO pips/sugar
 from __future__ import annotations
 import sys
 from pathlib import Path
