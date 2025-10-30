@@ -1,65 +1,62 @@
-<!-- Quick access bar (text-only, Home has an icon) -->
-<div class="quickbar">
-  <a class="quickbar-item home" href="./">
-    <span class="mi">home</span><span>Home</span>
-  </a>
-  <a class="quickbar-item" href="MT4Account/Account_Information/account_summary/">Account Info</a>
-  <a class="quickbar-item" href="MT4Account/Market_quota_symbols/Market_Quota.Overview/">Market Quota</a>
-  <a class="quickbar-item" href="MT4Account/Orders_Positions_History/Positions_History_Overview/">Positions History</a>
-  <a class="quickbar-item" href="MT4Account/Streams/Streams_Overview/">Streams</a>
-  <a class="quickbar-item" href="MT4Account/Trading_Actions/Trading_Actions_Overview/">Trading Actions</a>
-  <a class="quickbar-item" href="api/">API</a>
-</div>
+<!-- === HOME: 3×3 GRID WITH CENTERED ICONS === -->
 
-<!-- 3×3 grid -->
 <div class="home-grid">
 
-  <!-- Row 1: Infra (blue/purple) -->
-  <a class="card infra" href="MT4Account/BASE/">
+  <!-- Row 1: Core / Infra (indigo) -->
+  <a class="card centered infra" href="MT4Account/BASE/">
+    <span class="card-icon">⚙️</span>
     <h3>BASE</h3>
-    <p>Essential concepts & mental model.</p>
+    <p>All about low-level methods</p>
   </a>
 
-  <a class="card infra" href="PROJECT_MAP/">
+  <a class="card centered infra" href="PROJECT_MAP/">
+    <span class="card-icon">🗺️</span>
     <h3>Project Map</h3>
-    <p>Layers, boundaries, structure.</p>
+    <p>Its complete structure</p>
   </a>
 
-  <a class="card infra" href="ARCHITECTURE/">
+  <a class="card centered infra" href="ARCHITECTURE/">
+    <span class="card-icon">🧠</span>
     <h3>Architecture</h3>
-    <p>Data flow & service contracts.</p>
+    <p>The mechanism in action</p>
   </a>
 
-  <!-- Row 2: Practical (teal/green) -->
-  <a class="card practical" href="MT4Sugar/Overview/">
-    <h3>MT4Sugar Overview</h3>
-    <p>Simplified helpers & patterns.</p>
+  <!-- Row 2: Practical / Readable (teal/green) -->
+  <a class="card centered practical" href="MT4Sugar/Overview/">
+    <span class="card-icon">🍬</span>
+    <h3>All about Sugar</h3>
+    <p>Simplified helpers & patterns</p>
   </a>
 
-  <a class="card practical" href="Main/Overview/">
-    <h3>Main Overview</h3>
-    <p>Entry points & layout.</p>
+  <a class="card centered practical" href="Main/Overview/">
+    <span class="card-icon">🧩</span>
+    <h3>All entry points</h3>
+    <p>Entry points & layout</p>
   </a>
 
-  <a class="card practical" href="GLOSSARY/">
+  <a class="card centered practical" href="GLOSSARY/">
+    <span class="card-icon">📚</span>
     <h3>Glossary</h3>
-    <p>Terms used across docs & code.</p>
+    <p>Terms used across docs & code</p>
   </a>
 
-  <!-- Row 3: Strategy (orange/amber) -->
-  <a class="card strategy" href="Examples/All_about_examples/">
+  <!-- Row 3: Strategy / Action (amber/orange) -->
+  <a class="card centered strategy" href="Examples/All_about_examples/">
+    <span class="card-icon">🧪</span>
     <h3>Examples</h3>
-    <p>Quick demos & run instructions.</p>
+    <p>Quick demos & run instructions</p>
   </a>
 
-  <a class="card strategy" href="Strategy/All_about_orchestrator/">
+  <a class="card centered strategy" href="Strategy/All_about_orchestrator/">
+    <span class="card-icon">🎛️</span>
     <h3>Orchestrator</h3>
-    <p>Control loop & scheduling.</p>
+    <p>Control loop & scheduling</p>
   </a>
 
-  <a class="card strategy" href="Strategy/All_about_presets/">
+  <a class="card centered strategy" href="Strategy/All_about_presets/">
+    <span class="card-icon">⚡</span>
     <h3>Presets</h3>
-    <p>Strategy presets & tuning.</p>
+    <p>Strategy presets & tuning</p>
   </a>
 
 </div>
