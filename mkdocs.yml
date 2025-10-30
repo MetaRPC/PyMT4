@@ -29,12 +29,11 @@ theme:
     - toc.follow
 
 extra:
-  # Баннер под шапкой — панель быстрого доступа
+  # Баннер под шапкой — панель быстрого доступа (будет на всех страницах)
   announcement: |
     <nav class="quickbar quickbar--banner">
       <a class="quickbar-item home" href="{{ base_url }}/">
-        <span class="material-symbols-rounded">home</span>
-        <span>Home</span>
+        <span class="material-symbols-rounded">home</span><span>Home</span>
       </a>
       <a class="quickbar-item" href="{{ base_url }}/MT4Account/Account_Information/account_summary/">Account Info</a>
       <a class="quickbar-item" href="{{ base_url }}/MT4Account/Market_quota_symbols/Market_Quota.Overview/">Market Quota</a>
@@ -45,21 +44,16 @@ extra:
       <a class="quickbar-item" href="{{ base_url }}/api/">API</a>
       <a class="quickbar-item" href="{{ base_url }}/configuration/">Reference</a>
     </nav>
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/MetaRPC/PyMT4
+      name: PyMT4 on GitHub
 
 extra_css:
   - styles/custom.css
 
 extra_javascript:
   - javascripts/ux.js
-
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/MetaRPC/PyMT4
-      name: PyMT4 on GitHub
-
-extra_templates:
-  - includes/head.html
 
 markdown_extensions:
   - admonition
