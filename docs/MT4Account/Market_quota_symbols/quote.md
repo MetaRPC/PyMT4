@@ -1,4 +1,4 @@
-# ✅ Getting a Quote — `quote`
+# ✅ Getting a Quote
 
 > **Request:** retrieve the latest **bid/ask + OHLC snapshot** for a single symbol as `QuoteData`.
 > Use it for price displays, quick validation, and point/tick computations.
