@@ -1,4 +1,4 @@
-# main_sugar.py — README
+# main_sugar.py
 
 ## What this file is
 
