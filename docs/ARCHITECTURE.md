@@ -335,7 +335,7 @@ ticket = await acct.order_send(request)
        │                           │
        │ operation                 │
        ▼                           │
-┌─────────────┐     auto-retry    │
+┌─────────────┐     auto-retry     │
 │  Operating  │ ───────────────────┘
 └─────────────┘
        │
