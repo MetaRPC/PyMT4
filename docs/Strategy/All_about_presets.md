@@ -377,14 +377,6 @@ await run_market_one_shot(svc, MarketXAUUSD, risk_gold)
 
 ---
 
-## 📖 Related Documentation
-
-- [Orchestrators Guide](./All_about_orchestrator.md) - Use presets with orchestrators
-- [Examples Overview](../Examples/All_about_examples.md) - See presets in action
-- [MT4Sugar API](../MT4Sugar/) - Low-level functions
-
----
-
 ## 💡 Pro Tips
 
 1. **Start with Balanced** — it's the industry standard (1% risk, 1:2 R:R)
