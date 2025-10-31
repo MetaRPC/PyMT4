@@ -77,7 +77,7 @@ await run_market_one_shot(svc, MarketEURUSD, Scalper)       # Fast trading
 await run_market_one_shot(svc, MarketEURUSD, Walker)        # Patience + BE
 ```
 
-**Related:** [risk.py](../../Strategy/presets/risk.py)
+**Related:** [risk.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/presets/risk.py)
 
 ---
 
@@ -131,7 +131,7 @@ result = await run_market_one_shot(svc, MarketEURUSD, risk)
 5. Return RiskPreset with calculated values
 ```
 
-**Related:** [risk_atr.py](../../Strategy/presets/risk_atr.py)
+**Related:** [risk_atr.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/presets/risk_atr.py)
 
 ---
 
@@ -161,7 +161,7 @@ await run_market_one_shot(svc, MarketEURUSD, ScalperEURUSD)
 await run_market_one_shot(svc, MarketXAUUSD, SwingXAUUSD)
 ```
 
-**Related:** [risk_profiles.py](../../Strategy/presets/risk_profiles.py)
+**Related:** [risk_profiles.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/presets/risk_profiles.py)
 
 ---
 
@@ -207,7 +207,7 @@ Current time: 14:00 GMT
 → Returns: Conservative risk (SL=30, TP=60)
 ```
 
-**Related:** [risk_session.py](../../Strategy/presets/risk_session.py)
+**Related:** [risk_session.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/presets/risk_session.py)
 
 ---
 
@@ -299,13 +299,13 @@ for strategy in symbols:
     result = await run_market_one_shot(svc, strategy, Balanced)
 ```
 
-**Related:** [strategy_symbols.py](../../Strategy/presets/strategy_symbols.py)
+**Related:** [strategy_symbols.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/presets/strategy_symbols.py)
 
 ---
 
 ## 🎬 How to Use in Examples
 
-All presets are demonstrated in [examples/Presets_demo.py](../../examples/Presets_demo.py):
+All presets are demonstrated in [examples/Presets_demo.py](https://github.com/MetaRPC/PyMT4/blob/main/examples/Presets_demo.py):
 
 ```bash
 python examples/Presets_demo.py

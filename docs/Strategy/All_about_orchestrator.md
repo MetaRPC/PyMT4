@@ -54,7 +54,7 @@ result = await run_market_one_shot(svc, MarketEURUSD, Balanced)
 4. Move to breakeven when profitable (if configured)
 5. Return execution report
 
-**Related:** [market_one_shot.py](../../Strategy/orchestrator/market_one_shot.py)
+**Related:** [market_one_shot.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/market_one_shot.py)
 
 ---
 
@@ -93,7 +93,7 @@ Target:  1.1000  ═════════  (Your limit order)
 Filled!  1.1000  ─────────  (SL/TP set automatically)
 ```
 
-**Related:** [pending_bracket.py](../../Strategy/orchestrator/pending_bracket.py)
+**Related:** [pending_bracket.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/pending_bracket.py)
 
 ---
 
@@ -129,7 +129,7 @@ Wide spread (10 pips):   Need 1.10200 for 2 pip profit
                         → 5x more movement required!
 ```
 
-**Related:** [spread_guard.py](../../Strategy/orchestrator/spread_guard.py)
+**Related:** [spread_guard.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/spread_guard.py)
 
 ---
 
@@ -174,7 +174,7 @@ result = await run_with_session_guard(
 - 🇺🇸 New York: 12:00-21:00 GMT (highest volume)
 - Overlap: 12:00-16:30 GMT (best time)
 
-**Related:** [session_guard.py](../../Strategy/orchestrator/session_guard.py)
+**Related:** [session_guard.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/session_guard.py)
 
 ---
 
@@ -195,7 +195,7 @@ result = await run_with_session_guard(
 3. When one fills → cancel the other
 4. Continue with filled position
 
-**Related:** [oco_straddle.py](../../Strategy/orchestrator/oco_straddle.py)
+**Related:** [oco_straddle.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/oco_straddle.py)
 
 ---
 
@@ -208,7 +208,7 @@ result = await run_with_session_guard(
 - Avoiding early exits
 - Trend-following strategies
 
-**Related:** [bracket_trailing_activation.py](../../Strategy/orchestrator/bracket_trailing_activation.py)
+**Related:** [bracket_trailing_activation.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/bracket_trailing_activation.py)
 
 ---
 
@@ -221,7 +221,7 @@ result = await run_with_session_guard(
 - Preventing catastrophic losses
 - Automated safety net
 
-**Related:** [equity_circuit_breaker.py](../../Strategy/orchestrator/equity_circuit_breaker.py)
+**Related:** [equity_circuit_breaker.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/equity_circuit_breaker.py)
 
 ---
 
@@ -234,7 +234,7 @@ result = await run_with_session_guard(
 - Preventing rejections
 - Adaptive execution
 
-**Related:** [dynamic_deviation_guard.py](../../Strategy/orchestrator/dynamic_deviation_guard.py)
+**Related:** [dynamic_deviation_guard.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/dynamic_deviation_guard.py)
 
 ---
 
@@ -247,7 +247,7 @@ result = await run_with_session_guard(
 - Preventing wide-spread entries
 - Scalping protection
 
-**Related:** [rollover_avoidance.py](../../Strategy/orchestrator/rollover_avoidance.py)
+**Related:** [rollover_avoidance.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/rollover_avoidance.py)
 
 ---
 
@@ -260,7 +260,7 @@ result = await run_with_session_guard(
 - Grid strategies
 - Range-bound trading
 
-**Related:** [grid_dca_common_sl.py](../../Strategy/orchestrator/grid_dca_common_sl.py)
+**Related:** [grid_dca_common_sl.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/grid_dca_common_sl.py)
 
 ---
 
@@ -273,7 +273,7 @@ result = await run_with_session_guard(
 - Manual intervention
 - Clean slate before strategy change
 
-**Related:** [kill_switch_review.py](../../Strategy/orchestrator/kill_switch_review.py)
+**Related:** [kill_switch_review.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/kill_switch_review.py)
 
 ---
 
@@ -286,7 +286,7 @@ result = await run_with_session_guard(
 - Trend following (add to winners)
 - Risk averaging
 
-**Related:** [ladder_builder.py](../../Strategy/orchestrator/ladder_builder.py)
+**Related:** [ladder_builder.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/ladder_builder.py)
 
 ---
 
@@ -299,13 +299,13 @@ result = await run_with_session_guard(
 - Strategy reset
 - Emergency flatten
 
-**Related:** [cleanup.py](../../Strategy/orchestrator/cleanup.py)
+**Related:** [cleanup.py](https://github.com/MetaRPC/PyMT4/blob/main/Strategy/orchestrator/cleanup.py)
 
 ---
 
 ## 🎬 How to Use in Examples
 
-All orchestrators are demonstrated in [examples/Orchestrator_demo.py](../../examples/Orchestrator_demo.py):
+All orchestrators are demonstrated in [examples/Orchestrator_demo.py](https://github.com/MetaRPC/PyMT4/blob/main/examples/Orchestrator_demo.py):
 
 ```bash
 python examples/Orchestrator_demo.py
