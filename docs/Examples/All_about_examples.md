@@ -12,17 +12,17 @@ python examples/Low_level_call.py
 ```
 
 **Demonstrates:**
-- 🔌 Connection (2 methods): `connect_by_server_name()`, `connect_by_host_port()`
-- 👤 Account (1 method): `account_summary()`
-- 📊 Market Data (6 methods): `symbols()`, `quote()`, `quote_many()`, `quote_history()`, etc.
-- 📋 Orders (3 methods): `opened_orders()`, `orders_history()`, etc.
-- 💼 Trading (4 methods): `order_send()`, `order_modify()`, `order_close_delete()`, `order_close_by()`
-- 🌊 Streaming (4 methods): `on_symbol_tick()`, `on_trade()`, `on_opened_orders_tickets()`, etc.
+- 🔌 Connection (2 methods): `connect_by_server_name()`, `connect_by_host_port()`<br>
+- 👤 Account (1 method): `account_summary()`<br>
+- 📊 Market Data (6 methods): `symbols()`, `quote()`, `quote_many()`, `quote_history()`, etc.<br>
+- 📋 Orders (3 methods): `opened_orders()`, `orders_history()`, etc.<br>
+- 💼 Trading (4 methods): `order_send()`, `order_modify()`, `order_close_delete()`, `order_close_by()`<br>
+- 🌊 Streaming (4 methods): `on_symbol_tick()`, `on_trade()`, `on_opened_orders_tickets()`, etc.<br>
 
 **Features:**
-- ⏱️ Enforced timeouts for streams (freezing issue resolved)
-- 🎯 3-priority connection system
-- 🔒 Trading disabled by default (`ENABLE_TRADING=0`)
+- ⏱️ Enforced timeouts for streams (freezing issue resolved)<br>
+- 🎯 3-priority connection system<br>
+- 🔒 Trading disabled by default (`ENABLE_TRADING=0`)<br>
 
 ---
 
@@ -34,17 +34,17 @@ python examples/Call_sugar.py
 ```
 
 **Demonstrates:**
-- 🔌 Connection: `ensure_connected()`, `ping()`
-- 📐 Symbol Info: `digits()`, `point()`, `pip_size()`, `spread_pips()`, `mid_price()`
-- 🎲 Risk Management: `calc_lot_by_risk()`, `calc_cash_risk()`
-- 📊 Exposure: `exposure_summary()`, `opened_orders()`
-- 💰 Trading: `buy_market()`, `sell_market()`, `buy_limit()`, `sell_stop()`
-- ⚙️ Order Management: `modify_sl_tp_by_pips()`, `close()`, `close_partial()`
+- 🔌 Connection: `ensure_connected()`, `ping()`<br>
+- 📐 Symbol Info: `digits()`, `point()`, `pip_size()`, `spread_pips()`, `mid_price()`<br>
+- 🎲 Risk Management: `calc_lot_by_risk()`, `calc_cash_risk()`<br>
+- 📊 Exposure: `exposure_summary()`, `opened_orders()`<br>
+- 💰 Trading: `buy_market()`, `sell_market()`, `buy_limit()`, `sell_stop()`<br>
+- ⚙️ Order Management: `modify_sl_tp_by_pips()`, `close()`, `close_partial()`<br>
 
 **Features:**
-- 📏 All SL/TP specified in pips
-- 🤖 Automatic lot calculation based on risk
-- 🛠️ Convenient price helpers
+- 📏 All SL/TP specified in pips<br>
+- 🤖 Automatic lot calculation based on risk<br>
+- 🛠️ Convenient price helpers<br>
 
 ---
 
