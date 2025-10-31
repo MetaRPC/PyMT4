@@ -33,10 +33,10 @@ Demonstrates **low-level MT4 SDK methods** without any sugar wrappers. This is t
 - Account information (`account_summary`)
 
 ### When to use
-✅ When you need **maximum control** over every parameter
-✅ When building **custom trading logic** that doesn't fit sugar abstractions
-✅ When **learning the SDK internals** and understanding how things work under the hood
-✅ When **optimizing performance** by avoiding wrapper overhead
+✅ When you need **maximum control** over every parameter<br>
+✅ When building **custom trading logic** that doesn't fit sugar abstractions<br>
+✅ When **learning the SDK internals** and understanding how things work under the hood<br>
+✅ When **optimizing performance** by avoiding wrapper overhead<br>
 
 ### Example Output
 ![Low Level Output](../Examples_of_illustrations/LL.bmp)
@@ -59,11 +59,11 @@ Showcases **high-level sugar methods** that wrap low-level calls with sane defau
 - Batch operations (`close`, `close_all`)
 
 ### When to use
-✅ When you want **fast development** with minimal boilerplate
-✅ When **readability** is more important than fine-grained control
-✅ When building **simple strategies** without complex edge cases
-✅ When **onboarding new developers** who need quick wins
-✅ When **prototyping ideas** before optimizing
+✅ When you want **fast development** with minimal boilerplate<br>
+✅ When **readability** is more important than fine-grained control<br>
+✅ When building **simple strategies** without complex edge cases<br>
+✅ When **onboarding new developers** who need quick wins<br>
+✅ When **prototyping ideas** before optimizing<br>
 
 ### Example Output
 ![Sugar Output](../Examples_of_illustrations/Sugar.bmp)
@@ -86,11 +86,11 @@ Demonstrates **server-streaming APIs** for real-time subscriptions. Shows how to
 - Back-pressure handling and debouncing
 
 ### When to use
-✅ When you need **real-time market data** without polling
-✅ When building **event-driven applications** that react to changes
-✅ When **monitoring positions** and need instant updates
-✅ When creating **live dashboards** or charting applications
-✅ When **tracking P&L** in real-time
+✅ When you need **real-time market data** without polling<br>
+✅ When building **event-driven applications** that react to changes<br>
+✅ When **monitoring positions** and need instant updates<br>
+✅ When creating **live dashboards** or charting applications<br>
+✅ When **tracking P&L** in real-time<br>
 
 ### Example Output
 ![Streams Output](../Examples_of_illustrations/Stream.bmp)
@@ -113,11 +113,11 @@ Focuses on **trade modification flows**: placing, modifying, and closing orders.
 - Price and lot normalization
 
 ### When to use
-✅ When building **trade management systems**
-✅ When implementing **trailing stops** or dynamic SL/TP
-✅ When **scaling in/out** of positions
-✅ When **hedging positions** with opposite orders
-✅ When **testing order modification** logic
+✅ When building **trade management systems**<br>
+✅ When implementing **trailing stops** or dynamic SL/TP<br>
+✅ When **scaling in/out** of positions<br>
+✅ When **hedging positions** with opposite orders<br>
+✅ When **testing order modification** logic<br>
 
 ### Example Output
 ![Trade Modification Output](../Examples_of_illustrations/Mod.bmp)
@@ -149,10 +149,10 @@ python main_trade_mod.py
 ### 3. Modify and experiment
 
 All scripts are designed to be:
-- ✅ **Self-contained** - Run without external dependencies
-- ✅ **Well-commented** - Understand what each line does
-- ✅ **Easy to modify** - Change symbols, lots, parameters
-- ✅ **Production-ready patterns** - Use as templates for your own code
+- ✅ **Self-contained** - Run without external dependencies<br>
+- ✅ **Well-commented** - Understand what each line does<br>
+- ✅ **Easy to modify** - Change symbols, lots, parameters<br>
+- ✅ **Production-ready patterns** - Use as templates for your own code<br>
 
 ---
 
