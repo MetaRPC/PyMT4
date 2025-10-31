@@ -91,10 +91,10 @@ await run_market_one_shot(svc, MarketEURUSD, Walker)        # Patience + BE
 - Lower ATR = Less volatile → Tighter stops possible
 
 ### Why Use ATR Risk?
-✅ **Adaptive:** Stops adjust to current market conditions automatically
-✅ **Smart:** Wider stops in volatile markets (avoid premature stop-outs)
-✅ **Efficient:** Tighter stops in calm markets (better R:R)
-✅ **Universal:** Works across all symbols and timeframes
+✅ **Adaptive:** Stops adjust to current market conditions automatically<br>
+✅ **Smart:** Wider stops in volatile markets (avoid premature stop-outs)<br>
+✅ **Efficient:** Tighter stops in calm markets (better R:R)<br>
+✅ **Universal:** Works across all symbols and timeframes<br>
 
 ### Example:
 ```
@@ -365,15 +365,15 @@ await run_market_one_shot(svc, MarketXAUUSD, risk_gold)
 
 **I want to...**
 
-- ✅ **Trade safely** → `Conservative`
-- ✅ **Standard risk** → `Balanced`
-- ✅ **Take more risk** → `Aggressive`
-- ✅ **Scalp quickly** → `Scalper`
-- ✅ **Be patient** → `Walker`
-- ✅ **Adapt to volatility** → `ATR_Balanced`, `ATR_Scalper`, `ATR_Swing`
-- ✅ **Symbol-optimized risk** → `ScalperEURUSD`, `SwingXAUUSD`, etc.
-- ✅ **Trade by session** → `session_risk_auto()`
-- ✅ **Trade specific symbol** → `MarketEURUSD`, `LimitXAUUSD`, etc.
+- ✅ **Trade safely** → `Conservative`<br>
+- ✅ **Standard risk** → `Balanced`<br>
+- ✅ **Take more risk** → `Aggressive`<br>
+- ✅ **Scalp quickly** → `Scalper`<br>
+- ✅ **Be patient** → `Walker`<br>
+- ✅ **Adapt to volatility** → `ATR_Balanced`, `ATR_Scalper`, `ATR_Swing`<br>
+- ✅ **Symbol-optimized risk** → `ScalperEURUSD`, `SwingXAUUSD`, etc.<br>
+- ✅ **Trade by session** → `session_risk_auto()`<br>
+- ✅ **Trade specific symbol** → `MarketEURUSD`, `LimitXAUUSD`, etc.<br>
 
 ---
 
