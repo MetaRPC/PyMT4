@@ -7,11 +7,11 @@ Welcome to the **Sugar API**! This is PyMT4's high-level interface that wraps ra
 ## 🎯 What is Sugar API?
 
 The **Sugar API** is designed to make your trading code:
-- ✅ **Readable** - Methods named like `buy_market()`, `calc_lot_by_risk()`, `spread_pips()`
-- ✅ **Pip-based** - Work with pips instead of raw price values
-- ✅ **Smart defaults** - Set symbol/magic once, use everywhere
-- ✅ **Less boilerplate** - Auto-normalization, auto-reconnect, auto-symbol-enable
-- ✅ **Production-ready** - Error handling, retries, validation built-in
+- ✅ **Readable** - Methods named like `buy_market()`, `calc_lot_by_risk()`, `spread_pips()`<br>
+- ✅ **Pip-based** - Work with pips instead of raw price values<br>
+- ✅ **Smart defaults** - Set symbol/magic once, use everywhere<br>
+- ✅ **Less boilerplate** - Auto-normalization, auto-reconnect, auto-symbol-enable<br>
+- ✅ **Production-ready** - Error handling, retries, validation built-in<br>
 
 ### Sugar vs Low-Level
 
