@@ -1,0 +1,2330 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete Python SDK for MetaTrader 4 trading automation">
+      
+      
+      
+        <link rel="canonical" href="https://metarpc.github.io/PyMT4/PROJECT_MAP/">
+      
+      
+        <link rel="prev" href="../MT4Account/BASE/">
+      
+      
+        <link rel="next" href="../ARCHITECTURE/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Project Map - PyMT4 SDK Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../styles/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pymt4-project-map-layers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PyMT4 SDK Documentation" class="md-header__button md-logo" aria-label="PyMT4 SDK Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m3.5 18.5 6-6 4 4L22 6.92 20.59 5.5l-7.09 8-4-4L2 17z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyMT4 SDK Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Project Map
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/MetaRPC/PyMT4" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MetaRPC/PyMT4
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PyMT4 SDK Documentation" class="md-nav__button md-logo" aria-label="PyMT4 SDK Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m3.5 18.5 6-6 4 4L22 6.92 20.59 5.5l-7.09 8-4-4L2 17z"/></svg>
+
+    </a>
+    PyMT4 SDK Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/MetaRPC/PyMT4" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MetaRPC/PyMT4
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Access
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Quick Access
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MT4Account/Account_Information/account_summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Account Info
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MT4Account/Market_quota_symbols/Market_Quota.Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Quota — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MT4Account/Orders_Positions_History/Positions_History_Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Positions History — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MT4Account/Streams/Streams_Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streams — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MT4Account/Trading_Actions/Trading_Actions_Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trading Actions — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MT4Account/BASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BASE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Map
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0) TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-high-level-project-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) High-Level Project Map
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1) High-Level Project Map">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-app-core-sdk-wrappers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 app/ (core SDK wrappers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-strategy-orchestrators-presets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Strategy/ (orchestrators &amp; presets)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-examples-runnable-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 examples/ (runnable scripts)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-mainpy-entry-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 main*.py (entry points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-docs-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 docs/ (documentation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-packagemetarpcmt4-generated-stubs-dont-touch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 package/MetaRpcMT4 (generated stubs — don't touch)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-who-edits-what-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Who edits what (policy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-project-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Project Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Project Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-top-level-depth-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Top-level (depth 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-app-depth-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 app/ (depth 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-strategy-depth-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Strategy/ (depth 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-examples-depth-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 examples/ (depth 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-docs-structure-key-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 docs/ structure (key files)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-how-to-build-a-trading-strategy-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) How to build a trading strategy (step-by-step)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4) How to build a trading strategy (step-by-step)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#level-1-quick-start-sugar-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 1: Quick Start (Sugar API)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-2-using-presets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 2: Using Presets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-3-custom-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 3: Custom Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-4-custom-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 4: Custom Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-api-layers-from-low-to-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) API Layers (from low to high)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-configuration-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Configuration Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6) Configuration Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appsettingsjson-connection-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        appsettings.json (connection config)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables-override-appsettings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables (override appsettings)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-documentation-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) Documentation Navigation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7) Documentation Navigation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#by-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        By Role:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#by-api-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        By API Level:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) Common Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8) Common Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-test-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Test Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-run-strategy-with-presets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Run Strategy with Presets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-build-custom-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Build Custom Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-debug-low-level-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: Debug Low-Level API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-safety-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9) Safety Checklist ✅
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10) Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10) Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Classes:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Concepts:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files-to-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files to Check:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../MT4Sugar/Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MT4Sugar — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Main/Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Main — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Examples/All_about_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Strategy/All_about_orchestrator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrator — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Strategy/All_about_presets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presets — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0) TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-high-level-project-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) High-Level Project Map
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1) High-Level Project Map">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-app-core-sdk-wrappers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 app/ (core SDK wrappers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-strategy-orchestrators-presets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Strategy/ (orchestrators &amp; presets)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-examples-runnable-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 examples/ (runnable scripts)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-mainpy-entry-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 main*.py (entry points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-docs-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 docs/ (documentation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-packagemetarpcmt4-generated-stubs-dont-touch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 package/MetaRpcMT4 (generated stubs — don't touch)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-who-edits-what-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) Who edits what (policy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-project-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) Project Trees
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3) Project Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-top-level-depth-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Top-level (depth 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-app-depth-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 app/ (depth 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-strategy-depth-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Strategy/ (depth 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-examples-depth-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 examples/ (depth 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-docs-structure-key-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 docs/ structure (key files)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-how-to-build-a-trading-strategy-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) How to build a trading strategy (step-by-step)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4) How to build a trading strategy (step-by-step)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#level-1-quick-start-sugar-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 1: Quick Start (Sugar API)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-2-using-presets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 2: Using Presets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-3-custom-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 3: Custom Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-4-custom-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 4: Custom Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-api-layers-from-low-to-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5) API Layers (from low to high)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-configuration-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6) Configuration Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6) Configuration Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appsettingsjson-connection-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        appsettings.json (connection config)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables-override-appsettings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables (override appsettings)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-documentation-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7) Documentation Navigation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7) Documentation Navigation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#by-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        By Role:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#by-api-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        By API Level:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-common-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8) Common Workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8) Common Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-1-test-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 1: Test Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-2-run-strategy-with-presets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 2: Run Strategy with Presets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-3-build-custom-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 3: Build Custom Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-4-debug-low-level-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 4: Debug Low-Level API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-safety-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9) Safety Checklist ✅
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10) Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10) Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Classes:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Concepts:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files-to-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files to Check:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pymt4-project-map-layers">PyMT4 — Project Map &amp; Layers<a class="headerlink" href="#pymt4-project-map-layers" title="Permanent link">¶</a></h1>
+<h2 id="0-tldr">0) TL;DR<a class="headerlink" href="#0-tldr" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong>You edit</strong> (green): <code>app/</code>, <code>examples/</code>, <code>Strategy/</code>, <code>docs/</code>, <code>main*.py</code>, <code>appsettings.json</code>.</li>
+<li><strong>Don't edit</strong> (lock): <code>package/MetaRpcMT4/*_pb2*.py</code> (generated gRPC stubs), build artifacts.</li>
+<li><strong>Start here</strong>: <code>main_sugar.py</code> or <code>examples/Call_sugar.py</code> → verify connection → then build strategies in <code>Strategy/</code>.</li>
+<li><strong>Danger zone</strong>: everything that can place/modify/close orders — see <code>app/MT4Service_Trade_mod.py</code>. ☢️</li>
+</ul>
+<p>Legend: 🟢 = safe to edit, 🔒 = generated/infra, 🎭 = orchestrators, ⚙️ = presets, 📚 = docs, 🧠 = core logic, 🔌 = integration, 🧭 = examples, 🍬 = sugar API.</p>
+<hr />
+<h2 id="1-high-level-project-map">1) High-Level Project Map<a class="headerlink" href="#1-high-level-project-map" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code>PyMT4/
+├── app/                    🟢 🧠 Project application code (services, sugar, helpers)
+├── Strategy/               🟢 🎭 Trading orchestrators &amp; presets
+├── docs/                   🟢 📚 Documentation (guides, API specs)
+├── examples/               🟢 🧭 Runnable demo scripts
+├── package/                🔒 Published package sources (incl. generated pb2)
+├── main*.py                🟢 Entry points (low_level, sugar, streams, trade_mod)
+├── appsettings.json        🟢 Connection settings
+├── settings.json           🟢 Project settings
+├── README.md               🟢 Project overview
+└── mkdocs.yml              🟢 Docs site config
+</code></pre></div>
+<h3 id="11-app-core-sdk-wrappers">1.1 <code>app/</code> (core SDK wrappers)<a class="headerlink" href="#11-app-core-sdk-wrappers" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>🟢 app/
+├── Helper/                  Configuration, hooks, patches, rate limiting
+│   ├── config.py            Settings loader
+│   ├── errors.py            Custom exceptions
+│   ├── hooks.py             Event hooks system
+│   ├── patch_mt4_account.py Compatibility patches
+│   ├── rate_limit.py        Rate limiting for API calls
+│   └── Design/              Architecture notes
+├── MT4Service.py            🔌 Core service wrapper (low-level API)
+├── MT4Service_Trade_mod.py ☢️ Trading-focused service wrapper
+├── MT4Sugar.py              🍬 High-level sugar API (pip-based, user-friendly)
+└── __init__.py
+</code></pre></div>
+<p>Key files:</p>
+<ul>
+<li><code>MT4Service.py</code> — central async client/service wrapper for low-level MT4 API. 🔌</li>
+<li><code>MT4Service_Trade_mod.py</code> — trading operations wrapper (market/pending, modify, close). ☢️</li>
+<li><code>MT4Sugar.py</code> — high-level API with pip-based operations, auto lot calculation, convenience methods. 🍬</li>
+<li><code>Helper/config.py</code> — loads appsettings.json and environment variables. 🧠</li>
+<li><code>Helper/hooks.py</code> — event system for pre/post operation hooks. 🧠</li>
+<li><code>Helper/patch_mt4_account.py</code> — compatibility patches for MT4 quirks. 🧩</li>
+<li><code>Helper/rate_limit.py</code> — prevents API rate limit violations. 🛡️</li>
+</ul>
+<h3 id="12-strategy-orchestrators-presets">1.2 <code>Strategy/</code> (orchestrators &amp; presets)<a class="headerlink" href="#12-strategy-orchestrators-presets" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>🎭 Strategy/
+├── orchestrator/            13 ready-to-use trading scenarios
+│   ├── market_one_shot.py           🚀 Instant market execution
+│   ├── pending_bracket.py           ⏰ Limit order with timeout
+│   ├── spread_guard.py              💰 Cost protection filter
+│   ├── session_guard.py             🕐 Time window control
+│   ├── oco_straddle.py              🔀 Two-way breakout entry
+│   ├── bracket_trailing_activation.py 📈 Conditional trailing
+│   ├── equity_circuit_breaker.py    🛑 Drawdown protection
+│   ├── dynamic_deviation_guard.py   🎯 Adaptive slippage
+│   ├── rollover_avoidance.py        💸 Swap time protection
+│   ├── grid_dca_common_sl.py        📊 Grid trading with shared SL
+│   ├── kill_switch_review.py        🔴 Emergency stop
+│   ├── ladder_builder.py            🪜 Gradual position building
+│   └── cleanup.py                   🧹 Close/cancel all
+├── presets/                 40+ pre-configured trading profiles
+│   ├── risk.py              🎯 Basic risk (Conservative, Balanced, Aggressive, Scalper, Walker)
+│   ├── risk_atr.py          📈 ATR-based adaptive risk
+│   ├── risk_profiles.py     🎲 Symbol+style combinations
+│   ├── risk_session.py      🕐 Session-based risk
+│   ├── strategy.py          📋 Strategy base classes
+│   └── strategy_symbols.py  💱 30+ symbol presets (EURUSD, XAUUSD, BTCUSD...)
+└── __init__.py
+</code></pre></div>
+<h3 id="13-examples-runnable-scripts">1.3 <code>examples/</code> (runnable scripts)<a class="headerlink" href="#13-examples-runnable-scripts" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>🧭 examples/
+├── Low_level_call.py        🔧 Low-level API demo (19 methods)
+├── Call_sugar.py            🍬 Sugar API demo (~20 methods)
+├── Orchestrator_demo.py     🎭 Orchestrators demo (4 scenarios)
+├── Presets_demo.py          ⚙️ Presets demo (40+ presets)
+└── __init__.py
+</code></pre></div>
+<h3 id="14-mainpy-entry-points">1.4 <code>main*.py</code> (entry points)<a class="headerlink" href="#14-mainpy-entry-points" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>🟢 Root level/
+├── main_low_level.py        Entry point for low-level API demos
+├── main_sugar.py            Entry point for sugar API demos
+├── main_streams.py          Entry point for streaming demos
+└── main_trade_mod.py        Entry point for trading operations demos
+</code></pre></div>
+<h3 id="15-docs-documentation">1.5 <code>docs/</code> (documentation)<a class="headerlink" href="#15-docs-documentation" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>📚 docs/
+├── MT4Account/              Low-level API documentation
+│   ├── BASE.md              🗺️ Master overview
+│   ├── Account_Information/ Account balance/equity/margins
+│   ├── Market_quota_symbols/ Quotes, symbols, ticks, history
+│   ├── Orders_Positions_History/ Open positions, tickets
+│   ├── Trading_Actions/     Order placement, modification, closing
+│   └── Streams/             Real-time data streams
+├── MT4Sugar/                High-level sugar API docs
+│   ├── Core_Defaults.md     Connection, defaults management
+│   ├── Symbols_Quotes.md    Symbol info, quotes (8 methods)
+│   ├── Market_Data.md       Bars, ticks, price waiting
+│   ├── Math_Risk.md         Risk calculations, lot sizing (10 methods)
+│   ├── Order_Management.md  Modify, close operations (7 methods)
+│   ├── Order_Placement.md   Market, limit, stop orders (7 methods)
+│   └── Automation.md        Trailing stops, auto-breakeven
+├── Main/                    Entry point documentation
+│   ├── main_low_level.md    Low-level API guide
+│   ├── main_streams.md      Streaming API guide
+│   ├── main_sugar.md        Sugar API guide
+│   └── main_trade_mod.md    Trading operations guide
+├── Strategy/                Strategy documentation
+│   ├── All_about_orchestrator.md 🎭 Orchestrators guide (13 orchestrators)
+│   └── All_about_presets.md      ⚙️ Presets guide (40+ presets)
+├── Examples/                Examples documentation
+│   └── All_about_examples.md     📚 Examples overview
+├── Examples_of_illustrations/    Screenshots (LL.bmp, Sugar.bmp, Stream.bmp, Mod.bmp)
+└── PROJECT_MAP.md           🗺️ This file
+</code></pre></div>
+<h3 id="16-packagemetarpcmt4-generated-stubs-dont-touch">1.6 <code>package/MetaRpcMT4</code> (generated stubs — don't touch)<a class="headerlink" href="#16-packagemetarpcmt4-generated-stubs-dont-touch" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>🔒 package/MetaRpcMT4/
+├── __init__.py
+├── mrpc_mt4_error_pb2(.py|_grpc.py)          🔒 Error codes
+├── mt4_term_api_*_pb2(.py|_grpc.py)          🔒 Generated request/response messages &amp; service stubs
+├── mt4_account.py                             🟡 Low-level wrapper (avoid editing)
+└── ...
+</code></pre></div>
+<hr />
+<h2 id="2-who-edits-what-policy">2) Who edits what (policy)<a class="headerlink" href="#2-who-edits-what-policy" title="Permanent link">¶</a></h2>
+<ul>
+<li>🟢 <strong>Edit freely</strong>: <code>app/*</code>, <code>Strategy/*</code>, <code>examples/*</code>, <code>main*.py</code>, <code>appsettings.json</code>, <code>docs/*</code>.</li>
+<li>🛑 <strong>Don't edit</strong>: <code>package/MetaRpcMT4/*_pb2*.py</code> (regenerate from proto instead).</li>
+<li>🧪 <strong>Tests</strong>: put local tests in <code>package/tests</code> or add <code>tests/</code> at repo root.</li>
+</ul>
+<hr />
+<h2 id="3-project-trees">3) Project Trees<a class="headerlink" href="#3-project-trees" title="Permanent link">¶</a></h2>
+<h3 id="31-top-level-depth-1">3.1 Top-level (depth 1)<a class="headerlink" href="#31-top-level-depth-1" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>PyMT4/
+├── app/                     Core SDK wrappers
+├── Strategy/                Orchestrators &amp; presets
+├── docs/                    Documentation
+├── examples/                Demo scripts
+├── package/                 Generated gRPC stubs
+├── main_low_level.py        Low-level API entry
+├── main_sugar.py            Sugar API entry
+├── main_streams.py          Streaming API entry
+├── main_trade_mod.py        Trading operations entry
+├── appsettings.json         Connection config
+├── settings.json            Project settings
+├── mkdocs.yml               Docs config
+└── README.md
+</code></pre></div>
+<h3 id="32-app-depth-2">3.2 <code>app/</code> (depth 2)<a class="headerlink" href="#32-app-depth-2" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>app/
+├── Helper/
+│   ├── config.py
+│   ├── errors.py
+│   ├── hooks.py
+│   ├── patch_mt4_account.py
+│   ├── rate_limit.py
+│   └── Design/
+├── MT4Service.py
+├── MT4Service_Trade_mod.py
+├── MT4Sugar.py
+└── __init__.py
+</code></pre></div>
+<h3 id="33-strategy-depth-2">3.3 <code>Strategy/</code> (depth 2)<a class="headerlink" href="#33-strategy-depth-2" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>Strategy/
+├── orchestrator/
+│   ├── market_one_shot.py
+│   ├── pending_bracket.py
+│   ├── spread_guard.py
+│   ├── session_guard.py
+│   ├── oco_straddle.py
+│   ├── bracket_trailing_activation.py
+│   ├── equity_circuit_breaker.py
+│   ├── dynamic_deviation_guard.py
+│   ├── rollover_avoidance.py
+│   ├── grid_dca_common_sl.py
+│   ├── kill_switch_review.py
+│   ├── ladder_builder.py
+│   └── cleanup.py
+├── presets/
+│   ├── risk.py
+│   ├── risk_atr.py
+│   ├── risk_profiles.py
+│   ├── risk_session.py
+│   ├── strategy.py
+│   └── strategy_symbols.py
+└── __init__.py
+</code></pre></div>
+<h3 id="34-examples-depth-1">3.4 <code>examples/</code> (depth 1)<a class="headerlink" href="#34-examples-depth-1" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>examples/
+├── Low_level_call.py
+├── Call_sugar.py
+├── Orchestrator_demo.py
+├── Presets_demo.py
+└── __init__.py
+</code></pre></div>
+<h3 id="35-docs-structure-key-files">3.5 <code>docs/</code> structure (key files)<a class="headerlink" href="#35-docs-structure-key-files" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>docs/
+├── MT4Account/BASE.md                        🗺️ Low-level API master overview
+├── MT4Sugar/*.md                             🍬 Sugar API methods (7 files)
+├── Main/*.md                                 📖 Entry point guides (4 files)
+├── Strategy/All_about_orchestrator.md        🎭 Orchestrators guide
+├── Strategy/All_about_presets.md             ⚙️ Presets guide
+├── Examples/All_about_examples.md            📚 Examples overview
+├── Examples_of_illustrations/*.bmp           🖼️ Screenshots
+└── PROJECT_MAP.md                            🗺️ This file
+</code></pre></div>
+<hr />
+<h2 id="4-how-to-build-a-trading-strategy-step-by-step">4) How to build a trading strategy (step-by-step)<a class="headerlink" href="#4-how-to-build-a-trading-strategy-step-by-step" title="Permanent link">¶</a></h2>
+<h3 id="level-1-quick-start-sugar-api">Level 1: Quick Start (Sugar API)<a class="headerlink" href="#level-1-quick-start-sugar-api" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.MT4Sugar</span><span class="w"> </span><span class="kn">import</span> <span class="n">MT4Sugar</span>
+
+<span class="n">sugar</span> <span class="o">=</span> <span class="n">MT4Sugar</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">ensure_connected</span><span class="p">()</span>
+
+<span class="c1"># Simple market order with pip-based stops</span>
+<span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">buy_market</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">sl_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">tp_pips</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="level-2-using-presets">Level 2: Using Presets<a class="headerlink" href="#level-2-using-presets" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Strategy.presets</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarketEURUSD</span><span class="p">,</span> <span class="n">Balanced</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Strategy.orchestrator.market_one_shot</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_market_one_shot</span>
+
+<span class="c1"># Combine strategy preset + risk preset</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_market_one_shot</span><span class="p">(</span><span class="n">svc</span><span class="p">,</span> <span class="n">MarketEURUSD</span><span class="p">,</span> <span class="n">Balanced</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="level-3-custom-orchestrator">Level 3: Custom Orchestrator<a class="headerlink" href="#level-3-custom-orchestrator" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Strategy.orchestrator.spread_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">market_with_spread_guard</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Strategy.orchestrator.session_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_with_session_guard</span>
+
+<span class="c1"># Combine multiple orchestrators</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">run_with_session_guard</span><span class="p">(</span>
+    <span class="n">svc</span><span class="o">=</span><span class="n">svc</span><span class="p">,</span>
+    <span class="n">runner_coro_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">market_with_spread_guard</span><span class="p">(</span>
+        <span class="n">svc</span><span class="p">,</span> <span class="n">MarketEURUSD</span><span class="p">,</span> <span class="n">Balanced</span><span class="p">,</span> <span class="n">max_spread_pips</span><span class="o">=</span><span class="mf">2.0</span>
+    <span class="p">),</span>
+    <span class="n">windows</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;08:00&#39;</span><span class="p">,</span> <span class="s1">&#39;17:00&#39;</span><span class="p">)],</span>
+    <span class="n">tz</span><span class="o">=</span><span class="s1">&#39;Europe/London&#39;</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="level-4-custom-strategy">Level 4: Custom Strategy<a class="headerlink" href="#level-4-custom-strategy" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>Start</strong> with Sugar API — sketch basic logic in <code>examples/</code></li>
+<li><strong>Create preset</strong> — define your strategy in <code>Strategy/presets/</code></li>
+<li><strong>Build orchestrator</strong> — compose complex flows in <code>Strategy/orchestrator/</code></li>
+<li><strong>Combine</strong> — use multiple guards and automation features</li>
+</ol>
+<hr />
+<h2 id="5-api-layers-from-low-to-high">5) API Layers (from low to high)<a class="headerlink" href="#5-api-layers-from-low-to-high" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────┐
+│  Strategy Orchestrators &amp; Presets           │ 🎭 Highest level
+│  (market_one_shot, Balanced, etc.)          │ Ready-to-use scenarios
+└─────────────────────────────────────────────┘
+                    ↓ uses
+┌─────────────────────────────────────────────┐
+│  MT4Sugar API                               │  🍬 High level
+│  (pip-based, auto-calculation, friendly)    │ User-friendly wrappers
+└─────────────────────────────────────────────┘
+                    ↓ uses
+┌─────────────────────────────────────────────┐
+│  MT4Service / MT4Service_Trade_mod          │ 🔌 Medium level
+│  (service wrappers, connection mgmt)        │ Service orchestration
+└─────────────────────────────────────────────┘
+                    ↓ uses
+┌─────────────────────────────────────────────┐
+│  package/MetaRpcMT4/mt4_account.py          │ 🔧 Low level
+│  (direct gRPC wrappers)                     │ Generated stubs
+└─────────────────────────────────────────────┘
+                    ↓ gRPC
+┌─────────────────────────────────────────────┐
+│  MT4 Terminal                               │  💻 Broker connection
+│  (actual trading platform)                  │
+└─────────────────────────────────────────────┘
+</code></pre></div>
+<p><strong>Choose your level:</strong>
+- <strong>Orchestrators</strong> — for complete trading strategies (recommended)
+- <strong>Sugar API</strong> — for custom logic with convenience methods
+- <strong>Service wrappers</strong> — for fine control with connection management
+- <strong>Low-level API</strong> — for maximum control (experts only)</p>
+<hr />
+<h2 id="6-configuration-files">6) Configuration Files<a class="headerlink" href="#6-configuration-files" title="Permanent link">¶</a></h2>
+<h3 id="appsettingsjson-connection-config"><code>appsettings.json</code> (connection config)<a class="headerlink" href="#appsettingsjson-connection-config" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;access&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;host:port&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;host:port&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;login&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;12345678&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your_password&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;server&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MetaQuotes-Demo&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="environment-variables-override-appsettings">Environment Variables (override appsettings)<a class="headerlink" href="#environment-variables-override-appsettings" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nv">MT4_LOGIN</span><span class="o">=</span><span class="m">12345678</span>
+<span class="nv">MT4_PASSWORD</span><span class="o">=</span>your_password
+<span class="nv">MT4_SERVER</span><span class="o">=</span>MetaQuotes-Demo
+<span class="nv">ENABLE_TRADING</span><span class="o">=</span><span class="m">1</span><span class="w">  </span><span class="c1"># Enable real trading (default: 0)</span>
+</code></pre></div>
+<hr />
+<h2 id="7-documentation-navigation">7) Documentation Navigation<a class="headerlink" href="#7-documentation-navigation" title="Permanent link">¶</a></h2>
+<h3 id="by-role">By Role:<a class="headerlink" href="#by-role" title="Permanent link">¶</a></h3>
+<p><strong>Beginner:</strong>
+1. Start: <a href="../Examples/All_about_examples/">Examples Overview</a>
+2. Try: <code>python examples/Call_sugar.py</code>
+3. Learn: <a href="./MT4Sugar/">Sugar API docs</a></p>
+<p><strong>Intermediate:</strong>
+1. Read: <a href="../Strategy/All_about_orchestrator/">Orchestrators Guide</a>
+2. Read: <a href="../Strategy/All_about_presets/">Presets Guide</a>
+3. Try: <code>python examples/Orchestrator_demo.py</code></p>
+<p><strong>Advanced:</strong>
+1. Read: <a href="../MT4Account/BASE/">MT4Account BASE</a>
+2. Study: <a href="./MT4Account/">Low-level API docs</a>
+3. Try: <code>python examples/Low_level_call.py</code></p>
+<h3 id="by-api-level">By API Level:<a class="headerlink" href="#by-api-level" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Documentation</th>
+<th>Examples</th>
+<th>Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🎭 <strong>Orchestrators</strong></td>
+<td><a href="../Strategy/All_about_orchestrator/">All_about_orchestrator.md</a></td>
+<td><code>Orchestrator_demo.py</code></td>
+<td><code>Strategy/orchestrator/</code></td>
+</tr>
+<tr>
+<td>⚙️ <strong>Presets</strong></td>
+<td><a href="../Strategy/All_about_presets/">All_about_presets.md</a></td>
+<td><code>Presets_demo.py</code></td>
+<td><code>Strategy/presets/</code></td>
+</tr>
+<tr>
+<td>🍬 <strong>Sugar API</strong></td>
+<td><a href="./MT4Sugar/">MT4Sugar/</a></td>
+<td><code>Call_sugar.py</code>, <code>main_sugar.py</code></td>
+<td><code>app/MT4Sugar.py</code></td>
+</tr>
+<tr>
+<td>🔌 <strong>Service</strong></td>
+<td><a href="./Main/">Main/</a></td>
+<td><code>main_trade_mod.py</code></td>
+<td><code>app/MT4Service*.py</code></td>
+</tr>
+<tr>
+<td>🔧 <strong>Low-level</strong></td>
+<td><a href="./MT4Account/">MT4Account/</a></td>
+<td><code>Low_level_call.py</code>, <code>main_low_level.py</code></td>
+<td><code>package/MetaRpcMT4/</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-common-workflows">8) Common Workflows<a class="headerlink" href="#8-common-workflows" title="Permanent link">¶</a></h2>
+<h3 id="workflow-1-test-connection">Workflow 1: Test Connection<a class="headerlink" href="#workflow-1-test-connection" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>main_sugar.py<span class="w">  </span><span class="c1"># or examples/Call_sugar.py</span>
+</code></pre></div>
+<h3 id="workflow-2-run-strategy-with-presets">Workflow 2: Run Strategy with Presets<a class="headerlink" href="#workflow-2-run-strategy-with-presets" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>examples/Orchestrator_demo.py
+</code></pre></div>
+<h3 id="workflow-3-build-custom-strategy">Workflow 3: Build Custom Strategy<a class="headerlink" href="#workflow-3-build-custom-strategy" title="Permanent link">¶</a></h3>
+<ol>
+<li>Edit <code>Strategy/presets/strategy_symbols.py</code> — add your symbol</li>
+<li>Edit <code>Strategy/presets/risk.py</code> — customize risk profile</li>
+<li>Use in orchestrator or create new one in <code>Strategy/orchestrator/</code></li>
+</ol>
+<h3 id="workflow-4-debug-low-level-api">Workflow 4: Debug Low-Level API<a class="headerlink" href="#workflow-4-debug-low-level-api" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>examples/Low_level_call.py
+python<span class="w"> </span>main_low_level.py
+</code></pre></div>
+<hr />
+<h2 id="9-safety-checklist">9) Safety Checklist ✅<a class="headerlink" href="#9-safety-checklist" title="Permanent link">¶</a></h2>
+<p>Before live trading:</p>
+<ul>
+<li>[ ] Test on demo account first</li>
+<li>[ ] Set <code>ENABLE_TRADING=0</code> to test syntax (dry run)</li>
+<li>[ ] Verify <code>appsettings.json</code> credentials</li>
+<li>[ ] Check connection: <code>await sugar.ping()</code></li>
+<li>[ ] Test with small lots (0.01)</li>
+<li>[ ] Set stop losses on all positions</li>
+<li>[ ] Use <code>Conservative</code> risk preset initially</li>
+<li>[ ] Enable rate limiting (<code>Helper/rate_limit.py</code>)</li>
+<li>[ ] Monitor equity circuit breaker</li>
+<li>[ ] Review logs before production</li>
+</ul>
+<hr />
+<h2 id="10-quick-reference">10) Quick Reference<a class="headerlink" href="#10-quick-reference" title="Permanent link">¶</a></h2>
+<h3 id="key-classes">Key Classes:<a class="headerlink" href="#key-classes" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>MT4Service</code> — core low-level wrapper</li>
+<li><code>MT4Service_Trade_mod</code> — trading operations wrapper</li>
+<li><code>MT4Sugar</code> — high-level convenience API</li>
+<li><code>StrategyPreset</code> — symbol/entry configuration</li>
+<li><code>RiskPreset</code> — risk management configuration</li>
+</ul>
+<h3 id="key-concepts">Key Concepts:<a class="headerlink" href="#key-concepts" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Pips</strong> — universal unit for SL/TP in Sugar API</li>
+<li><strong>Magic numbers</strong> — organize orders by strategy (771-859 range)</li>
+<li><strong>Deviation</strong> — slippage tolerance (pips)</li>
+<li><strong>Orchestrators</strong> — complete trading workflows</li>
+<li><strong>Presets</strong> — reusable configurations</li>
+</ul>
+<h3 id="key-files-to-check">Key Files to Check:<a class="headerlink" href="#key-files-to-check" title="Permanent link">¶</a></h3>
+<ul>
+<li>Connection issues → <code>app/Helper/config.py</code></li>
+<li>Trading errors → <code>app/Helper/errors.py</code></li>
+<li>API limits → <code>app/Helper/rate_limit.py</code></li>
+<li>MT4 quirks → <code>app/Helper/patch_mt4_account.py</code></li>
+</ul>
+<hr />
+<p>"Wishing you tight spreads, clean fills, and profits that compound. 🟢"</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../MT4Account/BASE/" class="md-footer__link md-footer__link--prev" aria-label="Previous: BASE">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                BASE
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ARCHITECTURE/" class="md-footer__link md-footer__link--next" aria-label="Next: Architecture">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Architecture
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2024–2025 MetaRPC. MT4 is a trademark of MetaQuotes Software Corp. This documentation is community-maintained and not affiliated with MetaQuotes.
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/MetaRPC/PyMT4" target="_blank" rel="noopener" title="PyMT4 on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.footer", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../javascripts/ux.js"></script>
+      
+    
+  </body>
+</html>

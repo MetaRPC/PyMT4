@@ -1,0 +1,1370 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete Python SDK for MetaTrader 4 trading automation">
+      
+      
+      
+        <link rel="canonical" href="https://metarpc.github.io/PyMT4/MT4Sugar/Math_Risk/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Math & Risk - PyMT4 SDK Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../styles/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#math-risk" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PyMT4 SDK Documentation" class="md-header__button md-logo" aria-label="PyMT4 SDK Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m3.5 18.5 6-6 4 4L22 6.92 20.59 5.5l-7.09 8-4-4L2 17z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyMT4 SDK Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Math &amp; Risk
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/MetaRPC/PyMT4" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MetaRPC/PyMT4
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PyMT4 SDK Documentation" class="md-nav__button md-logo" aria-label="PyMT4 SDK Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m3.5 18.5 6-6 4 4L22 6.92 20.59 5.5l-7.09 8-4-4L2 17z"/></svg>
+
+    </a>
+    PyMT4 SDK Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/MetaRPC/PyMT4" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MetaRPC/PyMT4
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Access
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Quick Access
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MT4Account/Account_Information/account_summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Account Info
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MT4Account/Market_quota_symbols/Market_Quota.Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Market Quota — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MT4Account/Orders_Positions_History/Positions_History_Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Positions History — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MT4Account/Streams/Streams_Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streams — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MT4Account/Trading_Actions/Trading_Actions_Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trading Actions — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../MT4Account/BASE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BASE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PROJECT_MAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ARCHITECTURE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MT4Sugar — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Main/Overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Main — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Examples/All_about_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy/All_about_orchestrator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrator — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Strategy/All_about_presets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presets — Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#async-auto_breakeventicket-trigger_pips-plus_pips00" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🤖 async auto_breakeven(ticket, *, trigger_pips, plus_pips=0.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breakeven_priceentry_price-commission00-swap00" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚖️ breakeven_price(entry_price, commission=0.0, swap=0.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-calc_cash_risksymbol-lots-stop_pips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💵 async calc_cash_risk(symbol, lots, stop_pips)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-calc_lot_by_risksymbol-risk_percent-stop_pips-balancenone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧮 async calc_lot_by_risk(symbol, risk_percent, stop_pips, *, balance=None)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-close_by_breakeventicket-plus_pips00" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧷 async close_by_breakeven(ticket, plus_pips=0.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-normalize_lotsymbol-lots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧯 async normalize_lot(symbol, lots)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-normalize_pricesymbol-price" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 async normalize_price(symbol, price)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-pips_to_pricesymbol-pips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📏 async pips_to_price(symbol, pips)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-price_to_pipssymbol-price_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔁 async price_to_pips(symbol, price_delta)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-tick_valuesymbol-lots10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎫 async tick_value(symbol, lots=1.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="math-risk">Math &amp; Risk<a class="headerlink" href="#math-risk" title="Permanent link">¶</a></h1>
+<h2 id="async-auto_breakeventicket-trigger_pips-plus_pips00">🤖 <code>async auto_breakeven(ticket, *, trigger_pips, plus_pips=0.0)</code><a class="headerlink" href="#async-auto_breakeventicket-trigger_pips-plus_pips00" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Automatically moves SL to breakeven once price advances by <code>trigger_pips</code>;
+sets SL to <code>entry ± plus_pips</code> depending on direction.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Semi‑automated strategies/scalping to lock in breakeven without manual intervention.</li>
+</ul>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Trading_Actions/order_modify/">order_modify.md</a>, <a href="../../MT4Account/Orders_Positions_History/opened_orders/">opened_orders.md</a></p>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">auto_breakeven</span><span class="p">(</span><span class="n">ticket</span><span class="o">=</span><span class="mi">123456</span><span class="p">,</span> <span class="n">trigger_pips</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">plus_pips</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="breakeven_priceentry_price-commission00-swap00">⚖️ <code>breakeven_price(entry_price, commission=0.0, swap=0.0)</code><a class="headerlink" href="#breakeven_priceentry_price-commission00-swap00" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Computes breakeven price considering commission/swap.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Determining the level to pull SL to when targeting "flat" (zero P/L).</li>
+</ul>
+<p><strong>Related to:</strong> <em>pure math helper</em></p>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">be</span> <span class="o">=</span> <span class="n">sugar</span><span class="o">.</span><span class="n">breakeven_price</span><span class="p">(</span><span class="n">entry_price</span><span class="o">=</span><span class="mf">1.10000</span><span class="p">,</span> <span class="n">commission</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">swap</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-calc_cash_risksymbol-lots-stop_pips">💵 <code>async calc_cash_risk(symbol, lots, stop_pips)</code><a class="headerlink" href="#async-calc_cash_risksymbol-lots-stop_pips" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Calculates cash risk for a position if SL is placed <code>stop_pips</code> away.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Risk control / money management before order placement.</li>
+<li>Validating position sizes don't exceed risk limits.</li>
+<li>Portfolio risk aggregation.</li>
+<li>Risk reporting and monitoring.</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>symbol</code> - Trading symbol</li>
+<li><code>lots</code> - Position size in lots</li>
+<li><code>stop_pips</code> - Stop loss distance in pips</li>
+</ul>
+<p><strong>Returns:</strong> Cash risk amount in account currency (float)</p>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Market_quota_symbols/tick_value_with_size/">tick_value_with_size.md</a></p>
+<p><strong>Example 1: Verify risk before opening</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check if risk is acceptable</span>
+<span class="n">risk_cash</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_cash_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This trade risks $</span><span class="si">{</span><span class="n">risk_cash</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">risk_cash</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Risk too high - reducing position size&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">buy_market</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">sl_pips</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 2: Calculate total portfolio risk</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get all open positions</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">_svc</span><span class="o">.</span><span class="n">opened_orders</span><span class="p">()</span>
+
+<span class="n">total_risk</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">orders</span><span class="p">:</span>
+    <span class="c1"># Calculate risk for each position</span>
+    <span class="n">risk</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_cash_risk</span><span class="p">(</span>
+        <span class="n">symbol</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span>
+        <span class="n">lots</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">lots</span><span class="p">,</span>
+        <span class="n">stop_pips</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">stop_loss</span> <span class="o">-</span> <span class="n">order</span><span class="o">.</span><span class="n">open_price</span><span class="p">)</span> <span class="o">/</span> <span class="n">pip_size</span>
+    <span class="p">)</span>
+    <span class="n">total_risk</span> <span class="o">+=</span> <span class="n">risk</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total portfolio risk: $</span><span class="si">{</span><span class="n">total_risk</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 3: Risk as percentage of balance</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">balance</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># Account balance</span>
+<span class="n">risk_cash</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_cash_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">risk_pct</span> <span class="o">=</span> <span class="p">(</span><span class="n">risk_cash</span> <span class="o">/</span> <span class="n">balance</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Risk: $</span><span class="si">{</span><span class="n">risk_cash</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">risk_pct</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of balance)&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-calc_lot_by_risksymbol-risk_percent-stop_pips-balancenone">🧮 <code>async calc_lot_by_risk(symbol, risk_percent, stop_pips, *, balance=None)</code><a class="headerlink" href="#async-calc_lot_by_risksymbol-risk_percent-stop_pips-balancenone" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Derives lot size from desired <code>%</code> risk of balance and SL distance in pips. This is THE MOST IMPORTANT method for proper position sizing.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Auto‑sizing position before sending an order.</li>
+<li>Implementing consistent risk management across all trades.</li>
+<li>Adjusting position size based on stop loss distance.</li>
+<li>Portfolio risk management.</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>symbol</code> - Trading symbol</li>
+<li><code>risk_percent</code> - Percentage of balance to risk (e.g., 1.0 = 1%, 2.5 = 2.5%)</li>
+<li><code>stop_pips</code> - Stop loss distance in pips</li>
+<li><code>balance</code> - (Optional) Account balance. If None, fetches current balance automatically.</li>
+</ul>
+<p><strong>Returns:</strong> Lot size (float) that risks exactly the specified percentage</p>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>Automatically fetches account balance if not provided</li>
+<li>Accounts for symbol-specific tick values</li>
+<li>Returns normalized lot size (valid for broker)</li>
+<li>Higher risk_percent = larger position</li>
+<li>Wider stop_pips = smaller position (for same risk)</li>
+</ul>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Market_quota_symbols/tick_value_with_size/">tick_value_with_size.md</a></p>
+<p><strong>Example 1: Risk 1% on each trade</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Risk 1% of balance with 20 pip stop</span>
+<span class="n">lots</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_lot_by_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">risk_percent</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">buy_market</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="n">lots</span><span class="p">,</span> <span class="n">sl_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 2: Adaptive position sizing</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Tighter stops = larger position</span>
+<span class="c1"># Wider stops = smaller position</span>
+
+<span class="c1"># Volatile market - wide stop, automatically smaller position</span>
+<span class="n">lots_volatile</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_lot_by_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">risk_percent</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># Calm market - tight stop, automatically larger position</span>
+<span class="n">lots_calm</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_lot_by_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">risk_percent</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;50 pip stop = </span><span class="si">{</span><span class="n">lots_volatile</span><span class="si">}</span><span class="s2"> lots&quot;</span><span class="p">)</span>  <span class="c1"># e.g., 0.04</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;10 pip stop = </span><span class="si">{</span><span class="n">lots_calm</span><span class="si">}</span><span class="s2"> lots&quot;</span><span class="p">)</span>      <span class="c1"># e.g., 0.20</span>
+</code></pre></div>
+<p><strong>Example 3: Different risk levels for different strategies</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Conservative: 0.5% risk</span>
+<span class="n">conservative_lots</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_lot_by_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">risk_percent</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Standard: 1% risk</span>
+<span class="n">standard_lots</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_lot_by_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">risk_percent</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Aggressive: 2% risk</span>
+<span class="n">aggressive_lots</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_lot_by_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">risk_percent</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Use based on signal confidence</span>
+<span class="k">if</span> <span class="n">signal_confidence</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">:</span>
+    <span class="n">lots</span> <span class="o">=</span> <span class="n">aggressive_lots</span>
+<span class="k">elif</span> <span class="n">signal_confidence</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+    <span class="n">lots</span> <span class="o">=</span> <span class="n">standard_lots</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">lots</span> <span class="o">=</span> <span class="n">conservative_lots</span>
+</code></pre></div>
+<p><strong>Example 4: Portfolio risk management</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Never risk more than 5% total across all positions</span>
+<span class="n">MAX_TOTAL_RISK</span> <span class="o">=</span> <span class="mf">5.0</span>
+<span class="n">current_risk</span> <span class="o">=</span> <span class="mf">2.5</span>  <span class="c1"># Already 2.5% at risk in other positions</span>
+
+<span class="n">remaining_risk</span> <span class="o">=</span> <span class="n">MAX_TOTAL_RISK</span> <span class="o">-</span> <span class="n">current_risk</span>  <span class="c1"># 2.5%</span>
+
+<span class="k">if</span> <span class="n">remaining_risk</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">lots</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">calc_lot_by_risk</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">risk_percent</span><span class="o">=</span><span class="n">remaining_risk</span><span class="p">,</span> <span class="n">stop_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">buy_market</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="n">lots</span><span class="p">,</span> <span class="n">sl_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Max portfolio risk reached - no new positions&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-close_by_breakeventicket-plus_pips00">🧷 <code>async close_by_breakeven(ticket, plus_pips=0.0)</code><a class="headerlink" href="#async-close_by_breakeventicket-plus_pips00" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Closes a position if price returns to entry (adjusted by <code>plus_pips</code>).</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>"Don’t give back" logic: from profit either continue or exit flat.</li>
+</ul>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Trading_Actions/order_close_delete/">order_close_delete.md</a>, <a href="../../MT4Account/Orders_Positions_History/opened_orders_tickets/">opened_orders_tickets.md</a></p>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">close_by_breakeven</span><span class="p">(</span><span class="n">ticket</span><span class="o">=</span><span class="mi">123456</span><span class="p">,</span> <span class="n">plus_pips</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-normalize_lotsymbol-lots">🧯 <code>async normalize_lot(symbol, lots)</code><a class="headerlink" href="#async-normalize_lotsymbol-lots" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Normalizes lot to the instrument's step/min/max constraints.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Before <code>order_send</code> / <code>order_modify</code> to avoid broker rejections.</li>
+<li>Ensuring lot sizes comply with broker requirements.</li>
+<li>Rounding calculated lot sizes to valid values.</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>symbol</code> - Trading symbol</li>
+<li><code>lots</code> - Lot size to normalize</li>
+</ul>
+<p><strong>Returns:</strong> Normalized lot size (float) that meets broker requirements</p>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>Rounds to nearest valid lot step (usually 0.01)</li>
+<li>Clamps to min/max lot sizes</li>
+<li>Essential to avoid "invalid volume" errors</li>
+</ul>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Market_quota_symbols/symbol_params_many/">symbol_params_many.md</a></p>
+<p><strong>Example 1: Normalize calculated lots</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">lots_ok</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">normalize_lot</span><span class="p">(</span><span class="s2">&quot;XAUUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.033</span><span class="p">)</span>  <span class="c1"># → 0.03</span>
+</code></pre></div>
+<p><strong>Example 2: Normalize before order placement</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Calculate ideal lot size</span>
+<span class="n">ideal_lots</span> <span class="o">=</span> <span class="mf">0.1234</span>
+
+<span class="c1"># Normalize to broker requirements</span>
+<span class="n">actual_lots</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">normalize_lot</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">ideal_lots</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">buy_market</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="n">actual_lots</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-normalize_pricesymbol-price">🎯 <code>async normalize_price(symbol, price)</code><a class="headerlink" href="#async-normalize_pricesymbol-price" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Normalizes price to the instrument's precision (<code>digits/point</code>).</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Before setting SL/TP/limit/stop orders.</li>
+<li>Ensuring prices comply with broker requirements.</li>
+<li>Rounding calculated prices to valid tick sizes.</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>symbol</code> - Trading symbol</li>
+<li><code>price</code> - Price to normalize</li>
+</ul>
+<p><strong>Returns:</strong> Normalized price (float) rounded to valid tick size</p>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>Rounds to nearest valid tick</li>
+<li>Essential to avoid order rejections</li>
+<li>Different symbols have different precision (EURUSD: 5 digits, USDJPY: 3 digits)</li>
+</ul>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Market_quota_symbols/symbol_params_many/">symbol_params_many.md</a></p>
+<p><strong>Example 1: Normalize calculated price</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">p</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">normalize_price</span><span class="p">(</span><span class="s2">&quot;GBPUSD&quot;</span><span class="p">,</span> <span class="mf">1.279991</span><span class="p">)</span>  <span class="c1"># → 1.27999</span>
+</code></pre></div>
+<p><strong>Example 2: Normalize SL/TP before order</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Calculate ideal SL price</span>
+<span class="n">ideal_sl</span> <span class="o">=</span> <span class="mf">1.095678</span>
+
+<span class="c1"># Normalize to broker precision</span>
+<span class="n">actual_sl</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">normalize_price</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">ideal_sl</span><span class="p">)</span>
+
+<span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">buy_market</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">modify_sl_tp_by_price</span><span class="p">(</span><span class="n">ticket</span><span class="o">=</span><span class="n">ticket</span><span class="p">,</span> <span class="n">sl_price</span><span class="o">=</span><span class="n">actual_sl</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-pips_to_pricesymbol-pips">📏 <code>async pips_to_price(symbol, pips)</code><a class="headerlink" href="#async-pips_to_pricesymbol-pips" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Converts a distance in pips to a price delta for the symbol.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Computing SL/TP/entry levels from pip values.</li>
+<li>Converting pip-based calculations to actual price levels.</li>
+<li>Setting orders at specific pip distances from current price.</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>symbol</code> - Trading symbol</li>
+<li><code>pips</code> - Number of pips to convert</li>
+</ul>
+<p><strong>Returns:</strong> Price delta (float) equivalent to the pip distance</p>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>Accounts for symbol-specific pip sizes</li>
+<li>For 5-digit brokers (EURUSD): 10 pips = 0.00100</li>
+<li>For 3-digit brokers (USDJPY): 10 pips = 0.100</li>
+</ul>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Market_quota_symbols/symbol_params_many/">symbol_params_many.md</a>, <a href="../../MT4Account/Market_quota_symbols/tick_value_with_size/">tick_value_with_size.md</a></p>
+<p><strong>Example 1: Basic conversion</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">delta</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">pips_to_price</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>  <span class="c1"># ~0.0015 on 5-digit</span>
+</code></pre></div>
+<p><strong>Example 2: Calculate SL/TP prices</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get current price</span>
+<span class="n">quote</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">last_quote</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">)</span>
+<span class="n">entry_price</span> <span class="o">=</span> <span class="n">quote</span><span class="p">[</span><span class="s2">&quot;ask&quot;</span><span class="p">]</span>
+
+<span class="c1"># Calculate SL and TP prices</span>
+<span class="n">sl_distance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">pips_to_price</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">tp_distance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">pips_to_price</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="n">sl_price</span> <span class="o">=</span> <span class="n">entry_price</span> <span class="o">-</span> <span class="n">sl_distance</span>  <span class="c1"># For buy order</span>
+<span class="n">tp_price</span> <span class="o">=</span> <span class="n">entry_price</span> <span class="o">+</span> <span class="n">tp_distance</span>  <span class="c1"># For buy order</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entry: </span><span class="si">{</span><span class="n">entry_price</span><span class="si">}</span><span class="s2">, SL: </span><span class="si">{</span><span class="n">sl_price</span><span class="si">}</span><span class="s2">, TP: </span><span class="si">{</span><span class="n">tp_price</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 3: Place order at specific pip distance</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Place buy stop 30 pips above current price</span>
+<span class="n">quote</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">last_quote</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">)</span>
+<span class="n">current_ask</span> <span class="o">=</span> <span class="n">quote</span><span class="p">[</span><span class="s2">&quot;ask&quot;</span><span class="p">]</span>
+
+<span class="n">pip_distance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">pips_to_price</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">entry_price</span> <span class="o">=</span> <span class="n">current_ask</span> <span class="o">+</span> <span class="n">pip_distance</span>
+
+<span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">buy_stop</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">entry_price</span><span class="p">,</span> <span class="n">sl_pips</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-price_to_pipssymbol-price_delta">🔁 <code>async price_to_pips(symbol, price_delta)</code><a class="headerlink" href="#async-price_to_pipssymbol-price_delta" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Converts a price delta back into pips for the symbol.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Expressing spread/profit/risk in pips.</li>
+<li>Calculating profit/loss in pips.</li>
+<li>Converting technical levels to pip distances.</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>symbol</code> - Trading symbol</li>
+<li><code>price_delta</code> - Price difference to convert</li>
+</ul>
+<p><strong>Returns:</strong> Number of pips (float)</p>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Market_quota_symbols/symbol_params_many/">symbol_params_many.md</a></p>
+<p><strong>Example 1: Convert price to pips</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">pips</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">price_to_pips</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="mf">0.0007</span><span class="p">)</span>  <span class="c1"># ~7 pips</span>
+</code></pre></div>
+<p><strong>Example 2: Calculate profit in pips</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get position details</span>
+<span class="n">entry_price</span> <span class="o">=</span> <span class="mf">1.09500</span>
+<span class="n">current_price</span> <span class="o">=</span> <span class="mf">1.09750</span>
+<span class="n">price_move</span> <span class="o">=</span> <span class="n">current_price</span> <span class="o">-</span> <span class="n">entry_price</span>
+
+<span class="c1"># Convert to pips</span>
+<span class="n">profit_pips</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">price_to_pips</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">price_move</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Profit: </span><span class="si">{</span><span class="n">profit_pips</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> pips&quot;</span><span class="p">)</span>  <span class="c1"># ~25 pips</span>
+</code></pre></div>
+<p><strong>Example 3: Measure distance to key levels</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Technical analysis</span>
+<span class="n">quote</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">last_quote</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">)</span>
+<span class="n">current_price</span> <span class="o">=</span> <span class="n">quote</span><span class="p">[</span><span class="s2">&quot;bid&quot;</span><span class="p">]</span>
+
+<span class="n">resistance</span> <span class="o">=</span> <span class="mf">1.1000</span>
+<span class="n">distance_to_resistance</span> <span class="o">=</span> <span class="n">resistance</span> <span class="o">-</span> <span class="n">current_price</span>
+<span class="n">pips_to_resistance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">price_to_pips</span><span class="p">(</span><span class="s2">&quot;EURUSD&quot;</span><span class="p">,</span> <span class="n">distance_to_resistance</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pips_to_resistance</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> pips to resistance&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="async-tick_valuesymbol-lots10">🎫 <code>async tick_value(symbol, lots=1.0)</code><a class="headerlink" href="#async-tick_valuesymbol-lots10" title="Permanent link">¶</a></h2>
+<p><strong>What it does:</strong> Cash value of one tick move for the symbol at the given lot.</p>
+<p><strong>Used in:</strong></p>
+<ul>
+<li>Risk management, expected P/L per tick.</li>
+</ul>
+<p><strong>Related to:</strong> <a href="../../MT4Account/Market_quota_symbols/tick_value_with_size/">tick_value_with_size.md</a></p>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">tv</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sugar</span><span class="o">.</span><span class="n">tick_value</span><span class="p">(</span><span class="s2">&quot;USDJPY&quot;</span><span class="p">,</span> <span class="n">lots</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2024–2025 MetaRPC. MT4 is a trademark of MetaQuotes Software Corp. This documentation is community-maintained and not affiliated with MetaQuotes.
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/MetaRPC/PyMT4" target="_blank" rel="noopener" title="PyMT4 on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.footer", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../javascripts/ux.js"></script>
+      
+    
+  </body>
+</html>
