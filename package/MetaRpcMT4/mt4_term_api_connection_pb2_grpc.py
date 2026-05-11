@@ -44,6 +44,11 @@ class ConnectionStub(object):
                 request_serializer=mt4__term__api__connection__pb2.ReconnectRequest.SerializeToString,
                 response_deserializer=mt4__term__api__connection__pb2.ReconnectReply.FromString,
                 )
+        self.GetBrokerServersByBrokerName = channel.unary_unary(
+                '/mt4_term_api.Connection/GetBrokerServersByBrokerName',
+                request_serializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameRequest.SerializeToString,
+                response_deserializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameReply.FromString,
+                )
 
 
 class ConnectionServicer(object):
@@ -51,6 +56,12 @@ class ConnectionServicer(object):
 
     def ConnectEx(self, request, context):
         """Creates terminal connection to the MT5 server by MT cluster name, waits for connection and returns Guid of it 
+        [DefaultValues]
+        {
+        "user": "1124213727",
+        "password": "1tjvjck",
+        "mtClusterName": "FreshForex-Demo"
+        }  
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -112,6 +123,12 @@ class ConnectionServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetBrokerServersByBrokerName(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ConnectionServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -144,6 +161,11 @@ def add_ConnectionServicer_to_server(servicer, server):
                     servicer.Reconnect,
                     request_deserializer=mt4__term__api__connection__pb2.ReconnectRequest.FromString,
                     response_serializer=mt4__term__api__connection__pb2.ReconnectReply.SerializeToString,
+            ),
+            'GetBrokerServersByBrokerName': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetBrokerServersByBrokerName,
+                    request_deserializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameRequest.FromString,
+                    response_serializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -254,5 +276,22 @@ class Connection(object):
         return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Connection/Reconnect',
             mt4__term__api__connection__pb2.ReconnectRequest.SerializeToString,
             mt4__term__api__connection__pb2.ReconnectReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetBrokerServersByBrokerName(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Connection/GetBrokerServersByBrokerName',
+            mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameRequest.SerializeToString,
+            mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

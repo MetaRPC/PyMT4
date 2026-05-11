@@ -34,6 +34,11 @@ class MarketInfoStub(object):
                 request_serializer=mt4__term__api__market__info__pb2.QuoteHistoryRequest.SerializeToString,
                 response_deserializer=mt4__term__api__market__info__pb2.QuoteHistoryReply.FromString,
                 )
+        self.SymbolSelect = channel.unary_unary(
+                '/mt4_term_api.MarketInfo/SymbolSelect',
+                request_serializer=mt4__term__api__market__info__pb2.SymbolSelectRequest.SerializeToString,
+                response_deserializer=mt4__term__api__market__info__pb2.SymbolSelectReply.FromString,
+                )
 
 
 class MarketInfoServicer(object):
@@ -65,6 +70,14 @@ class MarketInfoServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def SymbolSelect(self, request, context):
+        """Selects a symbol in the Market Watch window or removes a symbol from the window
+        https://docs.mql4.com/marketinformation/symbolselect
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MarketInfoServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -87,6 +100,11 @@ def add_MarketInfoServicer_to_server(servicer, server):
                     servicer.QuoteHistory,
                     request_deserializer=mt4__term__api__market__info__pb2.QuoteHistoryRequest.FromString,
                     response_serializer=mt4__term__api__market__info__pb2.QuoteHistoryReply.SerializeToString,
+            ),
+            'SymbolSelect': grpc.unary_unary_rpc_method_handler(
+                    servicer.SymbolSelect,
+                    request_deserializer=mt4__term__api__market__info__pb2.SymbolSelectRequest.FromString,
+                    response_serializer=mt4__term__api__market__info__pb2.SymbolSelectReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -163,5 +181,22 @@ class MarketInfo(object):
         return grpc.experimental.unary_unary(request, target, '/mt4_term_api.MarketInfo/QuoteHistory',
             mt4__term__api__market__info__pb2.QuoteHistoryRequest.SerializeToString,
             mt4__term__api__market__info__pb2.QuoteHistoryReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SymbolSelect(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.MarketInfo/SymbolSelect',
+            mt4__term__api__market__info__pb2.SymbolSelectRequest.SerializeToString,
+            mt4__term__api__market__info__pb2.SymbolSelectReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
