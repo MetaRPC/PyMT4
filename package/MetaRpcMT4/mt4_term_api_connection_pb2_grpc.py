@@ -49,6 +49,11 @@ class ConnectionStub(object):
                 request_serializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameRequest.SerializeToString,
                 response_deserializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameReply.FromString,
                 )
+        self.GetId = channel.unary_unary(
+                '/mt4_term_api.Connection/GetId',
+                request_serializer=mt4__term__api__connection__pb2.GetIdRequest.SerializeToString,
+                response_deserializer=mt4__term__api__connection__pb2.GetIdReply.FromString,
+                )
 
 
 class ConnectionServicer(object):
@@ -129,6 +134,20 @@ class ConnectionServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetId(self, request, context):
+        """Generates a deterministic GUID from user and password.
+        The same user/password combination always produces the same GUID.
+        Use this GUID as the 'id' header for Connect and other endpoints.
+        [DefaultValues]
+        {
+        "user": "1124213727",
+        "password": "1tjvjck"
+        }
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ConnectionServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -166,6 +185,11 @@ def add_ConnectionServicer_to_server(servicer, server):
                     servicer.GetBrokerServersByBrokerName,
                     request_deserializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameRequest.FromString,
                     response_serializer=mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameReply.SerializeToString,
+            ),
+            'GetId': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetId,
+                    request_deserializer=mt4__term__api__connection__pb2.GetIdRequest.FromString,
+                    response_serializer=mt4__term__api__connection__pb2.GetIdReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -293,5 +317,22 @@ class Connection(object):
         return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Connection/GetBrokerServersByBrokerName',
             mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameRequest.SerializeToString,
             mt4__term__api__connection__pb2.GetBrokerServersByBrokerNameReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetId(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Connection/GetId',
+            mt4__term__api__connection__pb2.GetIdRequest.SerializeToString,
+            mt4__term__api__connection__pb2.GetIdReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
