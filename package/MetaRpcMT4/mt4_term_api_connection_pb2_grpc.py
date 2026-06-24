@@ -336,3 +336,114 @@ class Connection(object):
             mt4__term__api__connection__pb2.GetIdReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+
+class LogsStub(object):
+    """Provides access to terminal log content (Journal and Experts tabs).
+    Reads log entries directly from the MT4 terminal GUI.
+    Requires 'id' header with the terminal connection GUID returned by Connect.
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.Journal = channel.unary_unary(
+                '/mt4_term_api.Logs/Journal',
+                request_serializer=mt4__term__api__connection__pb2.JournalRequest.SerializeToString,
+                response_deserializer=mt4__term__api__connection__pb2.JournalReply.FromString,
+                )
+        self.Experts = channel.unary_unary(
+                '/mt4_term_api.Logs/Experts',
+                request_serializer=mt4__term__api__connection__pb2.JournalRequest.SerializeToString,
+                response_deserializer=mt4__term__api__connection__pb2.JournalReply.FromString,
+                )
+
+
+class LogsServicer(object):
+    """Provides access to terminal log content (Journal and Experts tabs).
+    Reads log entries directly from the MT4 terminal GUI.
+    Requires 'id' header with the terminal connection GUID returned by Connect.
+    """
+
+    def Journal(self, request, context):
+        """Returns log entries from the terminal Journal tab.
+        The Journal tab contains system messages about terminal connection status,
+        network activity, server synchronization and other internal events.
+        Works regardless of which tab is currently active in the terminal UI.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def Experts(self, request, context):
+        """Returns log entries from the terminal Experts tab.
+        The Experts tab contains messages from Expert Advisors (EAs), scripts and indicators
+        including Print() output, initialization/deinitialization events and runtime errors.
+        Works regardless of which tab is currently active in the terminal UI.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_LogsServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'Journal': grpc.unary_unary_rpc_method_handler(
+                    servicer.Journal,
+                    request_deserializer=mt4__term__api__connection__pb2.JournalRequest.FromString,
+                    response_serializer=mt4__term__api__connection__pb2.JournalReply.SerializeToString,
+            ),
+            'Experts': grpc.unary_unary_rpc_method_handler(
+                    servicer.Experts,
+                    request_deserializer=mt4__term__api__connection__pb2.JournalRequest.FromString,
+                    response_serializer=mt4__term__api__connection__pb2.JournalReply.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'mt4_term_api.Logs', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+ # This class is part of an EXPERIMENTAL API.
+class Logs(object):
+    """Provides access to terminal log content (Journal and Experts tabs).
+    Reads log entries directly from the MT4 terminal GUI.
+    Requires 'id' header with the terminal connection GUID returned by Connect.
+    """
+
+    @staticmethod
+    def Journal(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Logs/Journal',
+            mt4__term__api__connection__pb2.JournalRequest.SerializeToString,
+            mt4__term__api__connection__pb2.JournalReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def Experts(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Logs/Experts',
+            mt4__term__api__connection__pb2.JournalRequest.SerializeToString,
+            mt4__term__api__connection__pb2.JournalReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
