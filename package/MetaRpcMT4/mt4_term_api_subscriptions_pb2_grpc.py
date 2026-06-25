@@ -40,25 +40,37 @@ class SubscriptionServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def OnTrade(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Streams real-time order/trade events.
+        Requires 'id' header — use GetId to generate.
+        Swagger does not support streaming — use /subscription-stream interactive viewer.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def OnOpenedOrdersTickets(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Streams the tickets of currently opened orders as they change.
+        Requires 'id' header — use GetId to generate.
+        Swagger does not support streaming — use /subscription-stream interactive viewer.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def OnOpenedOrdersProfit(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Streams the live profit of currently opened orders.
+        Requires 'id' header — use GetId to generate.
+        Swagger does not support streaming — use /subscription-stream interactive viewer.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def OnSymbolTick(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Streams real-time ticks for the given symbols.
+        Requires 'id' header — use GetId to generate.
+        Swagger does not support streaming — use /subscription-stream interactive viewer.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
