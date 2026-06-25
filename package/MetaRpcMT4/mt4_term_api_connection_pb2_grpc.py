@@ -54,6 +54,11 @@ class ConnectionStub(object):
                 request_serializer=mt4__term__api__connection__pb2.GetIdRequest.SerializeToString,
                 response_deserializer=mt4__term__api__connection__pb2.GetIdReply.FromString,
                 )
+        self.Screenshot = channel.unary_unary(
+                '/mt4_term_api.Connection/Screenshot',
+                request_serializer=mt4__term__api__connection__pb2.ScreenshotRequest.SerializeToString,
+                response_deserializer=mt4__term__api__connection__pb2.ScreenshotReply.FromString,
+                )
 
 
 class ConnectionServicer(object):
@@ -148,6 +153,15 @@ class ConnectionServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Screenshot(self, request, context):
+        """Captures a screenshot of the terminal instance window.
+        Handled by Terminal Manager: the per-terminal in-process responder grabs the
+        MT4 window and the manager returns the image. Requires 'id' header.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ConnectionServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -190,6 +204,11 @@ def add_ConnectionServicer_to_server(servicer, server):
                     servicer.GetId,
                     request_deserializer=mt4__term__api__connection__pb2.GetIdRequest.FromString,
                     response_serializer=mt4__term__api__connection__pb2.GetIdReply.SerializeToString,
+            ),
+            'Screenshot': grpc.unary_unary_rpc_method_handler(
+                    servicer.Screenshot,
+                    request_deserializer=mt4__term__api__connection__pb2.ScreenshotRequest.FromString,
+                    response_serializer=mt4__term__api__connection__pb2.ScreenshotReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -334,6 +353,23 @@ class Connection(object):
         return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Connection/GetId',
             mt4__term__api__connection__pb2.GetIdRequest.SerializeToString,
             mt4__term__api__connection__pb2.GetIdReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def Screenshot(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Connection/Screenshot',
+            mt4__term__api__connection__pb2.ScreenshotRequest.SerializeToString,
+            mt4__term__api__connection__pb2.ScreenshotReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
