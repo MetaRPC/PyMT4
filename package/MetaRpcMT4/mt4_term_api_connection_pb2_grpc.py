@@ -59,6 +59,16 @@ class ConnectionStub(object):
                 request_serializer=mt4__term__api__connection__pb2.ScreenshotRequest.SerializeToString,
                 response_deserializer=mt4__term__api__connection__pb2.ScreenshotReply.FromString,
                 )
+        self.ConnectStream = channel.unary_stream(
+                '/mt4_term_api.Connection/ConnectStream',
+                request_serializer=mt4__term__api__connection__pb2.ConnectRequest.SerializeToString,
+                response_deserializer=mt4__term__api__connection__pb2.ConnectStreamEvent.FromString,
+                )
+        self.ConnectExStream = channel.unary_stream(
+                '/mt4_term_api.Connection/ConnectExStream',
+                request_serializer=mt4__term__api__connection__pb2.ConnectExRequest.SerializeToString,
+                response_deserializer=mt4__term__api__connection__pb2.ConnectStreamEvent.FromString,
+                )
 
 
 class ConnectionServicer(object):
@@ -162,6 +172,26 @@ class ConnectionServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ConnectStream(self, request, context):
+        """Same as Connect but streams real-time progress events (incl. live Journal/
+        Experts log lines) while the connection is established.
+        Requires 'id' header — use GetId to generate.
+        Swagger does not support streaming — use /connect-stream interactive viewer.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ConnectExStream(self, request, context):
+        """Same as ConnectEx but streams real-time progress events (incl. live Journal/
+        Experts log lines) while the connection is established.
+        Requires 'id' header — use GetId to generate.
+        Swagger does not support streaming — use /connect-stream interactive viewer.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ConnectionServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -209,6 +239,16 @@ def add_ConnectionServicer_to_server(servicer, server):
                     servicer.Screenshot,
                     request_deserializer=mt4__term__api__connection__pb2.ScreenshotRequest.FromString,
                     response_serializer=mt4__term__api__connection__pb2.ScreenshotReply.SerializeToString,
+            ),
+            'ConnectStream': grpc.unary_stream_rpc_method_handler(
+                    servicer.ConnectStream,
+                    request_deserializer=mt4__term__api__connection__pb2.ConnectRequest.FromString,
+                    response_serializer=mt4__term__api__connection__pb2.ConnectStreamEvent.SerializeToString,
+            ),
+            'ConnectExStream': grpc.unary_stream_rpc_method_handler(
+                    servicer.ConnectExStream,
+                    request_deserializer=mt4__term__api__connection__pb2.ConnectExRequest.FromString,
+                    response_serializer=mt4__term__api__connection__pb2.ConnectStreamEvent.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -370,6 +410,40 @@ class Connection(object):
         return grpc.experimental.unary_unary(request, target, '/mt4_term_api.Connection/Screenshot',
             mt4__term__api__connection__pb2.ScreenshotRequest.SerializeToString,
             mt4__term__api__connection__pb2.ScreenshotReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ConnectStream(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/mt4_term_api.Connection/ConnectStream',
+            mt4__term__api__connection__pb2.ConnectRequest.SerializeToString,
+            mt4__term__api__connection__pb2.ConnectStreamEvent.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ConnectExStream(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/mt4_term_api.Connection/ConnectExStream',
+            mt4__term__api__connection__pb2.ConnectExRequest.SerializeToString,
+            mt4__term__api__connection__pb2.ConnectStreamEvent.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
