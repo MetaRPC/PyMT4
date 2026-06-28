@@ -187,6 +187,12 @@ class ConnectionServicer(object):
         Experts log lines) while the connection is established.
         Requires 'id' header — use GetId to generate.
         Swagger does not support streaming — use /connect-stream interactive viewer.
+        [DefaultValues]
+        {
+        "user": "1124213727",
+        "password": "1tjvjck",
+        "mtClusterName": "FreshForex-Demo"
+        }
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
