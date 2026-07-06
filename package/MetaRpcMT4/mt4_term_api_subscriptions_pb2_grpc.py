@@ -70,6 +70,10 @@ class SubscriptionServiceServicer(object):
         """Streams real-time ticks for the given symbols.
         Requires 'id' header — use GetId to generate.
         Swagger does not support streaming — use /subscription-stream interactive viewer.
+        [DefaultValues]
+        {
+        "symbolNames": "EURUSD,BTCUSD"
+        }
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
