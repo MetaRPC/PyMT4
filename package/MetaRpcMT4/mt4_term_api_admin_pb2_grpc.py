@@ -70,6 +70,21 @@ class AdminApiStub(object):
                 request_serializer=mt4__term__api__admin__pb2.ActiveTerminalsRequest.SerializeToString,
                 response_deserializer=mt4__term__api__admin__pb2.RefreshMrpcRestReply.FromString,
                 )
+        self.GetVersion = channel.unary_unary(
+                '/mrpc_admin.AdminApi/GetVersion',
+                request_serializer=mt4__term__api__admin__pb2.VersionRequest.SerializeToString,
+                response_deserializer=mt4__term__api__admin__pb2.VersionReply.FromString,
+                )
+        self.GetAllLogs = channel.unary_unary(
+                '/mrpc_admin.AdminApi/GetAllLogs',
+                request_serializer=mt4__term__api__admin__pb2.GetAllLogsRequest.SerializeToString,
+                response_deserializer=mt4__term__api__admin__pb2.GetAllLogsReply.FromString,
+                )
+        self.GetSessionRestoreLogs = channel.unary_unary(
+                '/mrpc_admin.AdminApi/GetSessionRestoreLogs',
+                request_serializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsRequest.SerializeToString,
+                response_deserializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsReply.FromString,
+                )
 
 
 class AdminApiServicer(object):
@@ -165,6 +180,31 @@ class AdminApiServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetVersion(self, request, context):
+        """Build/version identity of the Terminal Manager running on THIS pod, so a deploy can be
+        VERIFIED rather than guessed. No admin_key required - it exposes no secrets. mrpc-rest
+        transcodes GET /version-tm onto this (its own build is at GET /version).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAllLogs(self, request, context):
+        """One-shot bundle of EVERY diagnostic log available on this pod: every *.log file on the
+        shared Data folder AND in C:\OEM, plus the Windows Application + System event logs. See the
+        mt5 admin proto for the canonical definition (this copy exists for the mt4 client libs).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetSessionRestoreLogs(self, request, context):
+        """Session restore logs for the latest startup sequence on a pod (stored in MongoDB session_restore_logs).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AdminApiServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -212,6 +252,21 @@ def add_AdminApiServicer_to_server(servicer, server):
                     servicer.RefreshMrpcRest,
                     request_deserializer=mt4__term__api__admin__pb2.ActiveTerminalsRequest.FromString,
                     response_serializer=mt4__term__api__admin__pb2.RefreshMrpcRestReply.SerializeToString,
+            ),
+            'GetVersion': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetVersion,
+                    request_deserializer=mt4__term__api__admin__pb2.VersionRequest.FromString,
+                    response_serializer=mt4__term__api__admin__pb2.VersionReply.SerializeToString,
+            ),
+            'GetAllLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllLogs,
+                    request_deserializer=mt4__term__api__admin__pb2.GetAllLogsRequest.FromString,
+                    response_serializer=mt4__term__api__admin__pb2.GetAllLogsReply.SerializeToString,
+            ),
+            'GetSessionRestoreLogs': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSessionRestoreLogs,
+                    request_deserializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsRequest.FromString,
+                    response_serializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -384,5 +439,56 @@ class AdminApi(object):
         return grpc.experimental.unary_unary(request, target, '/mrpc_admin.AdminApi/RefreshMrpcRest',
             mt4__term__api__admin__pb2.ActiveTerminalsRequest.SerializeToString,
             mt4__term__api__admin__pb2.RefreshMrpcRestReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetVersion(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mrpc_admin.AdminApi/GetVersion',
+            mt4__term__api__admin__pb2.VersionRequest.SerializeToString,
+            mt4__term__api__admin__pb2.VersionReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAllLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mrpc_admin.AdminApi/GetAllLogs',
+            mt4__term__api__admin__pb2.GetAllLogsRequest.SerializeToString,
+            mt4__term__api__admin__pb2.GetAllLogsReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetSessionRestoreLogs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mrpc_admin.AdminApi/GetSessionRestoreLogs',
+            mt4__term__api__admin__pb2.GetSessionRestoreLogsRequest.SerializeToString,
+            mt4__term__api__admin__pb2.GetSessionRestoreLogsReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
