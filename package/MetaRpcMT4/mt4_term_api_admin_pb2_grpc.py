@@ -85,6 +85,11 @@ class AdminApiStub(object):
                 request_serializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsRequest.SerializeToString,
                 response_deserializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsReply.FromString,
                 )
+        self.GetSessionRestoreStatus = channel.unary_unary(
+                '/mrpc_admin.AdminApi/GetSessionRestoreStatus',
+                request_serializer=mt4__term__api__admin__pb2.ActiveTerminalsRequest.SerializeToString,
+                response_deserializer=mt4__term__api__admin__pb2.GetSessionRestoreStatusReply.FromString,
+                )
 
 
 class AdminApiServicer(object):
@@ -205,6 +210,13 @@ class AdminApiServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetSessionRestoreStatus(self, request, context):
+        """Session restore watcher status (terminals loaded, queue count, state, diagnostics) for THIS pod.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AdminApiServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -267,6 +279,11 @@ def add_AdminApiServicer_to_server(servicer, server):
                     servicer.GetSessionRestoreLogs,
                     request_deserializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsRequest.FromString,
                     response_serializer=mt4__term__api__admin__pb2.GetSessionRestoreLogsReply.SerializeToString,
+            ),
+            'GetSessionRestoreStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSessionRestoreStatus,
+                    request_deserializer=mt4__term__api__admin__pb2.ActiveTerminalsRequest.FromString,
+                    response_serializer=mt4__term__api__admin__pb2.GetSessionRestoreStatusReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -490,5 +507,22 @@ class AdminApi(object):
         return grpc.experimental.unary_unary(request, target, '/mrpc_admin.AdminApi/GetSessionRestoreLogs',
             mt4__term__api__admin__pb2.GetSessionRestoreLogsRequest.SerializeToString,
             mt4__term__api__admin__pb2.GetSessionRestoreLogsReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetSessionRestoreStatus(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/mrpc_admin.AdminApi/GetSessionRestoreStatus',
+            mt4__term__api__admin__pb2.ActiveTerminalsRequest.SerializeToString,
+            mt4__term__api__admin__pb2.GetSessionRestoreStatusReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
