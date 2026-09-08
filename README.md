@@ -1,11 +1,48 @@
-### To view information: https://metarpc.github.io/PyMT4/
+# PyMT4 SDK
 
-To start using the library, run:
-```
+> Official MetaTrader 4 Python SDK for algorithmic trading, backtesting, and market data streaming via gRPC.
+
+[![Docs](https://img.shields.io/badge/docs-PyMT4-blue.svg)](https://metarpc.github.io/PyMT4/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+📄 **Full Documentation**: [https://metarpc.github.io/PyMT4/](https://metarpc.github.io/PyMT4/)
+
+---
+
+## 📦 Installation
+
+```bash
 pip install MetaRpcMT4
 ```
-Use the MT4Account class to interact with your MT4 account.
 
-In the project root, you can view everything from simple calls to complex ones. The examples folder also includes visual examples of working with Orchestrators and presets.
+---
 
-If you need the source code for the MetaRpcMT4 package and the MT4Account class itself, use the [/package] folder (https://github.com/MetaRPC/PyMT4/tree/main/package).
+## 🔑 API Key & Authentication
+
+Connecting to MetaRPC production endpoints (`mt4.mrpc.pro:443`) requires an API key:
+
+1. **Sign Up**: Create an account for free at [https://mrpc.pro/signup](https://mrpc.pro/signup).
+2. **Generate API Key**: In your MetaRPC Portal dashboard at [https://mrpc.pro/my](https://mrpc.pro/my), go to **API Keys** to generate and copy your personal API token.
+3. **Configure Connection**: Pass your API key / token along with the server address (`mt4.mrpc.pro:443`) in your connection settings.
+
+---
+
+## 🌐 Production Endpoints
+
+| Environment | Host | Port | Protocol |
+| :--- | :--- | :--- | :--- |
+| **Production** | `mt4.mrpc.pro` | `443` | TLS / gRPC |
+| **Direct API UI (Swagger)** | `https://mt4.mrpc.pro/apiui` | `443` | HTTPS |
+| **Portal Dashboard** | `https://mrpc.pro/my` | `443` | HTTPS |
+| **Registration / API Key** | `https://mrpc.pro/signup` | `443` | HTTPS |
+
+---
+
+## 📄 Documentation & Guides
+
+Explore comprehensive documentation at [https://metarpc.github.io/PyMT4/](https://metarpc.github.io/PyMT4/):
+- 🚀 **Quick Start & First Project**
+- 🔑 **Authentication & API Keys**
+- 📡 **Live Market Data & gRPC Streaming**
+- 💼 **Account Management & Order Execution**
+- 📊 **Return Codes & Error Handling Reference**

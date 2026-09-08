@@ -334,7 +334,7 @@ from pymt4 import MT4Account
 from pymt4.sugar import Sugar
 
 # Connect to MT4
-api = MT4Account(host="localhost", port=15555)
+api = MT4Account(host="mt4.mrpc.pro", port=443)
 await api.connect()
 
 # Create sugar instance
