@@ -1,6 +1,6 @@
 site_name: PyMT4 SDK Documentation
 site_url: https://metarpc.github.io/PyMT4/
-site_description: Complete Python SDK for MetaTrader 4 trading automation
+site_description: Complete Python SDK for MetaTrader 4 trading automation via gRPC
 
 repo_name: MetaRPC/PyMT4
 repo_url: https://github.com/MetaRPC/PyMT4
@@ -13,31 +13,33 @@ theme:
     text: Inter
     code: JetBrains Mono
   icon:
-    logo: material/chart-line-variant
+    logo: material/language-python
     repo: fontawesome/brands/github
   palette:
-    - scheme: slate
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: indigo
       accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   features:
-    - navigation.instant
     - navigation.tracking
     - navigation.expand
     - navigation.top
     - navigation.footer
     - content.code.copy
     - toc.follow
+  custom_dir: docs/includes
 
 extra:
-  
-  announcement: |
-    <div class="top-api-pill">
-      <a class="top-api-btn" href="{{ base_url }}/api/">
-        <span class="material-symbols-rounded">api</span>
-        <span>API</span>
-      </a>
-    </div>
-
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MetaRPC/PyMT4
@@ -56,27 +58,16 @@ markdown_extensions:
   - attr_list
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
   - toc:
       permalink: "¶"
       toc_depth: 3
 
 plugins:
   - search
-  - mkdocstrings:
-      default_handler: python
-      handlers:
-        python:
-          paths: [package]     
-          options:
-            docstring_style: google
-            show_source: true
-            show_root_heading: true
-            show_root_full_path: false
-            show_signature: true
-            show_signature_annotations: true
-            separate_signature: true
-            members_order: source
-            filters: ["!^_"]
 
 copyright: >
   Copyright © 2024–2025 MetaRPC. MT4 is a trademark of MetaQuotes Software Corp.
@@ -85,22 +76,24 @@ copyright: >
 nav:
   - Home: index.md
 
-  - Quick Access:
-    - Account Info: MT4Account/Account_Information/account_summary.md
-    - Market Quota — Overview: MT4Account/Market_quota_symbols/Market_Quota.Overview.md
-    - Positions History — Overview: MT4Account/Orders_Positions_History/Positions_History_Overview.md
-    - Streams — Overview: MT4Account/Streams/Streams_Overview.md
-    - Trading Actions — Overview: MT4Account/Trading_Actions/Trading_Actions_Overview.md
-
-  - API: api.md   
-
   - Guides:
-    - BASE: MT4Account/BASE.md
-    - Project Map: PROJECT_MAP.md
-    - Architecture: ARCHITECTURE.md
-    - MT4Sugar — Overview: MT4Sugar/Overview.md
-    - Main — Overview: Main/Overview.md
-    - Glossary: GLOSSARY.md
-    - Examples — Overview: Examples/All_about_examples.md
-    - Orchestrator — Overview: Strategy/All_about_orchestrator.md
-    - Presets — Overview: Strategy/All_about_presets.md
+    - Getting Started: All_Guides/GETTING_STARTED.md
+    - Your First Project: All_Guides/Your_First_Project.md
+    - Project Map: All_Guides/PROJECT_MAP.md
+    - Glossary: All_Guides/GLOSSARY.md
+    - MT4 for Beginners: All_Guides/MT4_For_Beginners.md
+    - gRPC Streaming: All_Guides/GRPC_STREAM_MANAGEMENT.md
+    - Return Codes: All_Guides/RETURN_CODES_REFERENCE.md
+    - ENUMs Reference: All_Guides/ENUMS_USAGE_REFERENCE.md
+    - Protobuf Inspector: All_Guides/PROTOBUF_INSPECTOR_GUIDE.md
+    - UserCode Sandbox: All_Guides/USERCODE_SANDBOX_GUIDE.md
+    - Sync vs Async: All_Guides/SYNC_VS_ASYNC.md
+
+  - API Reference:
+    - MT4Account API: API_Reference/MT4Account.md
+    - MT4Service API: API_Reference/MT4Service.md
+    - MT4Sugar API: API_Reference/MT4Sugar.md
+
+  - Strategies:
+    - Master Overview: Strategies/Strategies.Master.Overview.md
+    - Presets: Strategies/Presets/AdaptiveMarketModePreset.md

@@ -1,60 +1,53 @@
+# PyMT4 SDK Documentation
+
+**Complete Python SDK for MetaTrader 4 trading automation via gRPC**
+
 <div class="home-grid">
 
-  <!-- Row 1: Core / Infra -->
-  <a class="card centered infra" href="MT4Account/BASE/">
-    <span class="material-symbols-rounded">settings</span>
-    <h3>BASE</h3>
-    <p>All about low-level methods</p>
-  </a>
+<!-- Top Card (0) - Quick Start - Red-Orange -->
+<a href="All_Guides/Your_First_Project/" class="card card-0">
+  <span class="material-symbols-rounded">rocket_launch</span>
+  <h3>Quick Start</h3>
+  <p>Your first project from scratch in 10 minutes</p>
+</a>
 
-  <a class="card centered infra" href="PROJECT_MAP/">
-    <span class="material-symbols-rounded">map</span>
-    <h3>Project Map</h3>
-    <p>Its complete structure</p>
-  </a>
+<!-- Wide Card (1) - Getting Started - Yellow-Orange-Pink -->
+<a href="All_Guides/GETTING_STARTED/" class="card card-1 card-wide">
+  <span class="material-symbols-rounded">bolt</span>
+  <h3>Getting Started</h3>
+  <p>New here? Start with setup and overview</p>
+</a>
 
-  <a class="card centered infra" href="ARCHITECTURE/">
-    <span class="material-symbols-rounded">account_tree</span>
-    <h3>Architecture</h3>
-    <p>The mechanism in action</p>
-  </a>
+<!-- Middle Row (2-3) - Yellow-Blue & Purple -->
+<a href="All_Guides/PROJECT_MAP/" class="card card-2">
+  <span class="material-symbols-rounded">map</span>
+  <h3>Project Map</h3>
+  <p>Architecture overview</p>
+</a>
 
-  <!-- Row 2: Practical -->
-  <a class="card centered practical" href="MT4Sugar/Overview/">
-    <span class="material-symbols-rounded">auto_awesome</span>
-    <h3>All about Sugar</h3>
-    <p>Simplified helpers & patterns</p>
-  </a>
+<a href="All_Guides/GLOSSARY/" class="card card-3">
+  <span class="material-symbols-rounded">menu_book</span>
+  <h3>Glossary</h3>
+  <p>MT4 terms and concepts</p>
+</a>
 
-  <a class="card centered practical" href="Main/Overview/">
-    <span class="material-symbols-rounded">layers</span>
-    <h3>All entry points</h3>
-    <p>Entry points & layout</p>
-  </a>
+<!-- Bottom Row (4-5-6) - Teal, Mint, Green -->
+<a href="API_Reference/MT4Service/" class="card card-4">
+  <span class="material-symbols-rounded">build</span>
+  <h3>MT4Service</h3>
+  <p>Wrapper methods layer</p>
+</a>
 
-  <a class="card centered practical" href="GLOSSARY/">
-    <span class="material-symbols-rounded">menu_book</span>
-    <h3>Glossary</h3>
-    <p>Terms used across docs & code</p>
-  </a>
+<a href="API_Reference/MT4Account/" class="card card-5">
+  <span class="material-symbols-rounded">settings</span>
+  <h3>MT4Account</h3>
+  <p>Low-level gRPC protocol layer</p>
+</a>
 
-  <!-- Row 3: Strategy -->
-  <a class="card centered strategy" href="Examples/All_about_examples/">
-    <span class="material-symbols-rounded">science</span>
-    <h3>Examples</h3>
-    <p>Quick demos & run instructions</p>
-  </a>
-
-  <a class="card centered strategy" href="Strategy/All_about_orchestrator/">
-    <span class="material-symbols-rounded">tune</span>
-    <h3>Orchestrator</h3>
-    <p>Control loop & scheduling</p>
-  </a>
-
-  <a class="card centered strategy" href="Strategy/All_about_presets/">
-    <span class="material-symbols-rounded">bolt</span>
-    <h3>Presets</h3>
-    <p>Strategy presets & tuning</p>
-  </a>
+<a href="API_Reference/MT4Sugar/" class="card card-6">
+  <span class="material-symbols-rounded">auto_awesome</span>
+  <h3>MT4Sugar</h3>
+  <p>High-level convenience API</p>
+</a>
 
 </div>
