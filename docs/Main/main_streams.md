@@ -7,10 +7,10 @@ Shows how to consume async streams and handle cooperative cancellation.
 
 ## Low‑level methods used here
 
-- `on_symbol_tick(...)` → see [on_symbol_tick.md](../MT4Account/Streams/on_symbol_tick.md)
-- `on_trade(...)` → see [on_trade.md](../MT4Account/Streams/on_trade.md)
-- `on_opened_orders_tickets(...)` → see [on_opened_orders_tickets.md](../MT4Account/Streams/on_opened_orders_tickets.md)
-- `on_opened_orders_profit(...)` → see [on_opened_orders_profit.md](../MT4Account/Streams/on_opened_orders_profit.md)
+- `on_symbol_tick(...)` → see [on_symbol_tick.md](../API_Reference/MT4Account.md)
+- `on_trade(...)` → see [on_trade.md](../API_Reference/MT4Account.md)
+- `on_opened_orders_tickets(...)` → see [on_opened_orders_tickets.md](../API_Reference/MT4Account.md)
+- `on_opened_orders_profit(...)` → see [on_opened_orders_profit.md](../API_Reference/MT4Account.md)
 
 ## Tips for working with stream demos
 

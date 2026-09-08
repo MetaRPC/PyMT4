@@ -21,7 +21,7 @@
 
 **Returns:** Order ticket number (integer)
 
-**Related to:** [order_send.md](../MT4Account/Trading_Actions/order_send.md)
+**Related to:** [order_send.md](../API_Reference/MT4Account.md)
 
 **Example 1: Basic market buy**
 
@@ -87,7 +87,7 @@ ticket3 = await sugar.buy_market("EURUSD", lots=0.03, sl_pips=100, comment="Posi
 
 **Returns:** Order ticket number (integer)
 
-**Related to:** [order_send.md](../MT4Account/Trading_Actions/order_send.md)
+**Related to:** [order_send.md](../API_Reference/MT4Account.md)
 
 **Example 1: Basic market sell**
 
@@ -128,7 +128,7 @@ if price_rejected_resistance():
 
 **Returns:** Order ticket number (integer)
 
-**Related to:** [order_send.md](../MT4Account/Trading_Actions/order_send.md), [order_modify.md](../MT4Account/Trading_Actions/order_modify.md)
+**Related to:** [order_send.md](../API_Reference/MT4Account.md), [order_modify.md](../API_Reference/MT4Account.md)
 
 **Example 1: Buy at support level**
 
@@ -169,7 +169,7 @@ for level in support_levels:
 
 **Returns:** Order ticket number (integer)
 
-**Related to:** [order_send.md](../MT4Account/Trading_Actions/order_send.md)
+**Related to:** [order_send.md](../API_Reference/MT4Account.md)
 
 **Example 1: Sell at resistance**
 
@@ -202,7 +202,7 @@ for level in resistance_zone:
 
 **Returns:** Order ticket number (integer)
 
-**Related to:** [order_send.md](../MT4Account/Trading_Actions/order_send.md)
+**Related to:** [order_send.md](../API_Reference/MT4Account.md)
 
 **Example 1: Breakout entry**
 
@@ -238,7 +238,7 @@ sell_ticket = await sugar.sell_stop("EURUSD", lots=0.1, price=current_price - 0.
 
 **Returns:** Order ticket number (integer)
 
-**Related to:** [order_send.md](../MT4Account/Trading_Actions/order_send.md)
+**Related to:** [order_send.md](../API_Reference/MT4Account.md)
 
 **Example 1: Downside breakout**
 
@@ -265,7 +265,7 @@ ticket = await sugar.sell_stop("EURUSD", lots=0.15, price=support - 0.0010, sl_p
 * Strategies that dynamically choose order type and direction.
 * Universal trading templates and deal generators.
 
-**Related to:** [order_send.md](../MT4Account/Trading_Actions/order_send.md)
+**Related to:** [order_send.md](../API_Reference/MT4Account.md)
 
 **Example**
 

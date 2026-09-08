@@ -9,7 +9,7 @@ sets SL to `entry ± plus_pips` depending on direction.
 
 * Semi‑automated strategies/scalping to lock in breakeven without manual intervention.
 
-**Related to:** [order_modify.md](../MT4Account/Trading_Actions/order_modify.md), [opened_orders.md](../MT4Account/Orders_Positions_History/opened_orders.md)
+**Related to:** [order_modify.md](../API_Reference/MT4Account.md), [opened_orders.md](../API_Reference/MT4Account.md)
 
 **Example**
 
@@ -56,7 +56,7 @@ be = sugar.breakeven_price(entry_price=1.10000, commission=0.5, swap=0.0)
 
 **Returns:** Cash risk amount in account currency (float)
 
-**Related to:** [tick_value_with_size.md](../MT4Account/Market_quota_symbols/tick_value_with_size.md)
+**Related to:** [tick_value_with_size.md](../API_Reference/MT4Account.md)
 
 **Example 1: Verify risk before opening**
 
@@ -130,7 +130,7 @@ print(f"Risk: ${risk_cash:.2f} ({risk_pct:.2f}% of balance)")
 * Higher risk_percent = larger position
 * Wider stop_pips = smaller position (for same risk)
 
-**Related to:** [tick_value_with_size.md](../MT4Account/Market_quota_symbols/tick_value_with_size.md)
+**Related to:** [tick_value_with_size.md](../API_Reference/MT4Account.md)
 
 **Example 1: Risk 1% on each trade**
 
@@ -203,7 +203,7 @@ else:
 
 * "Don’t give back" logic: from profit either continue or exit flat.
 
-**Related to:** [order_close_delete.md](../MT4Account/Trading_Actions/order_close_delete.md), [opened_orders_tickets.md](../MT4Account/Orders_Positions_History/opened_orders_tickets.md)
+**Related to:** [order_close_delete.md](../API_Reference/MT4Account.md), [opened_orders_tickets.md](../API_Reference/MT4Account.md)
 
 **Example**
 
@@ -236,7 +236,7 @@ await sugar.close_by_breakeven(ticket=123456, plus_pips=0.5)
 * Clamps to min/max lot sizes
 * Essential to avoid "invalid volume" errors
 
-**Related to:** [symbol_params_many.md](../MT4Account/Market_quota_symbols/symbol_params_many.md)
+**Related to:** [symbol_params_many.md](../API_Reference/MT4Account.md)
 
 **Example 1: Normalize calculated lots**
 
@@ -281,7 +281,7 @@ await sugar.buy_market("EURUSD", lots=actual_lots)
 * Essential to avoid order rejections
 * Different symbols have different precision (EURUSD: 5 digits, USDJPY: 3 digits)
 
-**Related to:** [symbol_params_many.md](../MT4Account/Market_quota_symbols/symbol_params_many.md)
+**Related to:** [symbol_params_many.md](../API_Reference/MT4Account.md)
 
 **Example 1: Normalize calculated price**
 
@@ -327,7 +327,7 @@ await sugar.modify_sl_tp_by_price(ticket=ticket, sl_price=actual_sl)
 * For 5-digit brokers (EURUSD): 10 pips = 0.00100
 * For 3-digit brokers (USDJPY): 10 pips = 0.100
 
-**Related to:** [symbol_params_many.md](../MT4Account/Market_quota_symbols/symbol_params_many.md), [tick_value_with_size.md](../MT4Account/Market_quota_symbols/tick_value_with_size.md)
+**Related to:** [symbol_params_many.md](../API_Reference/MT4Account.md), [tick_value_with_size.md](../API_Reference/MT4Account.md)
 
 **Example 1: Basic conversion**
 
@@ -384,7 +384,7 @@ await sugar.buy_stop("EURUSD", lots=0.1, price=entry_price, sl_pips=20)
 
 **Returns:** Number of pips (float)
 
-**Related to:** [symbol_params_many.md](../MT4Account/Market_quota_symbols/symbol_params_many.md)
+**Related to:** [symbol_params_many.md](../API_Reference/MT4Account.md)
 
 **Example 1: Convert price to pips**
 
@@ -429,7 +429,7 @@ print(f"{pips_to_resistance:.1f} pips to resistance")
 
 * Risk management, expected P/L per tick.
 
-**Related to:** [tick_value_with_size.md](../MT4Account/Market_quota_symbols/tick_value_with_size.md)
+**Related to:** [tick_value_with_size.md](../API_Reference/MT4Account.md)
 
 **Example**
 

@@ -162,7 +162,7 @@ All scripts are designed to be:
 1. Start with **[main_sugar.py](main_sugar.md)** to understand high-level concepts
 2. Experiment with different symbols and lot sizes
 3. Add your own calculations and logic
-4. Read the [Sugar API documentation](../MT4Sugar/Overview.md)
+4. Read the [Sugar API documentation](../API_Reference/MT4Sugar.md)
 
 ### Intermediate Path
 1. Study **[main_streams.py](main_streams.md)** for real-time data handling
@@ -172,7 +172,7 @@ All scripts are designed to be:
 
 ### Advanced Path
 1. Dive into **[main_low_level.py](main_low_level.md)** for full control
-2. Read [Low-Level API documentation](../MT4Account/BASE.md)
+2. Read [Low-Level API documentation](../API_Reference/MT4Account.md)
 3. Build custom wrappers for your specific needs
 4. Optimize performance with direct RPC calls
 
@@ -181,8 +181,8 @@ All scripts are designed to be:
 ## 📖 Related Documentation
 
 ### Core Concepts
-- [Sugar API Overview](../MT4Sugar/Overview.md) - High-level API reference
-- [Low-Level API Overview](../MT4Account/BASE.md) - Complete RPC method list
+- [Sugar API Overview](../API_Reference/MT4Sugar.md) - High-level API reference
+- [Low-Level API Overview](../API_Reference/MT4Account.md) - Complete RPC method list
 - [Architecture Guide](../ARCHITECTURE.md) - How everything fits together
 
 ### Advanced Topics
@@ -223,8 +223,8 @@ Use git to track your experiments. You'll want to roll back changes sometimes.
 | Topic | Link |
 |-------|------|
 | Full Examples Guide | [All_about_examples.md](../Examples/All_about_examples.md) |
-| Sugar API Reference | [MT4Sugar Overview](../MT4Sugar/Overview.md) |
-| Low-Level API Reference | [MT4Account BASE](../MT4Account/BASE.md) |
+| Sugar API Reference | [MT4Sugar Overview](../API_Reference/MT4Sugar.md) |
+| Low-Level API Reference | [MT4Account BASE](../API_Reference/MT4Account.md) |
 | Architecture & Data Flow | [ARCHITECTURE.md](../ARCHITECTURE.md) |
 | Glossary | [GLOSSARY.md](../GLOSSARY.md) |
 | Project Structure | [PROJECT_MAP.md](../PROJECT_MAP.md) |

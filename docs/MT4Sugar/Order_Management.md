@@ -24,7 +24,7 @@
 * Pass `0` to remove SL or TP completely
 * Method automatically handles buy vs sell direction
 
-**Related to:** [order_modify.md](../MT4Account/Trading_Actions/order_modify.md), [opened_orders_tickets.md](../MT4Account/Orders_Positions_History/opened_orders_tickets.md)
+**Related to:** [order_modify.md](../API_Reference/MT4Account.md), [opened_orders_tickets.md](../API_Reference/MT4Account.md)
 
 **Example 1: Move to breakeven**
 
@@ -96,7 +96,7 @@ await sugar.modify_sl_tp_by_pips(ticket=123456, sl_pips=20, tp_pips=0)
 * Pass `None` to keep existing SL or TP unchanged
 * Pass `0` to remove SL or TP
 
-**Related to:** [order_modify.md](../MT4Account/Trading_Actions/order_modify.md)
+**Related to:** [order_modify.md](../API_Reference/MT4Account.md)
 
 **Example 1: Set to specific levels**
 
@@ -149,7 +149,7 @@ await sugar.modify_sl_tp_by_price(ticket=ticket, sl_price=ema_20)
 * For partial closes, use `close_partial()`
 * Works for both market positions and pending orders (pending orders are deleted)
 
-**Related to:** [order_close_delete.md](../MT4Account/Trading_Actions/order_close_delete.md)
+**Related to:** [order_close_delete.md](../API_Reference/MT4Account.md)
 
 **Example 1: Simple close**
 
@@ -205,7 +205,7 @@ await sugar.close(ticket)
 * Closed portion creates a new history entry
 * Useful for pyramiding strategies
 
-**Related to:** [order_close_delete.md](../MT4Account/Trading_Actions/order_close_delete.md)
+**Related to:** [order_close_delete.md](../API_Reference/MT4Account.md)
 
 **Example 1: Close half the position**
 
@@ -267,7 +267,7 @@ if spread > 5.0:
 * Saves spread costs compared to closing each separately
 * If positions are different sizes, smaller one closes completely, larger one is reduced
 
-**Related to:** [order_close_by.md](../MT4Account/Trading_Actions/order_close_by.md)
+**Related to:** [order_close_by.md](../API_Reference/MT4Account.md)
 
 **Example 1: Close hedged positions**
 
@@ -316,7 +316,7 @@ If `only_profit` is True/False, closes only profitable or losing positions.
 * Use filters carefully to avoid closing unintended positions
 * Pending orders are not affected (use `cancel_pendings()` for those)
 
-**Related to:** [opened_orders.md](../MT4Account/Orders_Positions_History/opened_orders.md), [order_close_delete.md](../MT4Account/Trading_Actions/order_close_delete.md)
+**Related to:** [opened_orders.md](../API_Reference/MT4Account.md), [order_close_delete.md](../API_Reference/MT4Account.md)
 
 **Example 1: Close all profitable positions for specific symbol**
 
@@ -374,7 +374,7 @@ if is_friday_evening():
 * Does not close market positions (use `close_all()` for that)
 * If no filters provided, cancels **all** pending orders
 
-**Related to:** [order_close_delete.md](../MT4Account/Trading_Actions/order_close_delete.md)
+**Related to:** [order_close_delete.md](../API_Reference/MT4Account.md)
 
 **Example 1: Cancel symbol-specific pendings**
 

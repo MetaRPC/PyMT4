@@ -25,7 +25,7 @@
 4. Returns a subscription ID that can be used to disable trailing later
 5. Stops automatically when position is closed
 
-**Related to:** [order_modify.md](../MT4Account/Trading_Actions/order_modify.md), [opened_orders_tickets.md](../MT4Account/Orders_Positions_History/opened_orders_tickets.md)
+**Related to:** [order_modify.md](../API_Reference/MT4Account.md), [opened_orders_tickets.md](../API_Reference/MT4Account.md)
 
 **Example 1: Basic trailing stop**
 
@@ -136,7 +136,7 @@ trailing_positions = {
 * Can be called multiple times safely (idempotent)
 * Does not close or modify the position itself
 
-**Related to:** [order_modify.md](../MT4Account/Trading_Actions/order_modify.md)
+**Related to:** [order_modify.md](../API_Reference/MT4Account.md)
 
 **Example 1: Basic unsubscribe**
 

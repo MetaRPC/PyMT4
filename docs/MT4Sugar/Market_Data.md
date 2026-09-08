@@ -28,7 +28,7 @@
 * Use `count` for simple "last N bars" queries
 * Use `since`/`until` for date range queries
 
-**Related to:** [quote_history.md](../MT4Account/Market_quota_symbols/quote_history.md)
+**Related to:** [quote_history.md](../API_Reference/MT4Account.md)
 
 **Example 1: Get last 500 hourly bars**
 
@@ -111,7 +111,7 @@ if h1_trend == h4_trend == d1_trend:
 * Returns ticks in chronological order
 * Time is in epoch milliseconds
 
-**Related to:** [quote_history.md](../MT4Account/Market_quota_symbols/quote_history.md)
+**Related to:** [quote_history.md](../API_Reference/MT4Account.md)
 
 **Example 1: Get last 100 ticks**
 
@@ -193,7 +193,7 @@ Returns the actual trigger price if satisfied within timeout, otherwise raises T
 * Polls every 0.25 seconds (non-blocking)
 * Raises TimeoutError on timeout (not returns False)
 
-**Related to:** [on_symbol_tick.md](../MT4Account/Streams/on_symbol_tick.md)
+**Related to:** [on_symbol_tick.md](../API_Reference/MT4Account.md)
 
 **Example 1: Wait for breakout above resistance**
 
