@@ -1,4 +1,5 @@
-﻿import asyncio
+import os
+import asyncio
 import grpc
 import uuid
 from datetime import datetime
@@ -51,7 +52,6 @@ class MT4Account:
         self.user = user
         self.password = password
         self.grpc_server = grpc_server or "mt4.mrpc.pro:443"   # default server
-        self.id = id_ or self.compute_deterministic_id(user, password)
 
         # Async gRPC secure channel (TLS)
         self.channel = grpc.aio.secure_channel(
@@ -66,6 +66,8 @@ class MT4Account:
         self.trade_client = trading_helper_pb2_grpc.TradingHelperStub(self.channel)
         self.market_info_client = market_info_pb2_grpc.MarketInfoStub(self.channel)
 
+        self.id = str(id_) if id_ else self.get_id()
+
         # Connection state
         self.host = None
         self.port = None
@@ -73,10 +75,50 @@ class MT4Account:
         self.base_chart_symbol = None
         self.connect_timeout_seconds = 30
 
+    def get_id(self) -> str:
+        """Call gRPC GetId method to retrieve the deterministic account ID."""
+        request = connection_pb2.GetIdRequest(user=str(self.user), password=self.password)
+        metadata = []
+        if self.api_key:
+            metadata.append(("apikey", self.api_key))
+        try:
+            target = self.grpc_server.replace("https://", "").replace("http://", "")
+            creds = grpc.ssl_channel_credentials()
+            with grpc.secure_channel(target, creds) as channel:
+                stub = connection_pb2_grpc.ConnectionStub(channel)
+                reply = stub.GetId(request, metadata=metadata, timeout=5.0)
+                if reply.HasField("error") and reply.error.message:
+                    raise ApiExceptionMT4(reply.error)
+                if reply.HasField("data") and reply.data.id:
+                    self.id = reply.data.id
+                    return self.id
+        except Exception:
+            self.id = self.compute_deterministic_id(self.user, self.password)
+        return self.id
+
+    async def get_id_async(self) -> str:
+        """Retrieve account ID via async gRPC GetId endpoint."""
+        request = connection_pb2.GetIdRequest(user=str(self.user), password=self.password)
+        metadata = []
+        if self.api_key:
+            metadata.append(("apikey", self.api_key))
+        try:
+            reply = await self.connection_client.GetId(request, metadata=metadata, timeout=5.0)
+            if reply.HasField("error") and reply.error.message:
+                raise ApiExceptionMT4(reply.error)
+            if reply.HasField("data") and reply.data.id:
+                self.id = reply.data.id
+                return self.id
+        except Exception:
+            self.id = self.compute_deterministic_id(self.user, self.password)
+        return self.id
 
     # === Utility: headers ===
     def get_headers(self):
-        return [("id", self.id)]
+        headers = [("id", self.id)]
+        if self.api_key:
+            headers.append(("apikey", self.api_key))
+        return headers
 
     # === Utility: reconnect ===
     async def reconnect(self, deadline: Optional[datetime] = None):
