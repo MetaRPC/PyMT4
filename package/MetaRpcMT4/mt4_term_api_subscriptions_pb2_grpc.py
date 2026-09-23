@@ -41,7 +41,7 @@ class SubscriptionServiceServicer(object):
 
     def OnTrade(self, request, context):
         """Streams real-time order/trade events.
-        Requires 'id' header — use GetId to generate.
+        Requires 'id' header returned by Connect/ConnectEx.
         Swagger does not support streaming — use /subscription-stream interactive viewer.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -50,7 +50,7 @@ class SubscriptionServiceServicer(object):
 
     def OnOpenedOrdersTickets(self, request, context):
         """Streams the tickets of currently opened orders as they change.
-        Requires 'id' header — use GetId to generate.
+        Requires 'id' header returned by Connect/ConnectEx.
         Swagger does not support streaming — use /subscription-stream interactive viewer.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -59,7 +59,7 @@ class SubscriptionServiceServicer(object):
 
     def OnOpenedOrdersProfit(self, request, context):
         """Streams the live profit of currently opened orders.
-        Requires 'id' header — use GetId to generate.
+        Requires 'id' header returned by Connect/ConnectEx.
         Swagger does not support streaming — use /subscription-stream interactive viewer.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -68,7 +68,7 @@ class SubscriptionServiceServicer(object):
 
     def OnSymbolTick(self, request, context):
         """Streams real-time ticks for the given symbols.
-        Requires 'id' header — use GetId to generate.
+        Requires 'id' header returned by Connect/ConnectEx.
         Swagger does not support streaming — use /subscription-stream interactive viewer.
         [DefaultValues]
         {

@@ -2,7 +2,6 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import mt4_term_api_demo_account_pb2 as mt4__term__api__demo__account__pb2
 from . import mt4_term_api_gui_pb2 as mt4__term__api__gui__pb2
 
 
@@ -18,25 +17,15 @@ class DemoAccountStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.FindCompanies = channel.unary_unary(
-                '/mt4_term_api.DemoAccount/FindCompanies',
-                request_serializer=mt4__term__api__gui__pb2.GuiDemoFindCompaniesRequest.SerializeToString,
-                response_deserializer=mt4__term__api__gui__pb2.GuiDemoFindCompaniesReply.FromString,
-                )
-        self.ServersAndAccountTypes = channel.unary_unary(
-                '/mt4_term_api.DemoAccount/ServersAndAccountTypes',
-                request_serializer=mt4__term__api__gui__pb2.GuiDemoServersAndTypesRequest.SerializeToString,
-                response_deserializer=mt4__term__api__gui__pb2.GuiDemoServersAndTypesReply.FromString,
-                )
         self.OpenDemoAccount = channel.unary_unary(
                 '/mt4_term_api.DemoAccount/OpenDemoAccount',
                 request_serializer=mt4__term__api__gui__pb2.GuiDemoOpenAccountRequest.SerializeToString,
                 response_deserializer=mt4__term__api__gui__pb2.GuiDemoOpenAccountReply.FromString,
                 )
-        self.OpenDemoAccountStream = channel.unary_stream(
-                '/mt4_term_api.DemoAccount/OpenDemoAccountStream',
-                request_serializer=mt4__term__api__gui__pb2.GuiDemoOpenAccountRequest.SerializeToString,
-                response_deserializer=mt4__term__api__demo__account__pb2.DemoAccountStreamEvent.FromString,
+        self.DemoOpenAccountInteractive = channel.stream_stream(
+                '/mt4_term_api.DemoAccount/DemoOpenAccountInteractive',
+                request_serializer=mt4__term__api__gui__pb2.GuiDemoInteractiveClientMessage.SerializeToString,
+                response_deserializer=mt4__term__api__gui__pb2.GuiDemoInteractiveServerMessage.FromString,
                 )
 
 
@@ -45,24 +34,6 @@ class DemoAccountServicer(object):
     Win32 GUI automation (proxied to the terminal's Gui service).
     Does NOT require 'id' header — auto-picks any available terminal.
     """
-
-    def FindCompanies(self, request, context):
-        """Search for broker companies by name (reads the wizard's broker ListView).
-        [DefaultValues]
-        { "searchText": "MetaQuotes" }
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ServersAndAccountTypes(self, request, context):
-        """Get available servers and account types for a company.
-        [DefaultValues]
-        { "companyName": "MetaQuotes Ltd." }
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
 
     def OpenDemoAccount(self, request, context):
         """Open a demo account. Full wizard flow: search -> select -> fill form -> register.
@@ -74,9 +45,9 @@ class DemoAccountServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def OpenDemoAccountStream(self, request, context):
-        """Same as OpenDemoAccount but streams real-time progress events.
-        Swagger does not support streaming — use /demo-account-stream interactive viewer.
+    def DemoOpenAccountInteractive(self, request_iterator, context):
+        """Interactive step-by-step demo account opening wizard.
+        Bidirectional streaming session: search company -> select -> form schema -> submit -> 2FA (if any) -> completed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -85,25 +56,15 @@ class DemoAccountServicer(object):
 
 def add_DemoAccountServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'FindCompanies': grpc.unary_unary_rpc_method_handler(
-                    servicer.FindCompanies,
-                    request_deserializer=mt4__term__api__gui__pb2.GuiDemoFindCompaniesRequest.FromString,
-                    response_serializer=mt4__term__api__gui__pb2.GuiDemoFindCompaniesReply.SerializeToString,
-            ),
-            'ServersAndAccountTypes': grpc.unary_unary_rpc_method_handler(
-                    servicer.ServersAndAccountTypes,
-                    request_deserializer=mt4__term__api__gui__pb2.GuiDemoServersAndTypesRequest.FromString,
-                    response_serializer=mt4__term__api__gui__pb2.GuiDemoServersAndTypesReply.SerializeToString,
-            ),
             'OpenDemoAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.OpenDemoAccount,
                     request_deserializer=mt4__term__api__gui__pb2.GuiDemoOpenAccountRequest.FromString,
                     response_serializer=mt4__term__api__gui__pb2.GuiDemoOpenAccountReply.SerializeToString,
             ),
-            'OpenDemoAccountStream': grpc.unary_stream_rpc_method_handler(
-                    servicer.OpenDemoAccountStream,
-                    request_deserializer=mt4__term__api__gui__pb2.GuiDemoOpenAccountRequest.FromString,
-                    response_serializer=mt4__term__api__demo__account__pb2.DemoAccountStreamEvent.SerializeToString,
+            'DemoOpenAccountInteractive': grpc.stream_stream_rpc_method_handler(
+                    servicer.DemoOpenAccountInteractive,
+                    request_deserializer=mt4__term__api__gui__pb2.GuiDemoInteractiveClientMessage.FromString,
+                    response_serializer=mt4__term__api__gui__pb2.GuiDemoInteractiveServerMessage.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -117,40 +78,6 @@ class DemoAccount(object):
     Win32 GUI automation (proxied to the terminal's Gui service).
     Does NOT require 'id' header — auto-picks any available terminal.
     """
-
-    @staticmethod
-    def FindCompanies(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.DemoAccount/FindCompanies',
-            mt4__term__api__gui__pb2.GuiDemoFindCompaniesRequest.SerializeToString,
-            mt4__term__api__gui__pb2.GuiDemoFindCompaniesReply.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ServersAndAccountTypes(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/mt4_term_api.DemoAccount/ServersAndAccountTypes',
-            mt4__term__api__gui__pb2.GuiDemoServersAndTypesRequest.SerializeToString,
-            mt4__term__api__gui__pb2.GuiDemoServersAndTypesReply.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def OpenDemoAccount(request,
@@ -170,7 +97,7 @@ class DemoAccount(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def OpenDemoAccountStream(request,
+    def DemoOpenAccountInteractive(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -180,8 +107,8 @@ class DemoAccount(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/mt4_term_api.DemoAccount/OpenDemoAccountStream',
-            mt4__term__api__gui__pb2.GuiDemoOpenAccountRequest.SerializeToString,
-            mt4__term__api__demo__account__pb2.DemoAccountStreamEvent.FromString,
+        return grpc.experimental.stream_stream(request_iterator, target, '/mt4_term_api.DemoAccount/DemoOpenAccountInteractive',
+            mt4__term__api__gui__pb2.GuiDemoInteractiveClientMessage.SerializeToString,
+            mt4__term__api__gui__pb2.GuiDemoInteractiveServerMessage.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
