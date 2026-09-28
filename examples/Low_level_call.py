@@ -96,12 +96,15 @@ async def main():
         grpc_server = os.getenv("GRPC_SERVER", "mt4.mrpc.pro:443")
         access_list = []
 
+    api_key = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else (os.getenv("MRPC_API_KEY") or (settings.get("mt4", {}).get("api_key") if settings else None) or "TRIAL")
+
     print(f"Login: {user}")
     print(f"GRPC Server: {grpc_server}")
     print(f"Base Symbol: {base_symbol}")
     print(f"Timeout: {connect_timeout}s")
+    print(f"APIKey: {api_key}")
 
-    account = MT4Account(user=user, password=password, grpc_server=grpc_server, id_=None)
+    account = MT4Account(user=user, password=password, grpc_server=grpc_server, id_=None, api_key=api_key)
 
     # ===== 1) Connection (Multi-priority system) =====
     print("\n" + "=" * 80)
@@ -701,6 +704,16 @@ async def main():
     print("  export ENABLE_TRADING=1")
     print("  python examples/Low_level_call.py")
     print("=" * 80)
+
+    # Clean disconnection
+    print("\n" + "=" * 80)
+    print("CLEANUP: Disconnecting from MT4...")
+    print("=" * 80)
+    try:
+        await account.disconnect()
+        print("✓ Disconnected successfully")
+    except Exception as e:
+        print(f"⚠️  Disconnect warning: {e}")
 
 
 if __name__ == "__main__":

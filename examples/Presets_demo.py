@@ -152,14 +152,17 @@ async def main():
     timeout_seconds = settings["mt4"].get("timeout_seconds", 180)
     access_list = settings["mt4"].get("access", [])
 
+    api_key = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else (os.getenv("MRPC_API_KEY") or (settings.get("mt4", {}).get("api_key") if settings else None) or "TRIAL")
+
     print(f"\n[CONFIG]")
     print(f"  User: {user}")
     print(f"  Symbol: {base_symbol}")
+    print(f"  APIKey: {api_key}")
 
     # ========= 2) Connect =========
     hdr("[1] CONNECTION")
 
-    account = MT4Account(user=user, password=password, grpc_server=grpc_server)
+    account = MT4Account(user=user, password=password, grpc_server=grpc_server, api_key=api_key)
     connected = False
 
     # Try connection (3-priority system)
@@ -397,6 +400,16 @@ async def main():
     print("  Session: Auto-detect by time (Asia/London/NY/Overlap)")
 
     print("\n" + "=" * 80)
+
+    # Clean disconnection
+    print("\n" + "=" * 80)
+    print("CLEANUP: Disconnecting from MT4...")
+    print("=" * 80)
+    try:
+        await svc.disconnect()
+        print("✓ Disconnected successfully")
+    except Exception as e:
+        print(f"⚠️  Disconnect warning: {e}")
 
 
 def show_presets_structure_only():

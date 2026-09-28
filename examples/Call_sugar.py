@@ -94,12 +94,13 @@ async def main():
     print(f"  Stop Loss: {stop_pips} pips")
     print(f"  Take Profit: {tp_pips} pips")
     print(f"  Magic: {magic}")
-    print(f"  Trading Enabled: {enable_trading}")
+    api_key = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else (os.getenv("MRPC_API_KEY") or (settings.get("mt4", {}).get("api_key") if settings else None) or "TRIAL")
+    print(f"  APIKey: {api_key}")
 
     # ========= 2) Create MT4Account and connect =========
     hdr("[1] CONNECTION")
 
-    account = MT4Account(user=user, password=password, grpc_server=grpc_server)
+    account = MT4Account(user=user, password=password, grpc_server=grpc_server, api_key=api_key)
     connected = False
 
     # Try connection methods (same as Low_level_call.py)
@@ -487,6 +488,16 @@ async def main():
     print("  export ENABLE_TRADING=1")
     print("  python examples/Call_sugar.py")
     print("=" * 80)
+
+    # Clean disconnection
+    print("\n" + "=" * 80)
+    print("CLEANUP: Disconnecting from MT4...")
+    print("=" * 80)
+    try:
+        await svc.disconnect()
+        print("✓ Disconnected successfully")
+    except Exception as e:
+        print(f"⚠️  Disconnect warning: {e}")
 
 
 if __name__ == "__main__":

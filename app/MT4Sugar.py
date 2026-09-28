@@ -51,6 +51,17 @@ class MT4Sugar:
             "risk_percent": None,
         }
 
+    async def disconnect(self) -> None:
+        """Disconnect from MT4 server and close the channel."""
+        if hasattr(self.svc, "disconnect"):
+            await self.svc.disconnect()
+
+    async def __aenter__(self) -> "MT4Sugar":
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        await self.disconnect()
+
     # ──────────────────────────────────
     # region DEFAULTS & CONTEXT
     # ──────────────────────────────────

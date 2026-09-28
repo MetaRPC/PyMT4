@@ -109,12 +109,13 @@ async def main():
     print(f"\n[CONFIG]")
     print(f"  User: {user}")
     print(f"  Symbol: {demo_symbol}")
-    print(f"  Trading: {'ENABLED' if enable_trading else 'DISABLED (dry run)'}")
+    api_key = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else (os.getenv("MRPC_API_KEY") or (settings.get("mt4", {}).get("api_key") if settings else None) or "TRIAL")
+    print(f"  APIKey: {api_key}")
 
     # ========= 2) Connect =========
     hdr("[1] CONNECTION")
 
-    account = MT4Account(user=user, password=password, grpc_server=grpc_server)
+    account = MT4Account(user=user, password=password, grpc_server=grpc_server, api_key=api_key)
     connected = False
 
     # Try connection (3-priority system)
@@ -449,6 +450,16 @@ async def main():
     print("  export ENABLE_TRADING=1")
     print("  python examples/Orchestrator_demo.py")
     print("=" * 80)
+
+    # Clean disconnection
+    print("\n" + "=" * 80)
+    print("CLEANUP: Disconnecting from MT4...")
+    print("=" * 80)
+    try:
+        await svc.disconnect()
+        print("✓ Disconnected successfully")
+    except Exception as e:
+        print(f"⚠️  Disconnect warning: {e}")
 
 
 if __name__ == "__main__":

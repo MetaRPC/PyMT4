@@ -58,7 +58,6 @@ class MT4Account:
         self.host = None
         self.port = None
         self.server_name = None
-        self.base_chart_symbol = None
         self.connect_timeout_seconds = 30
 
 
@@ -66,15 +65,35 @@ class MT4Account:
     def get_headers(self):
         return [("id", self.id)]
 
+    async def disconnect(self):
+        """
+        Disconnect from MT4 server by sending Disconnect request, then close the gRPC channel.
+        """
+        try:
+            if hasattr(self, 'connection_client') and self.connection_client:
+                request = connection_pb2.DisconnectRequest()
+                await self.connection_client.Disconnect(request, metadata=self.get_headers(), timeout=10)
+        except Exception:
+            pass
+        finally:
+            if hasattr(self, 'channel') and self.channel is not None:
+                try:
+                    await self.channel.close()
+                except Exception:
+                    pass
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.disconnect()
+
     # === Utility: reconnect ===
     async def reconnect(self, deadline: Optional[datetime] = None):
         if self.server_name:
-            await self.connect_by_server_name(self.server_name, self.base_chart_symbol or "EURUSD",
-                                              True, self.connect_timeout_seconds, deadline)
+            await self.connect_by_server_name(self.server_name, True, self.connect_timeout_seconds, deadline)
         elif self.host:
-            await self.connect_by_host_port(self.host, self.port or 443,
-                                            self.base_chart_symbol or "EURUSD", True,
-                                            self.connect_timeout_seconds, deadline)
+            await self.connect_by_host_port(self.host, self.port or 443, True, self.connect_timeout_seconds, deadline)
 
     # === Core retry wrapper ===
     async def execute_with_reconnect(
@@ -113,20 +132,23 @@ class MT4Account:
         self,
         host: str,
         port: int = 443,
-        base_chart_symbol: str = "EURUSD",
         wait_for_terminal_is_alive: bool = True,
         timeout_seconds: int = 30,
         deadline: Optional[datetime] = None,
+        base_chart_symbol: Optional[str] = None,
+        *args,
+        **kwargs,
     ):
-        #Build connect request (from your proto)
+        if isinstance(wait_for_terminal_is_alive, str):
+            wait_for_terminal_is_alive = True
+
+        # Build connect request (from your proto)
         request = connection_pb2.ConnectRequest(
             user=self.user,
             password=self.password,
             host=host,
             port=port,
-            base_chart_symbol=base_chart_symbol,
-            wait_for_terminal_is_alive=wait_for_terminal_is_alive,
-            terminal_readiness_waiting_timeout_seconds=timeout_seconds,
+            timeout_seconds=timeout_seconds,
         )
 
         headers = []
@@ -145,25 +167,28 @@ class MT4Account:
         # Save state
         self.host = host
         self.port = port
-        self.base_chart_symbol = base_chart_symbol
         self.connect_timeout_seconds = timeout_seconds
-        self.id = res.data.terminalInstanceGuid
+        self.id = getattr(res.data, "terminal_instance_guid", getattr(res.data, "terminalInstanceGuid", None))
 
     async def connect_by_server_name(
         self,
         server_name: str,
-        base_chart_symbol: str = "EURUSD",
         wait_for_terminal_is_alive: bool = True,
         timeout_seconds: int = 30,
         deadline: Optional[datetime] = None,
+        base_chart_symbol: Optional[str] = None,
+        *args,
+        **kwargs,
     ):
+        if isinstance(wait_for_terminal_is_alive, str):
+            wait_for_terminal_is_alive = True
+
         # Build connect request (from your proto)
         request = connection_pb2.ConnectExRequest(
             user=self.user,
             password=self.password,
             mt_cluster_name=server_name,
-            base_chart_symbol=base_chart_symbol,
-            terminal_readiness_waiting_timeout_seconds=timeout_seconds,
+            timeout_seconds=timeout_seconds,
         )
 
         headers = []
@@ -180,7 +205,6 @@ class MT4Account:
 
         # Save state
         self.server_name = server_name
-        self.base_chart_symbol = base_chart_symbol
         self.connect_timeout_seconds = timeout_seconds
         self.id = res.data.terminal_instance_guid
 

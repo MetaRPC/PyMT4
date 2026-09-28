@@ -260,6 +260,19 @@ class MT4Service:
 
     # ───────────────── CONNECTION ─────────────────
 
+    async def disconnect(self) -> None:
+        """Disconnect from MT4 server and close the channel."""
+        if hasattr(self._acc, "disconnect"):
+            await self._acc.disconnect()
+        elif hasattr(self._acc, "channel") and self._acc.channel:
+            await self._acc.channel.close()
+
+    async def __aenter__(self) -> "MT4Service":
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        await self.disconnect()
+
     def get_headers(self) -> dict:
         """Get current connection headers (terminal ID, etc.)."""
         return self._acc.get_headers()
