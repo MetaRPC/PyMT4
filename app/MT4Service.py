@@ -260,10 +260,10 @@ class MT4Service:
 
     # ───────────────── CONNECTION ─────────────────
 
-    async def disconnect(self) -> None:
+    async def disconnect(self, delete: bool = False) -> None:
         """Disconnect from MT4 server and close the channel."""
         if hasattr(self._acc, "disconnect"):
-            await self._acc.disconnect()
+            await self._acc.disconnect(delete=delete)
         elif hasattr(self._acc, "channel") and self._acc.channel:
             await self._acc.channel.close()
 

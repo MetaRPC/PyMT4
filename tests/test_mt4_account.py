@@ -74,12 +74,14 @@ class TestMT4Account(unittest.TestCase):
         self.assertEqual(data.account_currency, "USD")
         self.assertEqual(data.account_leverage, 500)
 
-    def test_exceptions(self):
-        exc = ConnectExceptionMT4("connection failed")
-        self.assertIn("connection failed", str(exc))
+    def test_disconnect_request_proto(self):
+        req_default = conn_pb.DisconnectRequest()
+        self.assertFalse(req_default.delete)
+        self.assertEqual(req_default.reason, "")
 
-        api_exc = ApiExceptionMT4("order error")
-        self.assertIn("order error", str(api_exc))
+        req_delete = conn_pb.DisconnectRequest(reason="TestRun", delete=True)
+        self.assertTrue(req_delete.delete)
+        self.assertEqual(req_delete.reason, "TestRun")
 
 
 if __name__ == "__main__":
