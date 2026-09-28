@@ -59,14 +59,17 @@ async def main():
     # Try to load from appsettings.json if exists
     import json
     settings = None
-    try:
-        with open("appsettings.json", "r", encoding="utf-8") as f:
-            settings = json.load(f)
-            print("Loaded appsettings.json")
-    except FileNotFoundError:
+    for p in [Path("appsettings.json"), REPO_ROOT / "appsettings.json"]:
+        if p.exists():
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    settings = json.load(f)
+                    print(f"Loaded {p}")
+                    break
+            except Exception as e:
+                print(f"Error loading {p}: {e}")
+    if not settings:
         print("No appsettings.json found, using environment variables only")
-    except Exception as e:
-        print(f"Error loading appsettings.json: {e}")
 
     # Get credentials with fallback to appsettings.json
     if settings and "mt4" in settings:

@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 import grpc
 import uuid
 from datetime import datetime
@@ -35,11 +35,12 @@ class ApiExceptionMT4(Exception):
 
 # === MT5Account Class ===
 class MT4Account:
-    def __init__(self, user: int, password: str, grpc_server: Optional[str] = None, id_: Optional[str] = None):
+    def __init__(self, user: int, password: str, grpc_server: Optional[str] = None, id_: Optional[str] = None, api_key: Optional[str] = None):
         self.user = user
         self.password = password
         self.grpc_server = grpc_server or "mt4.mrpc.pro:443"   # default server
         self.id = id_
+        self.api_key = api_key or "TRIAL"
 
         # Async gRPC secure channel (TLS)
         self.channel = grpc.aio.secure_channel(
@@ -63,7 +64,11 @@ class MT4Account:
 
     # === Utility: headers ===
     def get_headers(self):
-        return [("id", self.id)]
+        headers = []
+        if self.id:
+            headers.append(("id", str(self.id)))
+        headers.append(("apikey", str(getattr(self, "api_key", None) or "TRIAL")))
+        return headers
 
     async def disconnect(self):
         """

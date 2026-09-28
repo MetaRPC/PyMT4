@@ -50,11 +50,14 @@ from Strategy.orchestrator.spread_guard import market_with_spread_guard
 
 def load_settings(path: str = "appsettings.json") -> dict:
     """Load settings from appsettings.json"""
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
+    for p in [Path(path), REPO_ROOT / path]:
+        if p.exists():
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
+    return {}
 
 
 def hdr(title: str) -> None:

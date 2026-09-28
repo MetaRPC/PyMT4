@@ -38,11 +38,14 @@ from app.MT4Service import MT4Service
 
 def load_settings(path: str = "appsettings.json") -> dict:
     """Load settings from appsettings.json"""
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
+    for p in [Path(path), REPO_ROOT / path]:
+        if p.exists():
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
+    return {}
 
 
 def hdr(title: str) -> None:
