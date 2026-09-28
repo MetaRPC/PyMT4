@@ -1,4 +1,4 @@
-import asyncio
+﻿import asyncio
 from MetaRpcMT4.mt4_account import MT4Account
 
 
@@ -10,20 +10,17 @@ async def test_account_summary():
     server_name = "VTMarkets-Demo"
 
     account = MT4Account(user=user, password=password)
-    try:
-        #await account.connect_by_host_port(host=host, port=port, base_chart_symbol="EURUSD")
-        await account.connect_by_server_name(server_name=server_name, base_chart_symbol="EURUSD")
+    #await account.connect_by_host_port(host=host, port=port, base_chart_symbol="EURUSD")
+    await account.connect_by_server_name(server_name=server_name, base_chart_symbol="EURUSD")
 
-        summary = await account.account_summary()
-        print("✅ Account summary:")
-        print(summary)
+    summary = await account.account_summary()
+    print("✅ Account summary:")
+    print(summary)
 
-        some  = await account.quote("sadfsf");
+    some  = await account.quote("sadfsf");
 
-        async for tick in account.on_symbol_tick(["EURUSD", "GBPUSD", "BTCUSD"]):
-            print(tick)
-    finally:
-        await account.disconnect(delete=True)
+    async for tick in account.on_symbol_tick(["EURUSD", "GBPUSD", "BTCUSD"]):
+        print(tick)
 
 
 if __name__ == "__main__":

@@ -70,13 +70,13 @@ class MT4Account:
         headers.append(("apikey", str(getattr(self, "api_key", None) or "TRIAL")))
         return headers
 
-    async def disconnect(self, delete: bool = False):
+    async def disconnect(self):
         """
         Disconnect from MT4 server by sending Disconnect request, then close the gRPC channel.
         """
         try:
             if hasattr(self, 'connection_client') and self.connection_client:
-                request = connection_pb2.DisconnectRequest(delete=delete)
+                request = connection_pb2.DisconnectRequest()
                 await self.connection_client.Disconnect(request, metadata=self.get_headers(), timeout=10)
         except Exception:
             pass
