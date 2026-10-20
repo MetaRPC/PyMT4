@@ -41,6 +41,7 @@ class MT4Account:
         self.grpc_server = grpc_server or "mt4.mrpc.pro:443"   # default server
         self.id = id_
         self.api_key = api_key or "TRIAL"
+        self.name = None
 
         # Async gRPC secure channel (TLS)
         self.channel = grpc.aio.secure_channel(
@@ -95,10 +96,11 @@ class MT4Account:
 
     # === Utility: reconnect ===
     async def reconnect(self, deadline: Optional[datetime] = None):
+        name = getattr(self, "name", None)
         if self.server_name:
-            await self.connect_by_server_name(self.server_name, True, self.connect_timeout_seconds, deadline)
+            await self.connect_by_server_name(self.server_name, True, self.connect_timeout_seconds, deadline, name=name)
         elif self.host:
-            await self.connect_by_host_port(self.host, self.port or 443, True, self.connect_timeout_seconds, deadline)
+            await self.connect_by_host_port(self.host, self.port or 443, True, self.connect_timeout_seconds, deadline, name=name)
 
     # === Core retry wrapper ===
     async def execute_with_reconnect(
@@ -141,9 +143,17 @@ class MT4Account:
         timeout_seconds: int = 30,
         deadline: Optional[datetime] = None,
         base_chart_symbol: Optional[str] = None,
+        name: Optional[str] = None,
+        expiration: Optional[int] = None,
         *args,
         **kwargs,
     ):
+        """
+        Connects by broker host:port. `name` is the human-readable terminal label shown in
+        the MRPC portal / `Accounts` list; `expiration` is an optional terminal lifetime in
+        seconds. The `id` (terminal instance guid) and `apikey` headers are always sent, so a
+        stable `id_` passed to the constructor re-attaches to the same terminal on every run.
+        """
         if isinstance(wait_for_terminal_is_alive, str):
             wait_for_terminal_is_alive = True
 
@@ -155,17 +165,18 @@ class MT4Account:
             port=port,
             timeout_seconds=timeout_seconds,
         )
+        if name:
+            request.name = name
+            self.name = name
+        if expiration is not None:
+            request.expiration = int(expiration)
 
-        headers = []
-        if self.id:
-            headers.append(("id", str(self.id)))
-        
         res = await self.connection_client.Connect(
             request,
-            metadata=headers,
-            timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
+            metadata=self.get_headers(),
+            timeout=float(timeout_seconds) + 30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
-        
+
         if res.HasField("error") and res.error.error_message:
             raise ApiExceptionMT4(res.error)
 
@@ -173,7 +184,9 @@ class MT4Account:
         self.host = host
         self.port = port
         self.connect_timeout_seconds = timeout_seconds
-        self.id = getattr(res.data, "terminal_instance_guid", getattr(res.data, "terminalInstanceGuid", None))
+        guid = getattr(res.data, "terminal_instance_guid", None)
+        if guid:
+            self.id = guid
 
     async def connect_by_server_name(
         self,
@@ -182,9 +195,18 @@ class MT4Account:
         timeout_seconds: int = 30,
         deadline: Optional[datetime] = None,
         base_chart_symbol: Optional[str] = None,
+        name: Optional[str] = None,
+        expiration: Optional[int] = None,
         *args,
         **kwargs,
     ):
+        """
+        Connects by broker server (cluster) name, e.g. "AMarkets-Demo" (ConnectEx).
+        `name` is the human-readable terminal label shown in the MRPC portal / `Accounts`
+        list; `expiration` is an optional terminal lifetime in seconds. The `id` (terminal
+        instance guid) and `apikey` headers are always sent, so a stable `id_` passed to the
+        constructor re-attaches to the same terminal on every run instead of creating a new one.
+        """
         if isinstance(wait_for_terminal_is_alive, str):
             wait_for_terminal_is_alive = True
 
@@ -195,14 +217,16 @@ class MT4Account:
             mt_cluster_name=server_name,
             timeout_seconds=timeout_seconds,
         )
+        if name:
+            request.name = name
+            self.name = name
+        if expiration is not None:
+            request.expiration = int(expiration)
 
-        headers = []
-        if self.id:
-            headers.append(("id", str(self.id)))
         res = await self.connection_client.ConnectEx(
             request,
-            metadata=headers,
-            timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
+            metadata=self.get_headers(),
+            timeout=float(timeout_seconds) + 30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
 
         if res.HasField("error") and res.error.error_message:
@@ -211,12 +235,14 @@ class MT4Account:
         # Save state
         self.server_name = server_name
         self.connect_timeout_seconds = timeout_seconds
-        self.id = res.data.terminal_instance_guid
+        guid = getattr(res.data, "terminal_instance_guid", None)
+        if guid:
+            self.id = guid
 
 
 #
 #    Account helper --------------------------------------------------------------------------------------------------------
-#    
+#
 
     async def account_summary(
         self,
@@ -446,7 +472,7 @@ class MT4Account:
 
         Returns:
             SymbolParamsManyData: The result containing symbol parameters.
-        
+
         Raises:
             ConnectExceptionMT4: If the account is not connected before calling this method.
             ApiExceptionMT4: If the server returns an error in the response.
@@ -491,7 +517,7 @@ class MT4Account:
         Args:
             symbol_names (list[str]): List of symbol names.
 
-        Returns: 
+        Returns:
             TickValueWithSizeData: The result containing tick values and sizes.
 
         Raises:
@@ -527,7 +553,7 @@ class MT4Account:
 
 #
 #    Streams --------------------------------------------------------------------------------------------------------
-#    
+#
 
     async def execute_stream_with_reconnect(
         self,
@@ -574,7 +600,7 @@ class MT4Account:
                         reconnect_required = True
                         break
 
-                    if error and getattr(error, "message", None):
+                    if error and (getattr(error, "error_message", None) or getattr(error, "error_code", None)):
                         raise ApiExceptionMT4(error)
 
                     data = get_data(reply)
@@ -1120,6 +1146,44 @@ class MT4Account:
             if deadline:
                 timeout = max((deadline - datetime.utcnow()).total_seconds(), 0)
             return await self.market_info_client.Symbols(
+                request,
+                metadata=headers,
+                timeout=timeout,
+            )
+
+        res = await self.execute_with_reconnect(
+            grpc_call=grpc_call,
+            error_selector=lambda r: getattr(r, "error", None),
+            deadline=deadline,
+            cancellation_event=cancellation_event,
+        )
+        return res.data
+
+
+    async def symbol_select(
+        self,
+        symbol: str,
+        select: bool = True,
+        deadline: Optional[datetime] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Adds (select=True) or removes (select=False) a symbol in the terminal's Market Watch.
+        A symbol must be selected before Quote / OnSymbolTick / OrderSend will work for it.
+
+        Returns:
+            SymbolSelectData: `.success` (bool).
+        """
+        if not (self.host or self.server_name or self.id):
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = market_info_pb2.SymbolSelectRequest(symbol=symbol, select=select)
+
+        async def grpc_call(headers):
+            timeout = None
+            if deadline:
+                timeout = max((deadline - datetime.utcnow()).total_seconds(), 0)
+            return await self.market_info_client.SymbolSelect(
                 request,
                 metadata=headers,
                 timeout=timeout,
