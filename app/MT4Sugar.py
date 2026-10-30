@@ -53,8 +53,8 @@ class MT4Sugar:
 
     async def disconnect(self, delete: bool = False) -> None:
         """Disconnect from MT4 server and close the channel."""
-        if hasattr(self.svc, "disconnect"):
-            await self.svc.disconnect(delete=delete)
+        if hasattr(self._svc, "disconnect"):
+            await self._svc.disconnect(delete=delete)
 
     async def __aenter__(self) -> "MT4Sugar":
         return self
@@ -452,17 +452,26 @@ class MT4Sugar:
         since: int | None = None,
         until: int | None = None,
     ) -> list[dict]:
-        """Return OHLCV bars; aggregates from ticks if bars API is unavailable."""
-        ticks = await self.ticks(symbol, since=since, until=until, limit=None)
-        if not ticks:
-            return []
-        tf_sec = self._timeframe_to_seconds(timeframe)
-        if tf_sec <= 0:
-            raise ValueError(f"Unsupported timeframe: {timeframe}")
-        bars = self._aggregate_ticks_to_bars(ticks, tf_sec)
+        """Return OHLC bars straight from quote_history (historical_quotes)."""
+        await self.ensure_symbol(symbol)
+        data = await self._svc.quote_history(
+            symbol=symbol, timeframe=timeframe, since=since, until=until, limit=count
+        )
+        out: list[dict] = []
+        for q in getattr(data, "historical_quotes", None) or []:
+            tv = self._get_field(q, "time")
+            tsec = int(tv.seconds) if hasattr(tv, "seconds") else (int(tv) if tv else 0)
+            out.append({
+                "time": tsec,
+                "open": float(self._get_field(q, "open") or 0.0),
+                "high": float(self._get_field(q, "high") or 0.0),
+                "low": float(self._get_field(q, "low") or 0.0),
+                "close": float(self._get_field(q, "close") or 0.0),
+                "volume": int(self._get_field(q, "tick_volume", "real_volume") or 0),
+            })
         if count is not None and count > 0:
-            bars = bars[-count:]
-        return bars
+            out = out[-count:]
+        return out
 
     async def ticks(
         self, symbol: str, *, since: int | None = None, until: int | None = None, limit: int | None = None
@@ -478,7 +487,9 @@ class MT4Sugar:
 
         # Handle protobuf response - could be repeated field or list
         ticks_list = []
-        if hasattr(data, "ticks"):
+        if hasattr(data, "historical_quotes"):
+            ticks_list = data.historical_quotes
+        elif hasattr(data, "ticks"):
             ticks_list = data.ticks
         elif hasattr(data, "quotes"):
             ticks_list = data.quotes
@@ -487,8 +498,7 @@ class MT4Sugar:
         elif isinstance(data, list):
             ticks_list = data
         else:
-            # Try to extract any iterable field
-            ticks_list = data if data else []
+            ticks_list = []
 
         for t in ticks_list:
             try:
@@ -508,6 +518,12 @@ class MT4Sugar:
                 # Extract bid/ask
                 bid = self._extract_quote_field(t, "bid")
                 ask = self._extract_quote_field(t, "ask")
+
+                # quote_history returns OHLC candles (no bid/ask) — use close
+                if bid is None or ask is None:
+                    close = self._get_field(t, "close", "Close")
+                    if close is not None:
+                        bid = ask = float(close)
 
                 if bid is None or ask is None:
                     continue
@@ -1154,7 +1170,7 @@ class MT4Sugar:
         side = self._order_side(o)
         entry = self._order_open_price(o)
         if entry is None:
-            entry = o.get("price") or o.get("Price")
+            entry = self._get_field(o, "open_price", "price", "Price", "OpenPrice")
             entry = float(entry) if entry is not None else None
         if entry is None:
             raise ValueError("entry/open price is unknown; cannot compute SL/TP by pips")
@@ -1303,7 +1319,7 @@ class MT4Sugar:
     async def cancel_pendings(self, *, symbol: str | None = None, magic: int | None = None) -> None:
         """Cancel pending orders by filters."""
         try:
-            orders = await self._svc.opened_orders()
+            orders = await self._normalize_orders(await self._svc.opened_orders())
         except Exception as e:
             raise map_backend_error(e, context="opened_orders")
         if not orders:
@@ -1318,10 +1334,10 @@ class MT4Sugar:
             osym = self._order_symbol(o)
             if sym_up and osym != sym_up:
                 continue
-            omagic = o.get("magic") or o.get("Magic")
+            omagic = self._get_field(o, "magic", "Magic", "magic_number")
             if mgc is not None and str(omagic) != mgc:
                 continue
-            t = int(o.get("ticket") or o.get("Ticket"))
+            t = int(self._get_field(o, "ticket", "Ticket"))
             try:
                 await self._svc.order_close_delete(ticket=t)
             except Exception as e:
@@ -1416,7 +1432,7 @@ class MT4Sugar:
                     desired_sl = await self.normalize_price(symbol, desired_sl)
 
                     # current SL if any
-                    cur_sl = o.get("sl") or o.get("sl_price") or o.get("SL") or o.get("StopLoss")
+                    cur_sl = self._get_field(o, "stop_loss", "sl", "sl_price", "SL", "StopLoss")
                     cur_sl = float(cur_sl) if cur_sl is not None else None
 
                     # Only tighten SL (improve protection)

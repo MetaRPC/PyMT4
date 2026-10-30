@@ -1,0 +1,9 @@
+{
+  "user": 0,
+  "password": "YOUR_MT4_PASSWORD",
+  "grpc_server": "mt4.mrpc.pro:443",
+  "mt_cluster": "MetaQuotes-Demo",
+  "test_symbol": "EURUSD",
+  "test_volume": 0.01,
+  "api_key": "TRIAL"
+}

@@ -159,8 +159,8 @@ async def run_oco_straddle(
 
     # 2) Compute entry prices from mid
     mid = await sugar.mid_price(sp.symbol)
-    buy_price  = await sugar.pips_to_price(sp.symbol, mid, +abs(offset_pips))
-    sell_price = await sugar.pips_to_price(sp.symbol, mid, -abs(offset_pips))
+    buy_price  = (mid + await sugar.pips_to_price(sp.symbol, +abs(offset_pips)))
+    sell_price = (mid + await sugar.pips_to_price(sp.symbol, -abs(offset_pips)))
 
     # 3) Determine lots sizing
     base_lots = await sugar.calc_lot_by_risk(

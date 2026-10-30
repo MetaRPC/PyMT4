@@ -132,9 +132,9 @@ async def run_grid_dca_common_sl(
     for i in range(steps):
         delta = step_pips * (i + 1)
         if side == "buy":
-            price = await sugar.pips_to_price(sp.symbol, base_price, -abs(delta))
+            price = (base_price + await sugar.pips_to_price(sp.symbol, -abs(delta)))
         else:
-            price = await sugar.pips_to_price(sp.symbol, base_price, +abs(delta))
+            price = (base_price + await sugar.pips_to_price(sp.symbol, +abs(delta)))
         prices.append(price)
 
     # 4) Decide lots sizing per leg
@@ -216,23 +216,23 @@ async def run_grid_dca_common_sl(
             sl_ref = lowest_or_highest_px
 
         if side == "buy":
-            common_sl = await sugar.pips_to_price(sp.symbol, sl_ref, -abs(rp.sl_pips))
+            common_sl = (sl_ref + await sugar.pips_to_price(sp.symbol, -abs(rp.sl_pips)))
         else:
-            common_sl = await sugar.pips_to_price(sp.symbol, sl_ref, +abs(rp.sl_pips))
+            common_sl = (sl_ref + await sugar.pips_to_price(sp.symbol, +abs(rp.sl_pips)))
 
         # Common TP (optional)
         common_tp = None
         if tp_mode == "fixed_pips_from_avg" and tp_fixed_pips:
             if side == "buy":
-                common_tp = await sugar.pips_to_price(sp.symbol, vwap_px, +abs(tp_fixed_pips))
+                common_tp = (vwap_px + await sugar.pips_to_price(sp.symbol, +abs(tp_fixed_pips)))
             else:
-                common_tp = await sugar.pips_to_price(sp.symbol, vwap_px, -abs(tp_fixed_pips))
+                common_tp = (vwap_px + await sugar.pips_to_price(sp.symbol, -abs(tp_fixed_pips)))
         elif tp_mode == "rr_multiple" and tp_rr_multiple and rp.sl_pips:
             rr_pips = float(tp_rr_multiple) * float(rp.sl_pips)
             if side == "buy":
-                common_tp = await sugar.pips_to_price(sp.symbol, vwap_px, +abs(rr_pips))
+                common_tp = (vwap_px + await sugar.pips_to_price(sp.symbol, +abs(rr_pips)))
             else:
-                common_tp = await sugar.pips_to_price(sp.symbol, vwap_px, -abs(rr_pips))
+                common_tp = (vwap_px + await sugar.pips_to_price(sp.symbol, -abs(rr_pips)))
 
         return common_sl, common_tp
 
