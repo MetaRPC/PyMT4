@@ -44,7 +44,7 @@ The fastest way to get started is to create a demo account directly through the 
 
 ### Step 1️⃣: Download and Install MT4 Terminal
 
-1. Visit the official MetaTrader website: [https://www.metatrader5.com/en/download](https://www.metatrader5.com/en/download)
+1. Visit the official MetaTrader 4 website: [https://www.metatrader4.com/en/download](https://www.metatrader4.com/en/download)
 
 2. Download the version for your operating system (Windows/Mac/Linux)
 
@@ -171,12 +171,11 @@ Now that you have an MT4 demo account, you need to configure PyMT4 to connect to
 {
   "user": 591129415,
   "password": "YourPasswordHere",
-  "host": "mt4.mrpc.pro",
-  "port": 443,
   "grpc_server": "mt4.mrpc.pro:443",
   "mt_cluster": "MetaQuotes-Demo",
   "test_symbol": "EURUSD",
-  "test_volume": 0.01
+  "test_volume": 0.01,
+  "api_key": "TRIAL"
 }
 ```
 
@@ -185,7 +184,8 @@ Now that you have an MT4 demo account, you need to configure PyMT4 to connect to
 - **user**: Replace with your login number
 - **password**: Replace with your password
 - **mt_cluster**: Use the exact server name from MT4 (e.g., "MetaQuotes-Demo")
-- **host, port, grpc_server**: Provided by MetaRPC team (leave as is)
+- **grpc_server**: MetaRPC gateway address — leave as is for the demo
+- **api_key**: `"TRIAL"` works out of the box (1 terminal per IP); use your key from [mrpc.pro/my](https://mrpc.pro/my) to lift the limit
 
 ---
 
@@ -272,13 +272,13 @@ While you can use the MetaQuotes demo server for practice, you may want to choos
 - **OANDA** - Strong reputation, accepts US clients
 - **XM** - Easy account opening, many account types
 - **RoboForex** - Good for automated trading
-- **FxPro** - Excellent demo trading conditions (used in PyMT4 examples)
+- **FxPro** - Excellent demo trading conditions
 
 ### What to look for:
 
 - ✅ **Regulation** - Check if regulated by FCA, ASIC, CySEC, etc.
 
-- ✅ **MT4 Support** - Make sure they offer MT4 (not just MT4).
+- ✅ **MT4 Support** - Make sure they offer MetaTrader 4 (not only MT5).
 
 - ✅ **Demo Account** - Free demo without expiration (though demo accounts typically last 30 days, then become inactive).
 
@@ -306,7 +306,7 @@ Follow our main getting started guide to connect PyMT4 to your MT4 account:
 PyMT4 is built in **three levels**, from low-level to high-level. You can choose where to start depending on your needs:
 
 #### Level 1: MT4Account (Low-Level gRPC Foundation)
-👉 **[MT4Account Overview](../API_Reference/MT4Account.md)**
+👉 **[MT4Account Overview](../MT4Account/MT4Account.Master.Overview.md)**
 
 - **Direct gRPC calls** to MT4 terminal
 - **Foundation of everything** - all other levels use this internally
@@ -314,7 +314,7 @@ PyMT4 is built in **three levels**, from low-level to high-level. You can choose
 - Best for: Advanced users who need fine-grained control
 
 #### Level 2: MT4Service (Convenient Wrappers)
-👉 **[MT4Service Overview](../API_Reference/MT4Service.md)**
+👉 **[MT4Service Overview](../MT4Service/MT4Service.Overview.md)**
 
 - **Wrapper methods** over MT4Account gRPC calls
 - Simplified error handling and response parsing
@@ -322,7 +322,7 @@ PyMT4 is built in **three levels**, from low-level to high-level. You can choose
 - Best for: Most common trading scenarios
 
 #### Level 3: MT4Sugar (High-Level Helpers)
-👉 **[MT4Sugar API Overview](../API_Reference/MT4Sugar.md)**
+👉 **[MT4Sugar API Overview](../MT4Sugar/MT4Sugar.Master.Overview.md)**
 
 - **Syntactic sugar** and convenience methods
 - Chainable operations, smart defaults

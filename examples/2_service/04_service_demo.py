@@ -94,6 +94,49 @@ async def region_account_symbols(service: MT4Service):
     except Exception as e:
         print_if_error(e, "tick_value_with_size")
 
+    print_method("1.5", "service.trade_stats()", "aggregated trade statistics")
+    try:
+        st = await service.trade_stats()
+        print(f"   profit_factor={st.profit_factor:.2f} trades={st.trades} "
+              f"growth={st.growth_percent:+.2f}% markets={len(st.markets)}")
+    except Exception as e:
+        print_if_error(e, "trade_stats")
+
+    print_method("1.6", "service.trade_unrealized_pl()", "MFE/MAE per open order")
+    try:
+        upl = await service.trade_unrealized_pl()
+        print(f"   extrema entries: {len(upl.extrema)}")
+    except Exception as e:
+        print_if_error(e, "trade_unrealized_pl")
+
+    print_method("1.7", "service.equity_history()", "equity-curve points")
+    try:
+        eq = await service.equity_history(exclude_same_bars=True)
+        print(f"   equity points: {len(eq.points)}")
+    except Exception as e:
+        print_if_error(e, "equity_history")
+
+    print_method("1.8", "service.trade_stats_equity_history()", "stats + equity + trades")
+    try:
+        sc = await service.trade_stats_equity_history(exclude_same_bars=True)
+        print(f"   charts={len(sc.charts)} trades={len(sc.trades)} open={len(sc.open_trades)}")
+    except Exception as e:
+        print_if_error(e, "trade_stats_equity_history")
+
+    print_method("1.9", "service.server_timezone()", "server UTC offset")
+    try:
+        tz = await service.server_timezone()
+        print(f"   {tz.server}: UTC offset {tz.utc_offset_seconds}s")
+    except Exception as e:
+        print_if_error(e, "server_timezone")
+
+    print_method("1.10", "service.symbol_select()", f"add {SYMBOL} to Market Watch")
+    try:
+        sel = await service.symbol_select(SYMBOL, True)
+        print(f"   success: {sel.success}")
+    except Exception as e:
+        print_if_error(e, "symbol_select")
+
 
 # =============================================================================
 # REGION 2 - QUOTES
@@ -294,6 +337,14 @@ async def region_streaming(service: MT4Service):
         max_items=2, timeout=12.0,
     )
     tr.cancel()
+
+    print_method("5.5", "service.on_connect_state()", "terminal connection-state changes")
+    await _sample(
+        lambda: service.on_connect_state(), "on_connect_state",
+        lambda ev: print(f"   [CONNSTATE] state={ev.state} connected={ev.is_connected} "
+                         f"server={ev.server}"),
+        max_items=1, timeout=8.0,
+    )
 
 
 async def main():

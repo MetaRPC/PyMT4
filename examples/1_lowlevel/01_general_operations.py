@@ -138,6 +138,49 @@ async def run(account):
     except Exception as e:
         print_if_error(e, "orders_history")
 
+    print_method("10", "server_timezone()", "trade-server timezone / UTC offset")
+    try:
+        tz = await account.server_timezone()
+        print(f"   Server: {tz.server}  UTC offset: {tz.utc_offset_seconds}s")
+    except Exception as e:
+        print_if_error(e, "server_timezone")
+
+    print_method("11", "trade_stats()", "aggregated trade statistics")
+    try:
+        st = await account.trade_stats()
+        print(f"   profit_factor={st.profit_factor:.2f} growth%={st.growth_percent:.2f} "
+              f"markets={len(st.markets)}")
+    except Exception as e:
+        print_if_error(e, "trade_stats")
+
+    print_method("12", "equity_history()", "equity-curve points")
+    try:
+        eq = await account.equity_history()
+        print(f"   equity points: {len(eq.points)}")
+    except Exception as e:
+        print_if_error(e, "equity_history")
+
+    print_method("13", "trade_unrealized_pl()", "per-open-order unrealized P/L extrema")
+    try:
+        upl = await account.trade_unrealized_pl()
+        print(f"   extrema entries: {len(upl.extrema)}")
+    except Exception as e:
+        print_if_error(e, "trade_unrealized_pl")
+
+    print_method("14", "trade_stats_equity_history()", "stats + equity points + trades in one call")
+    try:
+        sc = await account.trade_stats_equity_history()
+        print(f"   charts={len(sc.charts)} trades={len(sc.trades)} open_trades={len(sc.open_trades)}")
+    except Exception as e:
+        print_if_error(e, "trade_stats_equity_history")
+
+    print_method("15", "symbol_select()", f"add {symbol} to Market Watch")
+    try:
+        sel = await account.symbol_select(symbol, True)
+        print(f"   success: {sel.success}")
+    except Exception as e:
+        print_if_error(e, "symbol_select")
+
 
 async def main():
     print("\n" + "=" * 78)

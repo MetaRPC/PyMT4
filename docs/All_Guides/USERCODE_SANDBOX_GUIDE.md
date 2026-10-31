@@ -6,12 +6,12 @@ This is **your sandbox** for writing custom MT4 trading code in Python. Connecti
 
 ## 🏁 Quick Start
 
-1. **Case already active in main.py**
+1. **Already wired into main.py**
    - Open `examples/main.py`
-   - Case "18" for user code sandbox is ready to use
+   - Entry **17** ("Your sandbox") is ready to use
 
-2. **Open `examples/6_usercode/18_usercode.py`**
-   - Write your code or uncomment examples
+2. **Open `examples/5_usercode/17_usercode.py`**
+   - Write your code or uncomment the examples inside `run_user_code(account, service, sugar)`
 
 3. **Run:**
    ```bash
@@ -19,25 +19,26 @@ This is **your sandbox** for writing custom MT4 trading code in Python. Connecti
    python main.py usercode
    ```
 
-That's it! Your code will execute with full MT4 connection.
+That's it! Your code runs with a live MT4 connection already established.
 
 ## How to use
 
-### Option 1: Uncomment examples
+The sandbox hands you three ready objects inside `run_user_code(account, service, sugar)`:
 
-The file contains 5 ready-to-use examples:
+- `account` - low-level gRPC client (`MT4Account`)
+- `service` - typed facade (`MT4Service`)
+- `sugar` - high-level helpers (`MT4Sugar`)
+
+### Option 1: Uncomment an example
 
 ```python
-# Example 1: Get account balance (Sugar - easiest)
-# balance = await sugar.get_balance()
-# print(f"Balance: {balance:.2f}")
+# q = await sugar.last_quote("EURUSD")
+# print(f"EURUSD: Bid={q['bid']:.5f} Ask={q['ask']:.5f}")
 ```
 
-Just remove `#` to activate!
+Just remove `#` to activate.
 
 ### Option 2: Write your own code
-
-Add your logic between the markers:
 
 ```python
 # =================================================================
@@ -46,17 +47,15 @@ Add your logic between the markers:
 
 # Your trading strategy here...
 
-# TODO: Write your trading logic here
+# =================================================================
 ```
 
 ## Available commands
 
-Run your code with:
-
 ```bash
-# From examples directory
+# From the examples directory
 python main.py usercode
-python main.py 18
+python main.py 17
 python main.py user
 python main.py sandbox
 ```
@@ -64,246 +63,180 @@ python main.py sandbox
 ## What's already configured
 
 + **Connection** - MT4 terminal connected via gRPC
-
-+ **Configuration** - Loaded from `examples/0_common/settings.json`
-
-+ **account** - Low-level gRPC client (MT4Account)
-
-+ **service** - Mid-level wrapper (MT4Service)
-
-+ **sugar** - High-level Sugar API (MT4Sugar)
-
-+ **async/await** - All methods are asynchronous
++ **Configuration** - loaded from `examples/0_common/settings.json`
++ **account** - low-level gRPC client (`MT4Account`)
++ **service** - typed facade (`MT4Service`)
++ **sugar** - high-level Sugar API (`MT4Sugar`)
++ **async/await** - all methods are asynchronous
 
 ## 🧩 Can I mix API levels?
 
-**Yes!** You can use all three levels in the same file:
+**Yes!** All three objects talk to the same connection:
 
 ```python
 # Low-level (direct gRPC protobuf)
 summary = await account.account_summary()
 balance_pb = summary.account_balance
 
-# Mid-level (MT4Service)
-account_info = await service.get_account_summary()
-balance_svc = account_info.balance
+# Mid-level (MT4Service) - same protobuf object, via the facade
+summary_svc = await service.account_summary()
+balance_svc = summary_svc.account_balance
 
-# High-level (MT4Sugar)
-balance_sugar = await sugar.get_balance()
+# High-level (MT4Sugar) - convenience helpers
+q = await sugar.last_quote("EURUSD")
 ```
 
-All three variables are available simultaneously:
-
 - `account` - for full control (gRPC protobuf)
-- `service` - for convenient methods (Service layer)
-- `sugar` - for simplest usage (Sugar API)
+- `service` - the typed facade over MT4Account
+- `sugar` - for the simplest one-liners
 
 ## Quick reference
 
 ### Get account information
 
 ```python
-# Sugar API (easiest)
-balance = await sugar.get_balance()
-print(f"Balance: {balance:.2f}")
-
-# Service API (more details)
-account_info = await service.get_account_summary()
-print(f"Balance: {account_info.balance:.2f} {account_info.currency}")
-print(f"Equity:  {account_info.equity:.2f}")
-
-# Account API (full control)
-summary = await account.account_summary()
-print(f"Balance: {summary.account_balance:.2f}")
+# Account state comes from account_summary() (protobuf object)
+summary = await service.account_summary()
+print(f"Balance: {summary.account_balance:.2f} {summary.account_currency}")
+print(f"Equity:  {summary.account_equity:.2f}")
+print(f"Free margin: {summary.account_margin_free:.2f}")
 ```
 
 ### Get current price
 
 ```python
 # Sugar API
-bid = await sugar.get_bid("EURUSD")
-ask = await sugar.get_ask("EURUSD")
-print(f"EURUSD: Bid={bid:.5f}, Ask={ask:.5f}")
+q = await sugar.last_quote("EURUSD")          # {"bid": ..., "ask": ..., "time": ...}
+print(f"EURUSD: Bid={q['bid']:.5f}, Ask={q['ask']:.5f}")
+mid = await sugar.mid_price("EURUSD")
 
 # Service API
-tick = await service.get_symbol_tick("EURUSD")
+tick = await service.quote("EURUSD")
 print(f"EURUSD Bid: {tick.bid:.5f}, Ask: {tick.ask:.5f}")
 ```
 
 ### Open market order
 
 ```python
-# Sugar API (easiest)
+# Sugar API (lots is keyword-only)
 try:
-    ticket = await sugar.buy_market("EURUSD", 0.01)
+    ticket = await sugar.buy_market("EURUSD", lots=0.01)
     print(f"Order opened: #{ticket}")
 except Exception as e:
     print(f"Order failed: {e}")
 
 # With SL/TP in pips
-ticket = await sugar.buy_market_with_pips("EURUSD", 0.01, sl_pips=20, tp_pips=30)
+ticket = await sugar.buy_market("EURUSD", lots=0.01, sl_pips=20, tp_pips=30)
 
-# Calculate position size based on risk (2% with 50 pip SL)
-lot_size = await sugar.calculate_position_size("EURUSD", risk_percent=2.0, sl_pips=50)
-ticket = await sugar.buy_market_with_pips("EURUSD", lot_size, sl_pips=50, tp_pips=100)
+# Lot size based on risk (2% with 50-pip SL)
+lots = await sugar.calc_lot_by_risk("EURUSD", risk_percent=2.0, stop_pips=50)
+ticket = await sugar.buy_market("EURUSD", lots=lots, sl_pips=50, tp_pips=100)
 ```
 
 ### Place pending order
 
 ```python
 # Buy Limit with absolute price and SL/TP in pips
-ticket = await sugar.buy_limit_with_sltp("EURUSD", 0.01, price=1.0850,
-                                          sl_pips=20, tp_pips=30)
+ticket = await sugar.buy_limit("EURUSD", price=1.0850, lots=0.01, sl_pips=20, tp_pips=30)
 
 # Buy Stop with absolute price
-ticket = await sugar.buy_stop("EURUSD", 0.01, price=1.0950)
+ticket = await sugar.buy_stop("EURUSD", price=1.0950, lots=0.01)
 
-# Sell Limit with absolute price and SL/TP
-ticket = await sugar.sell_limit_with_sltp("EURUSD", 0.01, price=1.1050,
-                                           sl=1.1070, tp=1.1030)
+# Sell Limit with absolute SL/TP prices
+ticket = await sugar.sell_limit("EURUSD", price=1.1050, lots=0.01,
+                                sl_price=1.1070, tp_price=1.1030)
 ```
 
-### Get open positions
+### List open orders
 
 ```python
-# Sugar API
-positions = await sugar.get_open_positions()
-print(f"Open positions: {len(positions)}")
-for pos in positions:
-    print(f"  #{pos.ticket} {pos.symbol} {pos.volume:.2f} lot, "
-          f"Profit: {pos.profit:.2f}")
+# Sugar API - returns a list of dicts
+orders = await sugar.find_orders(symbol="EURUSD")
+print(f"Open orders: {len(orders)}")
+for o in orders:
+    print(o)
 
-# Service API with filters
-opened_data = await service.get_opened_orders()
-positions = opened_data.position_infos
+# Service API - low-level protobuf
+data = await service.opened_orders()
+for o in data.order_infos:
+    print(f"  #{o.ticket} {o.symbol} {o.lots:.2f} lot, profit: {o.profit:.2f}")
 ```
 
-### Close positions
+### Close orders
 
 ```python
-# Close specific position
-await sugar.close_position(ticket)
+# Close a specific order (market) or delete a pending one
+await sugar.close(ticket)
 
-# Close all positions for symbol
-await sugar.close_all_positions("EURUSD")
+# Close all orders for a symbol
+await sugar.close_all(symbol="EURUSD")
 
-# Close all positions (all symbols)
-await sugar.close_all_positions()
+# Close all orders (all symbols)
+await sugar.close_all()
+
+# Cancel pending orders only
+await sugar.cancel_pendings(symbol="EURUSD")
 ```
 
-### Modify position
+### Modify order
 
 ```python
-# Modify SL/TP
-await sugar.modify_position_sltp(ticket, sl=1.0850, tp=1.0950)
+# Modify SL/TP by absolute prices
+await sugar.modify_sl_tp_by_price(ticket, sl_price=1.0850, tp_price=1.0950)
 
-# Modify only Stop Loss
-await sugar.modify_position_sl(ticket, sl=1.0850)
-
-# Modify only Take Profit
-await sugar.modify_position_tp(ticket, tp=1.0950)
+# Modify SL/TP by pips relative to entry
+await sugar.modify_sl_tp_by_pips(ticket, sl_pips=20, tp_pips=40)
 ```
 
-### Calculate position size
+### Calculate lot size
 
 ```python
-# Calculate position size based on risk
-volume = await sugar.calculate_position_size("EURUSD", risk_percent=2.0, sl_pips=20)
-print(f"Volume for 2% risk with 20 pip SL: {volume:.2f} lot")
+# Lot size based on risk
+lots = await sugar.calc_lot_by_risk("EURUSD", risk_percent=2.0, stop_pips=20)
+print(f"Lots for 2% risk with 20-pip SL: {lots:.2f}")
 
-# Then use calculated volume
-ticket = await sugar.buy_market("EURUSD", volume)
+# Then use it
+ticket = await sugar.buy_market("EURUSD", lots=lots)
 ```
-
-## Return Codes (RetCodes)
-
-**Always check returned_code after trading operations!**
-
-```python
-from MetaRpcMT4.mt5_term_api_trading_helper_pb2 import OrderSendRequest
-import MetaRpcMT4.mt5_term_api_trading_helper_pb2 as pb_trading
-
-# Build request
-request = OrderSendRequest(
-    symbol="EURUSD",
-    volume=0.01,
-    operation=pb_trading.TMT4_ORDER_TYPE_BUY,
-    price=0.0,  # Market order (price will be filled by broker)
-    # ... other fields
-)
-
-result = await service.place_order(request)
-
-# Check RetCode
-if result.returned_code == 10009:  # Success for market orders
-    print(f"[OK] Order opened: #{result.order}")
-elif result.returned_code == 10008:  # Success for pending orders
-    print(f"[OK] Pending order placed: #{result.order}")
-else:
-    print(f"[X] Order failed: {result.comment} (code {result.returned_code})")
-```
-
-**Common RetCodes:**
-
-- `10009` - Market order executed successfully
-- `10008` - Pending order placed successfully
-- `10019` - Insufficient money (insufficient margin)
-- `10016` - Invalid stops (SL/TP too close to price)
-- `10018` - Market closed
-
-Full list: [RETURN_CODES_REFERENCE.md](RETURN_CODES_REFERENCE.md)
 
 ## ℹ️ Error handling
 
-PyMT4 uses Python exceptions for error handling:
+PyMT4 surfaces failures as **Python exceptions** (there is no MT5-style
+`returned_code` to poll). Order helpers return the **ticket number** on success.
 
-### 1. Connection/Network errors
+- `MT4Account` raises `ApiExceptionMT4` on server errors, `ConnectExceptionMT4`
+  if you call a method before connecting.
+- `MT4Sugar` raises `MT4Error` subclasses (`OrderRejected`, `ModifyRejected`,
+  `ConnectivityError`, `RateLimitExceeded`).
+
+### Recommended pattern
 
 ```python
+from MetaRpcMT4.mt4_account import ApiExceptionMT4
+from app.Helper.errors import OrderRejected, MT4Error
+
 try:
-    result = await service.place_order(request)
-except Exception as e:
-    print(f"Connection or network error: {e}")
-    return
-```
-
-### 2. Trading operation errors (RetCode)
-
-```python
-result = await service.place_order(request)
-if result.returned_code != 10009:
-    print(f"Trade rejected: {result.comment}")
-```
-
-**Always check BOTH!**
-
-### Recommended pattern:
-
-```python
-try:
-    result = await service.place_order(request)
-
-    if result.returned_code == 10009:
-        print(f"[OK] Success: Order #{result.order}")
-    else:
-        print(f"[X] Failed: {result.comment} (code: {result.returned_code})")
-
-except Exception as e:
+    ticket = await sugar.buy_market("EURUSD", lots=0.01)
+    print(f"[OK] Order opened: #{ticket}")
+except OrderRejected as e:
+    print(f"[X] Order rejected: {e}")
+except (ApiExceptionMT4, MT4Error) as e:
     print(f"[X] Error: {e}")
 ```
 
 ## 📝 Documentation
 
-- [MT4Account Master Overview](../API_Reference/MT4Account.md) - Complete API reference (40 methods)
-- [MT4Service Overview](../API_Reference/MT4Service.md) - Mid-level wrapper (36 methods)
-- [MT4Sugar Master Overview](../API_Reference/MT4Sugar.md) - High-level Sugar API (62+ methods)
-- [ENUMS Usage Reference](ENUMS_USAGE_REFERENCE.md) - All ENUMs in one place
+- [MT4Account API Reference](../MT4Account/MT4Account.Master.Overview.md) - low-level API (18 core methods)
+- [MT4Service Overview](../MT4Service/MT4Service.Overview.md) - typed facade + trade helpers
+- [MT4Sugar Reference](../MT4Sugar/MT4Sugar.Master.Overview.md) - high-level Sugar API (~60 methods)
+- [ENUMS Usage Reference](ENUMS_USAGE_REFERENCE.md) - all ENUMs in one place
+- [Return Codes Reference](RETURN_CODES_REFERENCE.md) - error / return codes
 
 ## 🔑 Configuration
 
-### Method 1: settings.json (Recommended)
+### settings.json
 
-Create `examples/0_common/settings.json`:
+Edit `examples/0_common/settings.json`:
 
 ```json
 {
@@ -312,150 +245,114 @@ Create `examples/0_common/settings.json`:
   "grpc_server": "mt4.mrpc.pro:443",
   "mt_cluster": "MetaQuotes-Demo",
   "test_symbol": "EURUSD",
-  "test_volume": 0.01
+  "test_volume": 0.01,
+  "api_key": "TRIAL"
 }
 ```
 
-### Method 2: Environment variables
+### Environment overrides
+
+`examples/0_common/demo_helpers.py` lets two environment variables override the
+file when set (handy for CI or switching servers without editing JSON):
 
 ```bash
 # Linux/Mac
-export MT4_USER=591129415
-export MT4_PASSWORD="YourPassword"
-export MT4_GRPC_SERVER="mt4.mrpc.pro:443"
-export MT4_CLUSTER="MetaQuotes-Demo"
+export MRPC_API_KEY=mrpc_live_...
+export MRPC_GRPC_SERVER=mt4.mrpc.pro:443
 
 # Windows PowerShell
-$env:MT4_USER="591129415"
-$env:MT4_PASSWORD="YourPassword"
-$env:MT4_GRPC_SERVER="mt4.mrpc.pro:443"
+$env:MRPC_API_KEY="mrpc_live_..."
+$env:MRPC_GRPC_SERVER="mt4.mrpc.pro:443"
 ```
-
-See [demo_helpers.py](#) for details.
 
 ## Tips
 
-1. **Start simple** - Uncomment one example at a time
-
-2. **Use Sugar API** - Methods like `buy_market_with_pips()` and 
-`calculate_position_size()` are easier than low-level
-
-3. **Check returned_code** - Always validate trading operations (10009 = success)
-
-4. **Test on demo** - Make sure you're using demo account first!
-
-5. **Read documentation** - [RETURN_CODES_REFERENCE.md](RETURN_CODES_REFERENCE.md) explains all error codes
-
-6. **Use async/await** - All methods are asynchronous
-
-7. **Type hints** - Use IDE autocomplete for better development experience
-
-8. **Check examples** - See `examples/` folder for 15+ working examples
+1. **Start simple** - uncomment one example at a time
+2. **Use Sugar API** - `buy_market(..., sl_pips=, tp_pips=)` and `calc_lot_by_risk()` are easier than low-level calls
+3. **Handle exceptions** - wrap trading calls in `try/except`
+4. **Test on demo** - make sure you're on a demo account first
+5. **Read the docs** - [RETURN_CODES_REFERENCE.md](RETURN_CODES_REFERENCE.md) explains error codes
+6. **Use async/await** - all methods are asynchronous
+7. **Type hints** - rely on IDE autocomplete
+8. **Check the examples** - the `examples/` folder has a full set of working examples
 
 ## Common mistakes
 
 [X] **Forgot to use await**
 ```python
-balance = sugar.get_balance()  # DON'T forget await!
+q = sugar.last_quote("EURUSD")  # DON'T forget await!
 ```
 
 [+] **Always use await**
 ```python
-balance = await sugar.get_balance()
+q = await sugar.last_quote("EURUSD")
 ```
 
-[X] **Not checking exceptions**
+[X] **Passing lots positionally**
 ```python
-ticket = await sugar.buy_market("EURUSD", 0.01)  # No try/except!
+ticket = await sugar.buy_market("EURUSD", 0.01)  # lots is keyword-only!
+```
+
+[+] **Pass lots as a keyword**
+```python
+ticket = await sugar.buy_market("EURUSD", lots=0.01)
+```
+
+[X] **Not handling exceptions**
+```python
+ticket = await sugar.buy_market("EURUSD", lots=0.01)  # no try/except!
 ```
 
 [+] **Always handle exceptions**
 ```python
 try:
-    ticket = await sugar.buy_market("EURUSD", 0.01)
+    ticket = await sugar.buy_market("EURUSD", lots=0.01)
     print(f"Order opened: #{ticket}")
 except Exception as e:
     print(f"Error: {e}")
 ```
 
-[X] **Not checking returned_code**
-```python
-result = await service.place_order(request)
-# Assuming it's success!
-```
-
-[+] **Check returned_code for trading operations**
-```python
-result = await service.place_order(request)
-if result.returned_code != 10009:
-    print(f"Trade failed: {result.comment}")
-    return
-```
-
 ## Getting help
 
-- **Protobuf types**: Check `package/MetaRpcMT4/` folder for all protobuf definitions
-- **Error codes**: See [RETURN_CODES_REFERENCE.md](RETURN_CODES_REFERENCE.md)
-- **Examples**: Check `examples/` folder for working code
-- **API documentation**: See docs folder for complete reference
+- **Protobuf types**: check the `package/MetaRpcMT4/` folder for all protobuf definitions
+- **Error codes**: see [RETURN_CODES_REFERENCE.md](RETURN_CODES_REFERENCE.md)
+- **Examples**: check the `examples/` folder for working code
+- **API documentation**: see the API Reference section
 
-## Example: Complete trading strategy
+## Example: Complete sandbox function
 
-Here's a complete example demonstrating proper error handling:
+This mirrors the real `run_user_code(account, service, sugar)` in
+`examples/5_usercode/17_usercode.py` — connection is already done for you, so you
+just add logic:
 
 ```python
-async def run_user_code():
-    """Your sandbox function - write your code here!"""
+async def run_user_code(account, service, sugar):
+    """Your sandbox. `account`, `service`, `sugar` are connected and ready."""
 
+    # Account state
     try:
-        # Load configuration
-        config = load_settings()
-    except Exception as e:
-        print(f"Config error: {e}")
-        return
-
-    try:
-        # Connect to MT4
-        account = await create_and_connect_mt5(config)
-    except Exception as e:
-        print(f"Connection error: {e}")
-        return
-
-    # Create service and sugar wrappers
-    service = MT4Service(account)
-    sugar = MT4Sugar(service, default_symbol=config.get('test_symbol', 'EURUSD'))
-
-    # Get account information
-    try:
-        balance = await sugar.get_balance()
-        print(f"Balance: {balance:.2f}")
+        summary = await service.account_summary()
+        print(f"Balance: {summary.account_balance:.2f} {summary.account_currency}")
     except Exception as e:
         print(f"Balance error: {e}")
         return
 
-    # Calculate position size based on risk (1% with 50 pip SL)
+    # Lot size based on risk (1% with 50-pip SL)
     try:
-        volume = await sugar.calculate_position_size("EURUSD",
-                                                      risk_percent=1.0,
-                                                      sl_pips=50)
+        lots = await sugar.calc_lot_by_risk("EURUSD", risk_percent=1.0, stop_pips=50)
     except Exception as e:
-        print(f"Position size error: {e}")
+        print(f"Lot-size error: {e}")
         return
 
-    # Open position with calculated volume
+    # Open a market order with SL/TP in pips
     try:
-        ticket = await sugar.buy_market_with_pips("EURUSD", volume,
-                                                   sl_pips=50, tp_pips=100)
-        print(f"[OK] Position opened: #{ticket} with {volume:.2f} lot")
+        ticket = await sugar.buy_market("EURUSD", lots=lots, sl_pips=50, tp_pips=100)
+        print(f"[OK] Order opened: #{ticket} with {lots:.2f} lot")
     except Exception as e:
         print(f"Order error: {e}")
         return
 
     print("Strategy execution completed!")
-
-
-if __name__ == "__main__":
-    asyncio.run(run_user_code())
 ```
 
 **Happy trading!**

@@ -54,6 +54,9 @@ def _as_list(obj: Any) -> list:
         "data", "items", "symbols", "names", "values",
         "Data", "Items", "Symbols", "Names", "Values",
         "result", "Result",
+        # MT4 protobuf repeated-field names
+        "SymbolNameInfos", "symbol_infos", "order_infos", "orders_info",
+        "infos", "quotes",
     ):
         if hasattr(obj, attr):
             try:
@@ -329,6 +332,28 @@ class MT4Service:
     async def account_summary(self) -> Any:
         return await self._acc.account_summary()
 
+    async def trade_stats(self, since: Optional[datetime] = None) -> Any:
+        """Aggregated trade statistics. Pass-through to MT4Account.trade_stats."""
+        return await self._acc.trade_stats(from_time=since)
+
+    async def trade_unrealized_pl(self, since: Optional[datetime] = None) -> Any:
+        """Per-open-order unrealized P/L extrema (MFE/MAE)."""
+        return await self._acc.trade_unrealized_pl(from_time=since)
+
+    async def equity_history(
+        self, since: Optional[datetime] = None, exclude_same_bars: Optional[bool] = None
+    ) -> Any:
+        """Equity-curve points with running drawdowns."""
+        return await self._acc.equity_history(from_time=since, exclude_same_bars=exclude_same_bars)
+
+    async def trade_stats_equity_history(
+        self, since: Optional[datetime] = None, exclude_same_bars: Optional[bool] = None
+    ) -> Any:
+        """Stats + equity points + trades in one call."""
+        return await self._acc.trade_stats_equity_history(
+            from_time=since, exclude_same_bars=exclude_same_bars
+        )
+
     # ─────────────── SYMBOLS / QUOTES ─────────────
 
     async def symbols(self, mask: Optional[Union[str, Sequence[str]]] = None) -> Any:
@@ -452,6 +477,14 @@ class MT4Service:
         """
         names = list(symbols) if symbols else ([symbol] if symbol else ["EURUSD"])
         return await self._acc.tick_value_with_size(symbol_names=names)
+
+    async def symbol_select(self, symbol: str, select: bool = True) -> Any:
+        """Add/remove a symbol in Market Watch."""
+        return await self._acc.symbol_select(symbol, select)
+
+    async def server_timezone(self) -> Any:
+        """Trade-server timezone / UTC offset."""
+        return await self._acc.server_timezone()
 
     # ─────────────── ORDERS / HISTORY ─────────────
 
@@ -596,6 +629,16 @@ class MT4Service:
                 timer_period_milliseconds=timer_period_milliseconds
             ):
                 yield item
+
+    async def on_connect_state(
+        self,
+        terminal_ids: Optional[Sequence[str]] = None,
+    ) -> AsyncIterator[Any]:
+        """Stream terminal connection-state changes."""
+        async for item in self._acc.on_connect_state(
+            terminal_ids=list(terminal_ids) if terminal_ids else None
+        ):
+            yield item
 
 """
 ╔══════════════════════════════════════════════════════════════════════════════╗

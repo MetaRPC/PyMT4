@@ -90,10 +90,15 @@ nav:
     - Sync vs Async: All_Guides/SYNC_VS_ASYNC.md
 
   - API Reference:
-    - MT4Account API: API_Reference/MT4Account.md
-    - MT4Service API: API_Reference/MT4Service.md
-    - MT4Sugar API: API_Reference/MT4Sugar.md
+    - MT4Account API: MT4Account/MT4Account.Master.Overview.md
+    - MT4Service API: MT4Service/MT4Service.Overview.md
+    - MT4Sugar API: MT4Sugar/MT4Sugar.Master.Overview.md
 
   - Strategies:
     - Master Overview: Strategies/Strategies.Master.Overview.md
-    - Presets: Strategies/Presets/AdaptiveMarketModePreset.md
+    - Market One-Shot: Strategies/Orchestrators_EN/MarketOneShot.md
+    - Bracket + Trailing: Strategies/Orchestrators_EN/BracketTrailing.md
+    - Grid DCA: Strategies/Orchestrators_EN/GridDCA.md
+    - OCO Straddle: Strategies/Orchestrators_EN/OcoStraddle.md
+    - Pending Bracket: Strategies/Orchestrators_EN/PendingBracket.md
+    - Presets: Strategies/Presets/Presets.md

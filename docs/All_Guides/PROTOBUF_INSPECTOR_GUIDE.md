@@ -9,14 +9,16 @@
 The Protobuf Inspector is an **interactive command-line tool** that helps you explore the structure of the MT4 gRPC API:
 
 - Interactive search for types, fields, and enums
-- Real-time inspection of protobuf message structures
-- Field-level discovery - find which types contain specific fields
+- Inspection of protobuf message structures
+- Field-level discovery - find which types contain a specific field
 - Field type discovery - find fields by their data type (double, string, enum, etc.)
 - Enum value exploration - see all possible enum values
-- Enum usage tracking - find where specific enums are used
-- Type browsing with filters - list types by category
+- Enum usage tracking - find where a specific enum is used
+- Type browsing with filters
 - JSON export - export type structures for documentation
-- Statistics analysis - field types, enum counts, comprehensive metrics
+- Statistics - field types, enum counts, comprehensive metrics
+
+It is **offline** — it reads the generated `MetaRpcMT4` protobuf descriptors, so no MT4 connection is required.
 
 ---
 
@@ -36,8 +38,8 @@ You will see an interactive prompt:
 MT4 PROTOBUF TYPES INSPECTOR
 ===========================================================
 
-  Discovered 163 protobuf message types
-  Discovered 60 enum types
+  Discovered 193 protobuf message types
+  Discovered 18 enum types
 
   Type 'help' to see available commands
   Type 'list' to see all types
@@ -55,57 +57,53 @@ MT4 PROTOBUF TYPES INSPECTOR
 | `list` or `ls` | Show all available protobuf types | `list` |
 | `list --request` | Show only Request types | `list --request` |
 | `list --reply` | Show only Reply types | `list --reply` |
-| `list --data` | Show only Data types | `list --data` |
-| `list --info` | Show only Info types | `list --info` |
-| `<TypeName>` | Inspect specific type structure | `PositionInfo` |
+| `<TypeName>` | Inspect a specific type structure | `OpenedOrderInfo` |
 | `search <text>` or `find <text>` | Search for types containing text | `search Order` |
 | `field <name>` | Find all types with a specific field | `field ticket` |
 | `findtype <type>` | Find all fields of a specific type | `findtype double` |
-| `enum <name>` | Show all enum values | `enum ENUM_ORDER_TYPE_TF` |
-| `whereenum <name>` | Find where enum is used | `whereenum ENUM_ORDER_TYPE_TF` |
-| `export <TypeName>` | Export type structure to JSON | `export PositionInfo` |
+| `enum <name>` | Show all enum values | `enum OrderSendOperationType` |
+| `whereenum <name>` | Find where an enum is used | `whereenum OpenedOrderType` |
+| `export <TypeName>` | Export a type structure to JSON | `export OrderSendData` |
 | `stats` | Show detailed statistics | `stats` |
 | `help` or `?` | Show help message | `help` |
-| `exit` or `quit` | Exit the inspector | `exit` |
+| `exit` / `quit` / `q` | Exit the inspector | `exit` |
 
 ---
 
 ## Practical Examples
 
-### Example 1: Find out what fields PositionInfo has
+### Example 1: Inspect a type's fields
 
 **Command:**
 ```
-> PositionInfo
+> OpenedOrderInfo
 ```
 
 **Output:**
 ```
+TYPE: OpenedOrderInfo
 ===========================================================
-TYPE: PositionInfo
-===========================================================
-FIELDS (20):
+FIELDS (19):
 -----------------------------------------------------------
-  #  1 index                         : uint32
-  #  2 ticket                        : uint64
-  #  3 open_time                     : Timestamp
-  #  4 volume                        : double
-  #  5 price_open                    : double
-  #  6 stop_loss                     : double
-  #  7 take_profit                   : double
-  #  8 price_current                 : double
-  #  9 swap                          : double
-  # 10 profit                        : double
-  # 11 last_update_time              : Timestamp
-  # 12 type                          : ENUM_ORDER_TYPE_TF
-  # 13 magic_number                  : int64
-  # 14 identifier                    : int64
-  # 15 reason                        : ENUM_POSITION_REASON_TYPE
-  # 16 symbol                        : string
-  # 17 comment                       : string
-  # 18 external_id                   : string
-  # 19 position_commission           : double
-  # 20 account_login                 : int64
+  #  1 comment                        : string
+  #  2 commision                      : double
+  #  3 expiration_time                : Timestamp
+  #  4 lots                           : double
+  #  5 magic_number                   : int32
+  #  6 open_price                     : double
+  #  7 profit                         : double
+  #  8 stop_loss                      : double
+  #  9 swap                           : double
+  # 10 symbol                         : string
+  # 11 take_profit                    : double
+  # 12 ticket                         : int32
+  # 13 position_index                 : int32
+  # 14 order_type                     : OpenedOrderType
+  # 15 sort_index                     : int32
+  # 16 open_time                      : Timestamp
+  # 17 account_login                  : int64
+  # 18 expiration_time_utc            : Timestamp
+  # 19 open_time_utc                  : Timestamp
 ```
 
 ---
@@ -121,93 +119,89 @@ FIELDS (20):
 ```
 EXACT MATCH: field 'ticket' found in:
 -----------------------------------------------------------
-    1. DealInfo
-    2. HistoryDealsGetByTicketRequest
-    3. HistoryOrdersGetByTicketRequest
-    4. OrderCloseRequest
-    5. OrderInfo
-    6. OrderModifyRequest
-    7. PositionCloseRequest
-    8. PositionInfo
-    9. PositionModifyRequest
-   10. TradeTransactionInfo
+    1. HistoryOrderInfo
+    2. OnOpenedOrdersProfitOrderInfo
+    3. OnTradeOrderInfo
+    4. OpenedOrderInfo
+    5. OrderSendData
+    6. TradeHistoryItemData
+    7. TradeUnrealizedExtremaData
 ```
 
 ---
 
-### Example 3: See all ORDER_TYPE enum values
+### Example 3: See order operation enum values
+
+MT4 has distinct order-operation enums for different contexts. The one used to
+**send** an order:
 
 **Command:**
 ```
-> enum ENUM_ORDER_TYPE_TF
+> enum OrderSendOperationType
 ```
 
 **Output:**
 ```
-ENUM: ENUM_ORDER_TYPE_TF
+ENUM: OrderSendOperationType
 ===========================================================
-  ORDER_TYPE_TF_BUY                        = 0
-  ORDER_TYPE_TF_SELL                       = 1
-  ORDER_TYPE_TF_BUY_LIMIT                  = 2
-  ORDER_TYPE_TF_SELL_LIMIT                 = 3
-  ORDER_TYPE_TF_BUY_STOP                   = 4
-  ORDER_TYPE_TF_SELL_STOP                  = 5
-  ORDER_TYPE_TF_BUY_STOP_LIMIT             = 6
-  ORDER_TYPE_TF_SELL_STOP_LIMIT            = 7
-  ORDER_TYPE_TF_CLOSE_BY                   = 8
+  OC_OP_BUY                                = 0
+  OC_OP_SELL                               = 1
+  OC_OP_BUYLIMIT                           = 2
+  OC_OP_SELLLIMIT                          = 3
+  OC_OP_BUYSTOP                            = 4
+  OC_OP_SELLSTOP                           = 5
 ```
 
----
-
-### Example 3a: See streaming event ORDER_TYPE enum (NEW)
+The one reported back on **open / history** orders:
 
 **Command:**
 ```
-> enum SUB_ENUM_ORDER_TYPE
+> enum OpenedOrderType
 ```
 
 **Output:**
 ```
-ENUM: SUB_ENUM_ORDER_TYPE
+ENUM: OpenedOrderType
 ===========================================================
-  SUB_ORDER_TYPE_BUY                       = 0
-  SUB_ORDER_TYPE_SELL                      = 1
-  SUB_ORDER_TYPE_BUY_LIMIT                 = 2
-  SUB_ORDER_TYPE_SELL_LIMIT                = 3
-  SUB_ORDER_TYPE_BUY_STOP                  = 4
-  SUB_ORDER_TYPE_SELL_STOP                 = 5
-  SUB_ORDER_TYPE_BUY_STOP_LIMIT            = 6
-  SUB_ORDER_TYPE_SELL_STOP_LIMIT           = 7
-  SUB_ORDER_TYPE_CLOSE_BY                  = 8
+  OO_OP_BUY                                = 0
+  OO_OP_SELL                               = 1
+  OO_OP_BUYLIMIT                           = 2
+  OO_OP_SELLLIMIT                          = 3
+  OO_OP_BUYSTOP                            = 4
+  OO_OP_SELLSTOP                           = 5
+  OO_OP_BALANCE                            = 6
+  OO_OP_CREDIT                             = 7
 ```
 
-**Note:** Use `SUB_ENUM_*` enums for streaming events (on_trade, on_trade_transaction, etc.), and `ENUM_*_TF` enums for trading functions (order_send, order_modify, etc.).
+**Note:** There is also `SUB_ORDER_OPERATION_TYPE` (`SUB_OP_*`) used inside streaming
+events. See [ENUMS Usage Reference](ENUMS_USAGE_REFERENCE.md).
 
 ---
 
-### Example 4: Find all types related to "Position"
+### Example 4: Find all types related to "Order"
 
 **Command:**
 ```
-> search Position
+> search Order
 ```
 
 **Output:**
 ```
-FOUND 12 TYPES MATCHING 'Position':
+FOUND 32 TYPES MATCHING 'Order':
 -----------------------------------------------------------
-    1. ClosedPositionsGetRequest
-    2. ClosedPositionsGetRequestReply
-    3. ENUM_POSITION_REASON_TYPE
-    4. OpenedPositionsGetRequest
-    5. OpenedPositionsGetRequestReply
-    6. PositionCloseRequest
-    7. PositionCloseRequestReply
-    8. PositionInfo
-    9. PositionModifyRequest
-   10. PositionModifyRequestReply
-   11. PositionProfitCallbackInfo
-   12. PositionsTicketsCallbackInfo
+    1. HistoryOrderInfo
+    2. OnOpenedOrdersProfitData
+    3. OnOpenedOrdersProfitOrderInfo
+    ...
+   11. OpenedOrderInfo
+   12. OpenedOrdersData
+   ...
+   27. OrderSendData
+   28. OrderSendReply
+   29. OrderSendRequest
+   30. OrdersHistoryData
+   31. OrdersHistoryReply
+   32. OrdersHistoryRequest
 ```
 
 ---
@@ -219,184 +213,80 @@ FOUND 12 TYPES MATCHING 'Position':
 > list
 ```
 
-**Output:**
+**Output (grouped by category):**
 ```
-AVAILABLE PROTOBUF TYPES (163)
+AVAILABLE PROTOBUF TYPES (193)
 -----------------------------------------------------------
 
-[Request] (47 types):
-    1. AccountInfoDoubleGetRequest
-    2. AccountInfoIntegerGetRequest
-    3. AccountInfoStringGetRequest
+[Request] (55 types):
+    1. AccountSummaryRequest
+    2. ConnectExRequest
+    ...
+   38. OrderSendRequest
+   39. OrdersHistoryRequest
+   ...
+
+[Reply] (59 types):
     ...
 
-[Reply] (44 types):
-    1. AccountInfoDoubleGetRequestReply
-    2. AccountInfoIntegerGetRequestReply
+[Data] (53 types):
     ...
 
-[Data] (47 types):
-    1. AccountSummaryData
-    2. MarketBookData
-    3. OnSymbolTickData
-    4. OnTradeData
-    5. OnTradeTransactionData
+[Info] (12 types):
     ...
 
-[Info] (10 types):
-    1. DealInfo
-    2. OnEventAccountInfo
-    3. OnTradeHistoryDealInfo
-    4. OnTradeOrderInfo
-    5. OnTradePositionInfo
-    ...
-
-[Other] (15 types):
+[Other] (14 types):
     ...
 ```
 
 ---
 
-### Example 6: Find all double fields (NEW)
+### Example 6: Find where an enum is used
 
 **Command:**
 ```
-> findtype double
+> whereenum OpenedOrderType
 ```
 
 **Output:**
 ```
-FIELDS OF TYPE 'double' (120+ fields):
+ENUM 'OpenedOrderType' USED IN (2 fields):
 ===========================================================
 
-  AccountInfoDoubleGetRequestReply:
-    - value
-
-  AccountSummaryData:
-    - account_balance
-    - account_equity
-    - account_margin
-    - account_freemargin
-    - account_profit
-
-  DealInfo:
-    - commission
-    - fee
-    - price
-    - profit
-    - swap
-    - volume
-
-  PositionInfo:
-    - position_commission
-    - price_current
-    - price_open
-    - profit
-    - stop_loss
-    - swap
-    - take_profit
-    - volume
-
-  SymbolInfo:
-    - ask
-    - bid
-    - point
-    - swap_long
-    - swap_short
-    - volume_max
-    - volume_min
-    - volume_step
-
-  ... (and more)
-```
-
----
-
-### Example 7: Find where enum is used (NEW)
-
-**Command:**
-```
-> whereenum ENUM_ORDER_TYPE_TF
-```
-
-**Output:**
-```
-ENUM 'ENUM_ORDER_TYPE_TF' USED IN (8 fields):
-===========================================================
-
-  DealInfo:
-    - type
-
-  MqlTradeRequest:
-    - type
-
-  OrderInfo:
-    - type
-
-  OrderSendRequest:
-    - operation
-
-  PositionInfo:
-    - type
-
-  TradeTransactionInfo:
+  HistoryOrderInfo:
     - order_type
-    - type
 
-  ... (and more)
+  OpenedOrderInfo:
+    - order_type
 ```
 
 ---
 
-### Example 8: Export type to JSON (NEW)
+### Example 7: Export a type to JSON
 
 **Command:**
 ```
-> export PositionInfo
+> export OrderSendData
 ```
 
 **Output:**
-```
-TYPE: PositionInfo (JSON export)
-===========================================================
+```json
 {
-  "type_name": "PositionInfo",
-  "full_name": "mt5.PositionInfo",
+  "type_name": "OrderSendData",
+  "full_name": "mt4_term_api.OrderSendData",
   "fields": [
-    {
-      "number": 1,
-      "name": "index",
-      "type": "uint32",
-      "label": "optional"
-    },
-    {
-      "number": 2,
-      "name": "ticket",
-      "type": "uint64",
-      "label": "optional"
-    },
-    {
-      "number": 12,
-      "name": "type",
-      "type": "ENUM_ORDER_TYPE_TF",
-      "label": "optional",
-      "enum_name": "ENUM_ORDER_TYPE_TF",
-      "enum_values": {
-        "ORDER_TYPE_TF_BUY": 0,
-        "ORDER_TYPE_TF_SELL": 1,
-        "ORDER_TYPE_TF_BUY_LIMIT": 2,
-        "ORDER_TYPE_TF_SELL_LIMIT": 3,
-        ...
-      }
-    },
-    ...
+    { "number": 1, "name": "ticket",        "type": "int32",     "label": "optional" },
+    { "number": 2, "name": "volume",        "type": "double",    "label": "optional" },
+    { "number": 3, "name": "price",         "type": "double",    "label": "optional" },
+    { "number": 4, "name": "open_time",     "type": "Timestamp", "label": "optional" },
+    { "number": 5, "name": "open_time_utc", "type": "Timestamp", "label": "optional" }
   ]
 }
 ```
 
 ---
 
-### Example 9: Show statistics (NEW)
+### Example 8: Show statistics
 
 **Command:**
 ```
@@ -408,248 +298,73 @@ TYPE: PositionInfo (JSON export)
 PROTOBUF INSPECTOR STATISTICS
 ===========================================================
 
-Message Types: 163 total
+Message Types: 193 total
 -----------------------------------------------------------
-  Request         :  47 types
-  Reply           :  44 types
-  Data            :  47 types
-  Info            :  10 types
-  Other           :  15 types
+  Request         :  55 types
+  Reply           :  59 types
+  Data            :  53 types
+  Info            :  12 types
+  Other           :  14 types
 
-Enum Types: 60 total
+Enum Types: 18 total
 -----------------------------------------------------------
-  Total enum values  : 644
+  Total enum values  : 99
 
   Top 5 largest enums:
-    BMT4_ENUM_SYMBOL_INDUSTRY                : 152 values
-    SymbolInfoDoubleProperty                 :  60 values
-    SymbolInfoIntegerProperty                :  37 values
     EnumOpenTerminalChartWithEaChatPeriod    :  22 values
-    BMT4_ENUM_DEAL_TYPE                      :  18 values
+    ENUM_QUOTE_HISTORY_TIMEFRAME             :   9 values
+    OpenedOrderType                          :   8 values
+    EnumOrderHistorySortType                 :   6 values
+    OrderSendOperationType                   :   6 values
 
-Field Types: 147 distinct types
+Field Types: 108 distinct types
 -----------------------------------------------------------
   Top 10 most common field types:
-    double               : 209 fields
-    string               : 112 fields
-    int64                :  54 fields
+    string               : 217 fields
+    double               : 173 fields
+    timestamp            :  73 fields
+    int32                :  65 fields
     error                :  45 fields
-    int32                :  44 fields
-    uint64               :  40 fields
-    timestamp            :  38 fields
-    bool                 :  28 fields
-    uint32               :  16 fields
-    sub_enum_order_type  :   4 fields
+    bool                 :  42 fields
+    int64                :  38 fields
+    uint64               :  16 fields
+    uint32               :  13 fields
+    ontradeorderinfo     :   5 fields
 
-Total Fields: 771
+Total Fields: 816
 ===========================================================
 ```
 
 ---
 
-### Example 10: List only Request types (NEW)
+## ℹ️ Coverage
 
-**Command:**
-```
-> list --request
-```
+When you run the inspector, it covers:
 
-**Output:**
-```
-REQUEST TYPES
------------------------------------------------------------
-
-[Request] (47 types):
-    1. AccountInfoDoubleGetRequest
-    2. AccountInfoIntegerGetRequest
-    3. AccountInfoStringGetRequest
-    4. AccountSummaryRequest
-    5. HistoryDealsGetByTicketRequest
-    6. HistoryDealsGetRequest
-    7. HistoryOrdersGetByTicketRequest
-    8. HistoryOrdersGetRequest
-    9. MarketBookGetRequest
-   10. OpenedOrdersGetRequest
-   11. OpenedPositionsGetRequest
-   12. OrderCalcMarginRequest
-   13. OrderCheckRequest
-   14. OrderCloseRequest
-   15. OrderModifyRequest
-   16. OrderSendRequest
-   17. PositionCloseRequest
-   18. PositionModifyRequest
-   19. SymbolExistRequest
-   20. SymbolInfoDoubleGetRequest
-   21. SymbolInfoIntegerGetRequest
-   22. SymbolInfoMarginRateGetRequest
-   23. SymbolInfoSessionQuoteGetRequest
-   24. SymbolInfoSessionTradeGetRequest
-   25. SymbolInfoStringGetRequest
-   26. SymbolInfoTickGetRequest
-   27. SymbolIsSynchronizedRequest
-   28. SymbolNameRequest
-   29. SymbolSelectRequest
-   30. SymbolsTotalRequest
-    ... (and more)
-```
+- **Message types:** 193 (all MetaRpcMT4 gRPC message types)
+- **Enums:** 18 (99 enum values total)
+- **Fields:** 816 across all types
+- **Field types:** 108 distinct protobuf types
 
 ---
 
-## 📦 Common Use Cases
+## Frequently Used Enums
 
-### USE CASE 1: "Getting 'field not found' error"
+| Enum Name | Description | Values |
+|-----------|-------------|--------|
+| `OrderSendOperationType` | Operation for `order_send` (`OC_OP_*`) | 6 |
+| `OpenedOrderType` | Operation on open / history orders (`OO_OP_*`, incl. BALANCE/CREDIT) | 8 |
+| `SUB_ORDER_OPERATION_TYPE` | Operation inside streaming events (`SUB_OP_*`) | 6 |
+| `OrderCloseDeleteMode` | Close market vs delete pending (`OCD_*`) | 2 |
+| `EnumOpenedOrderSortType` | Sort mode for `opened_orders` | 4 |
+| `EnumOrderHistorySortType` | Sort mode for `orders_history` | 6 |
+| `ENUM_QUOTE_HISTORY_TIMEFRAME` | Timeframe for `quote_history` | 9 |
+| `EnumAccountTradeMode` | Account type: DEMO / CONTEST / REAL | 3 |
+| `EnumAccountMarginMode` | Margin calculation mode | 3 |
+| `SP_ENUM_SYMBOL_TRADE_MODE` | Symbol trade permission (from `symbol_params_many`) | 5 |
+| `MT4_SUB_ENUM_EVENT_GROUP_TYPE` | Streaming event group (OrderProfit / OrderUpdate) | 2 |
 
-**Problem:** Your code has `position.ballance` but it doesn't work
-
-**Solution:**
-```
-> field balance
-```
-
-**Result:** Shows the correct field name and which type has it
-```
-EXACT MATCH: field 'balance' found in:
-  " AccountSummaryData
-  " AccountInfo
-```
-
-**Fix:** Use `account.balance`, not `position.balance`
-
----
-
-### USE CASE 2: "What fields does X have?"
-
-**Problem:** Don't know what data is in `PositionInfo`
-
-**Solution:**
-```
-> PositionInfo
-```
-
-**Result:** Shows all 20 fields (ticket, type, symbol, profit, etc.)
-
----
-
-### USE CASE 3: "What are valid enum values?"
-
-**Problem:** Don't know what value to use for `order_type`
-
-**Solution:**
-```
-> enum ENUM_ORDER_TYPE_TF
-```
-
-**Result:** Shows all values:
-```
-ORDER_TYPE_TF_BUY = 0
-ORDER_TYPE_TF_SELL = 1
-ORDER_TYPE_TF_BUY_LIMIT = 2
-ORDER_TYPE_TF_SELL_LIMIT = 3
-...
-```
-
----
-
-### USE CASE 4: "Need to find position-related types"
-
-**Problem:** Exploring the API, need to see all position-related structures
-
-**Solution:**
-```
-> search Position
-```
-
-**Result:** Shows all 12 types with "Position" in the name
-
----
-
-### USE CASE 5: "Want to browse what's available"
-
-**Problem:** New to the API, want to explore
-
-**Solution:**
-```
-> list
-```
-
-**Result:** Shows all available types, grouped by category
-
----
-
-### USE CASE 6: "Need all price fields" (NEW)
-
-**Problem:** Want to find all price-related fields in the API
-
-**Solution:**
-```
-> findtype double
-```
-
-**Result:** Shows all double fields (prices, volumes, profits, etc.) grouped by type
-
----
-
-### USE CASE 7: "Where is this enum used?" (NEW)
-
-**Problem:** Have an enum, need to know which types use it
-
-**Solution:**
-```
-> whereenum ENUM_ORDER_TYPE_TF
-```
-
-**Result:** Shows all types and fields that use this enum
-
----
-
-### USE CASE 8: "Generate documentation" (NEW)
-
-**Problem:** Need to document type structure for team or external tools
-
-**Solution:**
-```
-> export PositionInfo
-```
-
-**Result:** Gets complete JSON structure with field numbers, types, and enum values
-
----
-
-## ℹ️ Statistics
-
-When you run the inspector, it provides complete coverage of:
-
-- **Total Message Types:** 163 (all MT4 gRPC protobuf message types)
-- **Total Enums:** 60 (with 644 enum values)
-- **Total Fields:** 771 (across all types)
-- **Field Types:** 147 distinct protobuf types
-- **Coverage:** 100% of MT4 gRPC API
-
----
-
-## Important Enums (Frequently Used)
-
-| Enum Name | Description | Common Values |
-|-----------|-------------|---------------|
-| `ENUM_ORDER_TYPE_TF` | Order types (trade functions) | BUY, SELL, BUY_LIMIT, SELL_LIMIT, BUY_STOP, SELL_STOP (9 values) |
-| `SUB_ENUM_ORDER_TYPE` | Order types (streaming events) | SUB_ORDER_TYPE_BUY, SUB_ORDER_TYPE_SELL, etc. (9 values) |
-| `SUB_ENUM_POSITION_TYPE` | Position types (streaming) | SUB_POSITION_TYPE_BUY, SUB_POSITION_TYPE_SELL (2 values) |
-| `SUB_ENUM_DEAL_TYPE` | Deal types (streaming) | SUB_DEAL_TYPE_BUY, SUB_DEAL_TYPE_SELL, etc. (18 values) |
-| `SUB_ENUM_ORDER_STATE` | Order states (streaming) | STARTED, PLACED, CANCELED, FILLED, REJECTED (10 values) |
-| `MRPC_ENUM_ORDER_TYPE_FILLING` | Fill policies | FOK, IOC, Return, BOC (4 values) |
-| `MRPC_ENUM_ORDER_TYPE_TIME` | Time in force | GTC, Day, Specified, Specified_Day (4 values) |
-| `BMT4_ENUM_DEAL_REASON` | Deal execution reason | Client, Expert, SL, TP, Mobile (11 values) |
-| `BMT4_ENUM_DEAL_ENTRY_TYPE` | Deal entry type | In, Out, InOut, Out_By (4 values) |
-| `BMT4_ENUM_POSITION_REASON` | Why position opened | Client, Expert, Dealer, Mobile (7 values) |
-| `SymbolInfoDoubleProperty` | Symbol price properties | BID, ASK, POINT, SWAP_LONG, SWAP_SHORT (60 values) |
-| `SymbolInfoIntegerProperty` | Symbol integer properties | DIGITS, SPREAD, TRADE_MODE, etc. (37 values) |
-| `AccountInfoDoublePropertyType` | Account double properties | BALANCE, EQUITY, MARGIN, etc. (14 values) |
-
-**Note:** Enum names with prefixes (`MRPC_`, `BMT4_`, `SUB_`) indicate their usage context:
-
-- `MRPC_*` - MetaRpc protocol enums (trading operations)
-- `BMT4_*` - Base MT4 enums (historical data, reasons)
-- `SUB_*` - Subscription/streaming enums (real-time events)
+See [ENUMS Usage Reference](ENUMS_USAGE_REFERENCE.md) for which method uses which enum.
 
 ---
 
@@ -658,223 +373,15 @@ When you run the inspector, it provides complete coverage of:
 | Feature | Description |
 |---------|-------------|
 | **Case-insensitive search** | `search Order` = `search order` |
-| **Partial field matching** | `field profit` finds both `profit` and `take_profit` |
-| **Type categorization** | Shows `[Request]`, `[Reply]`, `[Data]`, `[Info]` tags |
-| **Category filtering** | `list --request`, `list --reply`, etc. |
+| **Partial field matching** | `field profit` finds `profit` and `take_profit` |
+| **Type categorization** | Shows `[Request]`, `[Reply]`, `[Data]`, `[Info]`, `[Other]` tags |
+| **Category filtering** | `list --request`, `list --reply` |
 | **Field type search** | `findtype double` finds all double fields |
-| **Enum usage tracking** | `whereenum <name>` shows where enum is used |
+| **Enum usage tracking** | `whereenum <name>` shows where an enum is used |
 | **JSON export** | `export <TypeName>` outputs structured JSON |
 | **Detailed statistics** | `stats` shows comprehensive metrics |
-| **Array indicators** | `[]` suffix for repeated/array fields |
 | **Protobuf field numbers** | Shows field `#N` for each field |
-| **Smart error messages** | Suggests alternatives when type not found |
-
----
-
-## Example Interactive Session
-
-```bash
-$ cd examples
-$ python main.py inspect
-
-===========================================================
-MT4 PROTOBUF TYPES INSPECTOR
-===========================================================
-
-> search Order
-FOUND 28 TYPES MATCHING 'Order':
------------------------------------------------------------
-    1. HistoryOrdersGetByTicketRequest
-    2. HistoryOrdersGetRequest
-    3. OpenedOrdersGetRequest
-    4. OrderCalcMarginRequest
-    5. OrderCheckRequest
-    6. OrderCloseRequest
-    7. OrderInfo
-    8. OrderModifyRequest
-    9. OrderSendRequest
-   ...
-
-> OrderInfo
-===========================================================
-TYPE: OrderInfo
-===========================================================
-FIELDS (25):
------------------------------------------------------------
-  #  1 ticket                        : uint64
-  #  2 type                          : ENUM_ORDER_TYPE_TF
-  #  3 state                         : ENUM_ORDER_STATE_TYPE
-  #  4 type_filling                  : ENUM_ORDER_TYPE_FILLING
-  #  5 type_time                     : ENUM_ORDER_TYPE_TIME
-  #  6 magic_number                  : int64
-  #  7 position_id                   : int64
-  #  8 position_by_id                : int64
-  #  9 reason                        : ENUM_ORDER_REASON_TYPE
-  # 10 volume_initial                : double
-  # 11 volume_current                : double
-  # 12 price_open                    : double
-  # 13 stop_loss                     : double
-  # 14 take_profit                   : double
-  # 15 price_current                 : double
-  # 16 price_stoplimit               : double
-  # 17 symbol                        : string
-  # 18 comment                       : string
-  # 19 external_id                   : string
-  # 20 setup_time                    : Timestamp
-  # 21 expiration_time               : Timestamp
-  # 22 time_done                     : Timestamp
-  # 23 account_login                 : int64
-  # 24 index                         : uint32
-  # 25 last_update_time              : Timestamp
-
-> field magic
-EXACT MATCH: field 'magic' found in:
------------------------------------------------------------
-    1. OrderInfo (magic_number)
-    2. PositionInfo (magic_number)
-    3. DealInfo (magic_number)
-    4. MqlTradeRequest (magic)
-    ...
-
-PARTIAL MATCHES (field contains 'magic'):
------------------------------------------------------------
-    1. OrderInfo (magic_number)
-    2. PositionInfo (magic_number)
-    3. DealInfo (magic_number)
-    ...
-
-> enum ENUM_ORDER_STATE_TYPE
-===========================================================
-ENUM: ENUM_ORDER_STATE_TYPE
-===========================================================
-  ORDER_STATE_TYPE_STARTED                 = 0
-  ORDER_STATE_TYPE_PLACED                  = 1
-  ORDER_STATE_TYPE_CANCELED                = 2
-  ORDER_STATE_TYPE_PARTIAL                 = 3
-  ORDER_STATE_TYPE_FILLED                  = 4
-  ORDER_STATE_TYPE_REJECTED                = 5
-  ORDER_STATE_TYPE_EXPIRED                 = 6
-  ORDER_STATE_TYPE_REQUEST_ADD             = 7
-  ORDER_STATE_TYPE_REQUEST_MODIFY          = 8
-  ORDER_STATE_TYPE_REQUEST_CANCEL          = 9
-
-> findtype double
-FIELDS OF TYPE 'double' (120+ fields):
-===========================================================
-
-  AccountSummaryData:
-    - account_balance
-    - account_equity
-    - account_freemargin
-    - account_margin
-    - account_profit
-
-  DealInfo:
-    - commission
-    - fee
-    - price
-    - profit
-    - swap
-    - volume
-
-  OrderInfo:
-    - price_current
-    - price_open
-    - price_stoplimit
-    - stop_loss
-    - take_profit
-    - volume_current
-    - volume_initial
-
-  PositionInfo:
-    - position_commission
-    - price_current
-    - price_open
-    - profit
-    - stop_loss
-    - swap
-    - take_profit
-    - volume
-
-  SymbolInfo:
-    - ask
-    - bid
-    - point
-    - swap_long
-    - swap_short
-    - volume_max
-    - volume_min
-    - volume_step
-
-  ... (and more)
-
-> whereenum ENUM_ORDER_TYPE_TF
-ENUM 'ENUM_ORDER_TYPE_TF' USED IN (8 fields):
-===========================================================
-
-  DealInfo:
-    - type
-
-  MqlTradeRequest:
-    - type
-
-  OrderInfo:
-    - type
-
-  OrderSendRequest:
-    - operation
-
-  PositionInfo:
-    - type
-
-  TradeTransactionInfo:
-    - order_type
-    - type
-
-> stats
-PROTOBUF INSPECTOR STATISTICS
-===========================================================
-
-Message Types: 163 total
------------------------------------------------------------
-  Request         :  47 types
-  Reply           :  44 types
-  Data            :  47 types
-  Info            :  10 types
-  Other           :  15 types
-
-Enum Types: 60 total
------------------------------------------------------------
-  Total enum values  : 644
-
-  Top 5 largest enums:
-    BMT4_ENUM_SYMBOL_INDUSTRY                : 152 values
-    SymbolInfoDoubleProperty                 :  60 values
-    SymbolInfoIntegerProperty                :  37 values
-    EnumOpenTerminalChartWithEaChatPeriod    :  22 values
-    BMT4_ENUM_DEAL_TYPE                      :  18 values
-
-Field Types: 147 distinct types
------------------------------------------------------------
-  Top 10 most common field types:
-    double               : 209 fields
-    string               : 112 fields
-    int64                :  54 fields
-    error                :  45 fields
-    int32                :  44 fields
-    uint64               :  40 fields
-    timestamp            :  38 fields
-    bool                 :  28 fields
-    uint32               :  16 fields
-    sub_enum_order_type  :   4 fields
-
-Total Fields: 771
-===========================================================
-
-> exit
-
-[+] Goodbye!
-```
+| **Smart error messages** | Suggests alternatives when a type is not found |
 
 ---
 
@@ -883,37 +390,32 @@ Total Fields: 771
 The Protobuf Inspector uses Python reflection to:
 
 1. Register all protobuf types at startup
-2. Build in-memory indexes for:
-   - Field names ‚¬„¢ Types mapping
-   - Field types ‚¬„¢ Fields mapping
-   - Enum names ‚¬„¢ Usage mapping
+2. Build in-memory indexes (field name → types, field type → fields, enum → usage)
 3. Provide instant search and lookup
-4. Format output with structure and clarity
-5. Export to JSON with complete metadata
+4. Export to JSON with complete metadata
 
 **Source file:** `examples/0_common/16_protobuf_inspector.py`
 
 **Modules scanned:**
 
-- `mt5_term_api_account_helper_pb2`
-- `mt5_term_api_account_information_pb2`
-- `mt5_term_api_market_info_pb2`
-- `mt5_term_api_trade_functions_pb2`
-- `mt5_term_api_trading_helper_pb2`
-- `mt5_term_api_subscriptions_pb2` (streaming events, SUB_ENUM_* enums)
-- `mt5_term_api_charts_pb2` (chart operations)
-- `mt5_term_api_connection_pb2` (connection management)
+- `mt4_term_api_account_helper_pb2`
+- `mt4_term_api_trade_stats_pb2`
+- `mt4_term_api_market_info_pb2`
+- `mt4_term_api_admin_pb2`
+- `mt4_term_api_trading_helper_pb2`
+- `mt4_term_api_subscriptions_pb2` (streaming events)
+- `mt4_term_api_charts_pb2` (chart / EA operations)
+- `mt4_term_api_connection_pb2` (connection management)
 
 ---
 
 ## Technical Notes
 
-- **No MT4 connection required** - This is a purely offline tool that inspects type definitions
-- **Complete coverage** - All 163 types and 60 enums from the MT4 gRPC API
-- **Instant search** - In-memory indexes for fast lookup
-- **Development only** - Not intended for production use
-- **Python reflection** - Uses protobuf DESCRIPTOR API for introspection
-- **JSON export** - Compatible with external documentation tools
+- **No MT4 connection required** — purely offline; it inspects type definitions.
+- **Instant search** — in-memory indexes for fast lookup.
+- **Development only** — not intended for production use.
+- **Python reflection** — uses the protobuf `DESCRIPTOR` API for introspection.
+- **JSON export** — compatible with external documentation tools.
 
 ---
 
@@ -925,39 +427,18 @@ The Protobuf Inspector uses Python reflection to:
 - Debugging "field not found" errors
 - Exploring available protobuf types
 - Looking up enum values
-- Finding the correct request/response types for API calls
+- Finding the correct request/response types for an API call
 - Understanding message structures before writing code
-- Identifying all fields of a specific type (e.g., all double fields)
-- Tracking enum usage across the API
-- Generating documentation for types
-- Analyzing API statistics
 
 **Don't use for:**
 
-- Inspecting runtime data (use debugger instead)
+- Inspecting runtime data (use a debugger instead)
 - Production code (this is a development tool)
-- Testing API connectivity (use demo connections instead)
-
----
-
-## Tips and Tricks
-
-1. **Start with search** - If you know the general area, use `search <keyword>` first
-2. **Use field search** - When you see a field name but don't know which type, use `field <name>`
-3. **Explore enums early** - Understanding enum values saves debugging time later
-4. **List is your friend** - When stuck, use `list` to browse available types
-5. **Case doesn't matter** - Type commands in lowercase, it's faster
-6. **Use filters** - `list --request` shows only what you need
-7. **Find by type** - `findtype double` to see all price/volume fields
-8. **Track enum usage** - `whereenum` shows relationships between types
-9. **Export for docs** - Use `export` to generate JSON for team documentation
-10. **Check stats** - Use `stats` to understand API structure overview
+- Testing API connectivity (use a demo connection instead)
 
 ---
 
 ## Quick Start Workflow
-
-**Beginner workflow for exploring the API:**
 
 ```bash
 # 1. Start the inspector
@@ -968,66 +449,28 @@ python main.py inspect
 > list
 
 # 3. Search for what you need
-> search Position
+> search Order
 
 # 4. Inspect a type
-> PositionInfo
+> OpenedOrderInfo
 
 # 5. Check enum values
-> enum ENUM_ORDER_TYPE_TF
+> enum OrderSendOperationType
 
-# 6. Find related types
+# 6. Find which types hold a field
 > field ticket
 
 # 7. Find fields by type
 > findtype double
 
 # 8. Check enum usage
-> whereenum ENUM_ORDER_TYPE_TF
+> whereenum OpenedOrderType
 
 # 9. Get detailed stats
 > stats
 
 # 10. Export to JSON
-> export PositionInfo
-```
-
----
-
-## Learning Session Example
-
-**Goal:** "I want to close a position, what do I need?"
-
-```bash
-> search position close
-FOUND 2 TYPES MATCHING 'position close':
-  " PositionCloseRequest
-  " PositionCloseRequestReply
-
-> PositionCloseRequest
-FIELDS (3):
-  #  1 ticket                        : uint64
-  #  2 deviation                     : uint64
-  #  3 comment                       : string
-
-> PositionCloseRequestReply
-FIELDS (2):
-  #  1 returned_code                 : uint32
-  #  2 order_ticket                  : uint64
-
-> field ticket
-EXACT MATCH: field 'ticket' found in:
-  " PositionInfo
-  " OrderInfo
-  " DealInfo
-  " PositionCloseRequest
-  " HistoryDealsGetByTicketRequest
-  ...
-
-# Now you know:
-# - Use PositionCloseRequest with ticket field
-# - You'll get PositionCloseRequestReply back
-# - Check returned_code == 10009 for success (see RETURN_CODES_REFERENCE.md)
+> export OrderSendData
 ```
 
 ---
@@ -1037,117 +480,51 @@ EXACT MATCH: field 'ticket' found in:
 **Q: Type not found**
 
 ```
-> MyType
-[!] Type not found: MyType
-    Did you mean: MqlTradeRequest, MqlTradeResult, ...
+> PositionInfo
+[!] Type 'PositionInfo' not found
 ```
 
-**A:** Use search with partial name to find similar types
+**A:** That's an MT5-style name; it doesn't exist in MT4. Use `search` with a partial
+name (e.g. `search Order`) to find the right MT4 type.
 
 ---
 
-**Q: Too many results**
+**Q: What's the difference between the `*Request`, `*Reply`, `*Data`, `*Info` types?**
 
-```
-> search data
-FOUND 156 TYPES...
-```
-
-**A:** Be more specific in your search query, or use filters like `list --data`
+- `*Request` — input for an API method (what you send)
+- `*Reply` — the full response envelope (wraps `data` or `error`)
+- `*Data` — the payload inside a reply (e.g. `OrderSendData`, `AccountSummaryData`)
+- `*Info` — a structured record inside a payload (e.g. `OpenedOrderInfo`, `HistoryOrderInfo`)
 
 ---
 
-**Q: What's the difference between OrderInfo and OrderSendRequest?**
-
-**A:** Use the inspector:
-
-- `OrderInfo` - Information about an existing order (has 25 fields including state, times, etc.)
-- `OrderSendRequest` - Request to create a new order (has 15 fields for order parameters)
-
-Rule:
-
-- `*Request` - Input for API method (what you send)
-- `*Reply` - Output from API method (what you receive)
-- `*Info` - Structured data about entities (position, order, deal, symbol)
-- `*Data` - Helper data structures
-
----
-
-**Q: Which fields are double vs int64?**
-
-**A:** Use field type search:
+**Q: Which fields are double vs int32?**
 
 ```
-> findtype double    # All price/volume/profit fields
-> findtype int64     # All ID/magic/ticket fields
-> findtype string    # All text fields (symbol, comment, etc.)
-```
-
----
-
-**Q: Where is enum X used?**
-
-**A:** Use enum usage search:
-
-```
-> whereenum ENUM_ORDER_TYPE_TF
-# Shows all types and fields that use this enum
+> findtype double    # prices, volumes, profits
+> findtype int32     # tickets, magic numbers, indices
+> findtype string    # symbols, comments
 ```
 
 ---
 
 ## Summary
 
-The Protobuf Inspector is your **first stop** when working with the MT4 gRPC API. Use it to:
+The Protobuf Inspector is a handy first stop when working with the MT4 gRPC API. Use it to:
 
 1. **Discover** available types and their structure
-2. 
-3. **Learn** message field names and types
-4. 
-5. **Debug** field name and type issues
-6. 
-7. **Verify** enum values and usage
-8. 
-9. **Track** relationships between types
-10. 
-11. **Export** documentation for your team
-12. 
-13. **Analyze** API structure and statistics
-14. 
-15. **Speed up** development workflow
+2. **Learn** message field names and types
+3. **Debug** field-name and type issues
+4. **Verify** enum values and usage
+5. **Export** JSON documentation for your team
 
-**Remember:** Type `help` at any time for command reference!
+**Remember:** type `help` at any time for the command reference.
 
 ---
 
-## Command Quick Reference
+## Next Steps
 
-```
-BASIC COMMANDS:
-  list               - Show all types
-  list --request     - Show only Request types
-  <TypeName>         - Inspect type structure
-  search <text>      - Find types by name
-  field <name>       - Find types with field
-  enum <name>        - Show enum values
-
-NEW COMMANDS:
-  findtype <type>    - Find fields by type
-  whereenum <name>   - Find enum usage
-  export <TypeName>  - Export to JSON
-  stats              - Show statistics
-
-NAVIGATION:
-  help               - Show help
-  exit               - Exit inspector
-```
-
----
-
-**Next Steps:**
-
-- Run `python main.py inspect` and explore!
-- Check [MT4Account Master Overview](../API_Reference/MT4Account.md) for complete API documentation
-- Try the demo examples in `examples/`
-- See [RETURN_CODES_REFERENCE.md](RETURN_CODES_REFERENCE.md) for error codes
-- See [USERCODE_SANDBOX_GUIDE.md](USERCODE_SANDBOX_GUIDE.md) for coding examples
+- Run `python main.py inspect` and explore.
+- Check [MT4Account API Reference](../MT4Account/MT4Account.Master.Overview.md) for the API documentation.
+- See [ENUMS Usage Reference](ENUMS_USAGE_REFERENCE.md) for enum-to-method mapping.
+- See [USERCODE_SANDBOX_GUIDE.md](USERCODE_SANDBOX_GUIDE.md) for coding examples.

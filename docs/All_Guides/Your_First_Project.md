@@ -25,23 +25,39 @@ cd my_pymt4_bot
 Install the package:
 
 ```bash
-pip install metarpc-mt4
+pip install MetaRpcMT4
 ```
 
 ---
 
 ## Step 2: Write Your Trading Code
 
-Create your main application file and paste the following snippet:
+Create `main.py` and paste the following complete program:
 
-```
-from pymt4 import MT4Account
+```python
+import asyncio
+from MetaRpcMT4.mt4_account import MT4Account
 
-# Session ID generation on Connect and authentication are handled automatically
-account = MT4Account(user=user, password=password, host=grpc_server, api_key=api_key)
-await account.connect_by_server_name(server_name, "EURUSD", timeout=30)
-summary = await account.account_summary()
-print(f"Balance: {summary.account_balance}, Equity: {summary.account_equity}")
+async def main():
+    # Session ID generation on Connect and authentication are handled automatically
+    account = MT4Account(
+        user=12345678,            # your MT4 login
+        password="your_password",   # your MT4 password
+        grpc_server="mt4.mrpc.pro:443",
+        api_key="TRIAL",            # or your key from mrpc.pro/my
+    )
+    await account.connect_by_server_name(
+        server_name="MetaQuotes-Demo",   # your broker's MT4 server name
+        base_chart_symbol="EURUSD",
+        timeout_seconds=30,
+    )
+
+    summary = await account.account_summary()
+    print(f"Balance: {summary.account_balance}, Equity: {summary.account_equity}")
+
+    await account.channel.close()
+
+asyncio.run(main())
 ```
 
 ---
@@ -51,8 +67,13 @@ print(f"Balance: {summary.account_balance}, Equity: {summary.account_equity}")
 Run your application:
 
 ```bash
-# Verify connection output
-# Balance: 10000.00, Equity: 10000.00
+python main.py
+```
+
+Expected output (values depend on your account):
+
+```text
+Balance: 10000.00, Equity: 10000.00
 ```
 
 ---
@@ -61,5 +82,5 @@ Run your application:
 
 Congratulations! You have successfully established a direct gRPC connection to MetaTrader 4. Next:
 - Explore **[gRPC Streaming](GRPC_STREAM_MANAGEMENT.md)** to listen to live ticks.
-- Check the **[API Reference](../API_Reference/MT4Account.md)** for all 40+ available terminal methods.
-- Learn about high-level risk management and auto-normalization in **[MT4Sugar](../API_Reference/MT4Sugar.md)**.
+- Check the **[API Reference](../MT4Account/MT4Account.Master.Overview.md)** for all 18 core terminal methods.
+- Learn about high-level risk management and auto-normalization in **[MT4Sugar](../MT4Sugar/MT4Sugar.Master.Overview.md)**.

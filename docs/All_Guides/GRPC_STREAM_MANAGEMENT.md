@@ -14,9 +14,9 @@ This document covers:
 
 ## Table of Contents
 
-1. [Quick Start - Simple Subscription](#quick-start---simple-subscription)
+1. [Quick Start - Simple Subscription](#quick-start-simple-subscription)
 2. [Available Streaming Methods](#available-streaming-methods)
-3. [Complete Patterns (Simple → Advanced)](#complete-patterns-simple--advanced)
+3. [Complete Patterns (Simple → Advanced)](#complete-patterns-simple-advanced)
 4. [Problem: Why Streams Need Management](#problem-why-streams-need-management)
 5. [Solutions and Best Practices](#solutions-and-best-practices)
 6. [Advanced Examples with Enums](#advanced-examples-with-enums)
@@ -34,7 +34,7 @@ This document covers:
 
 ```python
 import asyncio
-from MetaRpcMT4 import MT4Account
+from MetaRpcMT4.mt4_account import MT4Account
 
 async def main():
     # Setup connection
@@ -133,24 +133,23 @@ All streaming methods return **async generators** that yield data objects.
 
 | Method | Description | Returns (async generator) |
 |--------|-------------|---------------------------|
-| `on_symbol_tick()` | Real-time price ticks for symbols | `OnSymbolTickData` |
-| `on_trade()` | Trade events (orders executed, modified, etc.) | `OnTradeData` |
-| `on_position_profit()` | Position P&L updates | `OnPositionProfitData` |
-| `on_positions_and_pending_orders_tickets()` | Order/position tickets | `OnPositionsAndPendingOrdersTicketsData` |
-| `on_trade_transaction()` | Low-level trade transaction events | `OnTradeTransactionData` |
+| `on_symbol_tick(symbols)` | Real-time price ticks for symbols | `OnSymbolTickData` |
+| `on_trade()` | Trade events (orders opened, updated, removed) | `OnTradeData` |
+| `on_opened_orders_tickets(pull_interval_milliseconds)` | Live lists of open & pending order tickets | `OnOpenedOrdersTicketsData` |
+| `on_opened_orders_profit(timer_period_milliseconds)` | Open-order P&L updates (+ account snapshot) | `OnOpenedOrdersProfitData` |
 
-**All support `cancellation_event` parameter for graceful stopping!**
+**All support the `cancellation_event` parameter for graceful stopping.**
+
+> MT4 has four streaming methods. There is no `on_trade_transaction` /
+> `on_position_profit` / DOM streaming — those are MT5-only.
 
 **Documentation:**
-- [Streaming Methods Overview](../API_Reference/MT4Account.md)
-- [on_symbol_tick](../API_Reference/MT4Account.md)
-- [on_trade](../API_Reference/MT4Account.md)
+- [Streaming Methods Overview](../MT4Account/MT4Account.Master.Overview.md)
 
 **Examples:**
 
 - `examples/1_lowlevel/03_streaming_methods.py` - Low-level streaming examples
-
-- `examples/2_service/05_service_streaming.py` - Mid-level streaming examples
+- `examples/main.py streaming` - runs the same via the single entry point
 
 ---
 
@@ -160,7 +159,7 @@ All streaming methods return **async generators** that yield data objects.
 
 ```python
 import asyncio
-from MetaRpcMT4 import MT4Account
+from MetaRpcMT4.mt4_account import MT4Account
 
 async def quick_stream_example():
     account = MT4Account(
@@ -629,46 +628,47 @@ async def good():
 
 ## Advanced Examples with Enums
 
-### Example 1: Filter Trade Events by Type
+### Example 1: Monitor Trade Events
+
+`on_trade` yields `OnTradeData` with `type` (`MT4_SUB_ENUM_EVENT_GROUP_TYPE`) and an
+`event_data` payload (`OnTadeEventData`) holding four lists: `new_orders`,
+`updated_orders`, `removed_orders` and `new_history_orders`. Each order carries the
+`type` field (`SUB_ORDER_OPERATION_TYPE`: `SUB_OP_BUY`, `SUB_OP_SELL`, …).
 
 ```python
 import asyncio
-from MetaRpcMT4 import MT4Account
-import MetaRpcMT4.mt5_term_api_subscriptions_pb2 as sub_pb2
+from MetaRpcMT4.mt4_account import MT4Account
+import MetaRpcMT4.mt4_term_api_subscriptions_pb2 as sub_pb2
 
-async def filter_trade_events():
-    """
-    Monitor trade events and filter by type using protobuf enums.
-    Shows how to work with SUB_ENUM_TRADE_TRANSACTION_TYPE.
-    """
+async def monitor_trade_events():
+    """Monitor trade events and label the order operation using protobuf enums."""
     account = MT4Account(user=12345, password="password", grpc_server="mt4.mrpc.pro:443")
     await account.connect_by_server_name(server_name="YourBroker-Demo", base_chart_symbol="EURUSD")
 
     cancel_event = asyncio.Event()
 
-    # ✅ Using protobuf enums for filtering
-    ORDER_ADD = sub_pb2.SUB_TRADE_TRANSACTION_ORDER_ADD
-    ORDER_DELETE = sub_pb2.SUB_TRADE_TRANSACTION_ORDER_DELETE
-    DEAL_ADD = sub_pb2.SUB_TRADE_TRANSACTION_DEAL_ADD
+    # ✅ Operation-type enum values (SUB_ORDER_OPERATION_TYPE)
+    BUY  = sub_pb2.SUB_ORDER_OPERATION_TYPE.SUB_OP_BUY
+    SELL = sub_pb2.SUB_ORDER_OPERATION_TYPE.SUB_OP_SELL
 
     try:
-        print("Monitoring trade transactions (filtered by type)...")
+        print("Monitoring trade events...")
 
-        async for tx_data in account.on_trade_transaction(cancellation_event=cancel_event):
-            if tx_data.trade_transaction:
-                tx = tx_data.trade_transaction
+        async for ev in account.on_trade(cancellation_event=cancel_event):
+            data = ev.event_data
 
-                # ✅ Filter by transaction type using enums
-                if tx.type == ORDER_ADD:
-                    print(f"[NEW ORDER] Ticket={tx.order_ticket}, Symbol={tx.symbol}, "
-                          f"Price={tx.price:.5f}, Volume={tx.volume:.2f}")
+            for o in data.new_orders:
+                side = "BUY" if o.type == BUY else ("SELL" if o.type == SELL else str(o.type))
+                print(f"[NEW] #{o.ticket} {side} {o.symbol} @ {o.open_price:.5f} "
+                      f"lots={o.lots:.2f} SL={o.stop_loss:.5f} TP={o.take_profit:.5f}")
 
-                elif tx.type == ORDER_DELETE:
-                    print(f"[ORDER DELETED] Ticket={tx.order_ticket}")
+            for upd in data.updated_orders:
+                cur = upd.current
+                print(f"[UPDATED] #{cur.ticket} {cur.symbol} SL={cur.stop_loss:.5f} "
+                      f"TP={cur.take_profit:.5f} profit={cur.order_profit:.2f}")
 
-                elif tx.type == DEAL_ADD:
-                    print(f"[NEW DEAL] Deal={tx.deal_ticket}, Order={tx.order_ticket}, "
-                          f"Symbol={tx.symbol}, Price={tx.price:.5f}")
+            for o in data.removed_orders:
+                print(f"[REMOVED] #{o.ticket} {o.symbol}")
 
     finally:
         cancel_event.set()
@@ -678,65 +678,65 @@ async def filter_trade_events():
         except Exception as e:
             print(f"⚠️  Disconnect warning: {e}")
 
-asyncio.run(filter_trade_events())
+asyncio.run(monitor_trade_events())
 ```
 
 ---
 
-### Example 2: Sort and Filter Positions by Profit
+### Example 2: Sort Open Orders by Profit
+
+`on_opened_orders_profit` yields `OnOpenedOrdersProfitData`; the updated orders live
+in `opened_orders_with_profit_updated`, and each item exposes `ticket`, `symbol`,
+`order_profit`, `lots`, `type`, etc.
 
 ```python
 import asyncio
-from MetaRpcMT4 import MT4Account
+from MetaRpcMT4.mt4_account import MT4Account
 
-async def sort_positions_by_profit():
-    """
-    Monitor position profits and sort by P&L.
-    Shows advanced data processing with streaming.
-    """
+async def sort_orders_by_profit():
+    """Monitor open-order P&L and sort by profit."""
     account = MT4Account(user=12345, password="password", grpc_server="mt4.mrpc.pro:443")
     await account.connect_by_server_name(server_name="YourBroker-Demo", base_chart_symbol="EURUSD")
 
     cancel_event = asyncio.Event()
 
     try:
-        print("Monitoring positions (sorted by profit)...")
+        print("Monitoring open orders (sorted by profit)...")
         print("-" * 60)
 
-        async for profit_data in account.on_position_profit(
-            interval_ms=1000,
-            ignore_empty=True,
+        async for profit_data in account.on_opened_orders_profit(
+            timer_period_milliseconds=1000,
             cancellation_event=cancel_event
         ):
-            # ✅ Collect all updated positions
-            positions = list(profit_data.updated_positions)
+            # ✅ Collect all updated orders
+            orders = list(profit_data.opened_orders_with_profit_updated)
 
-            if not positions:
+            if not orders:
                 continue
 
             # ✅ Sort by profit (descending - winners first)
-            positions_sorted = sorted(positions, key=lambda p: p.profit, reverse=True)
+            orders_sorted = sorted(orders, key=lambda o: o.order_profit, reverse=True)
 
-            print(f"\n[UPDATE] Total positions: {len(positions_sorted)}")
+            print(f"\n[UPDATE] Total open orders: {len(orders_sorted)}")
             print(f"{'Symbol':<10} {'Ticket':<10} {'Profit':<12} {'Status':<10}")
             print("-" * 60)
 
             # ✅ Show top 5 winners and top 5 losers
-            for pos in positions_sorted[:5]:  # Top 5 winners
-                status = "✅ PROFIT" if pos.profit > 0 else "❌ LOSS"
-                print(f"{pos.position_symbol:<10} {pos.ticket:<10} {pos.profit:>10.2f}  {status:<10}")
+            for o in orders_sorted[:5]:  # Top 5 winners
+                status = "✅ PROFIT" if o.order_profit > 0 else "❌ LOSS"
+                print(f"{o.symbol:<10} {o.ticket:<10} {o.order_profit:>10.2f}  {status:<10}")
 
-            if len(positions_sorted) > 10:
-                print("   ... middle positions omitted ...")
+            if len(orders_sorted) > 10:
+                print("   ... middle orders omitted ...")
 
-            for pos in positions_sorted[-5:]:  # Top 5 losers
-                status = "✅ PROFIT" if pos.profit > 0 else "❌ LOSS"
-                print(f"{pos.position_symbol:<10} {pos.ticket:<10} {pos.profit:>10.2f}  {status:<10}")
+            for o in orders_sorted[-5:]:  # Top 5 losers
+                status = "✅ PROFIT" if o.order_profit > 0 else "❌ LOSS"
+                print(f"{o.symbol:<10} {o.ticket:<10} {o.order_profit:>10.2f}  {status:<10}")
 
             # ✅ Calculate statistics
-            total_profit = sum(p.profit for p in positions_sorted)
-            winners = sum(1 for p in positions_sorted if p.profit > 0)
-            losers = sum(1 for p in positions_sorted if p.profit < 0)
+            total_profit = sum(o.order_profit for o in orders_sorted)
+            winners = sum(1 for o in orders_sorted if o.order_profit > 0)
+            losers = sum(1 for o in orders_sorted if o.order_profit < 0)
 
             print("-" * 60)
             print(f"Total P&L: {total_profit:+.2f} | Winners: {winners} | Losers: {losers}")
@@ -749,63 +749,64 @@ async def sort_positions_by_profit():
         except Exception as e:
             print(f"⚠️  Disconnect warning: {e}")
 
-asyncio.run(sort_positions_by_profit())
+asyncio.run(sort_orders_by_profit())
 ```
 
 ---
 
-### Example 3: Filter Orders by State and Type
+### Example 3: Filter Pending Orders by Operation Type
+
+MT4 orders carry an operation **type** (`SUB_ORDER_OPERATION_TYPE`), not an MT5-style
+order *state*. Use the `SUB_OP_*LIMIT` / `SUB_OP_*STOP` values to pick out pending
+orders, and read `updated_orders` (each has `previous` / `current`) for SL/TP changes.
 
 ```python
 import asyncio
-from MetaRpcMT4 import MT4Account
-import MetaRpcMT4.mt5_term_api_subscriptions_pb2 as sub_pb2
+from MetaRpcMT4.mt4_account import MT4Account
+import MetaRpcMT4.mt4_term_api_subscriptions_pb2 as sub_pb2
 
-async def filter_orders_by_state():
-    """
-    Monitor trade events and filter orders by state and type.
-    Shows complex filtering using multiple enums.
-    """
+async def filter_pending_orders():
+    """Monitor trade events and pick out pending (limit/stop) orders."""
     account = MT4Account(user=12345, password="password", grpc_server="mt4.mrpc.pro:443")
     await account.connect_by_server_name(server_name="YourBroker-Demo", base_chart_symbol="EURUSD")
 
     cancel_event = asyncio.Event()
 
-    # ✅ Define enum values for filtering
-    ORDER_STATE_PLACED = sub_pb2.SUB_ORDER_STATE_PLACED
-    ORDER_STATE_FILLED = sub_pb2.SUB_ORDER_STATE_FILLED
-    ORDER_STATE_CANCELED = sub_pb2.SUB_ORDER_STATE_CANCELED
-
-    ORDER_TYPE_BUY_LIMIT = sub_pb2.SUB_ORDER_TYPE_BUY_LIMIT
-    ORDER_TYPE_SELL_LIMIT = sub_pb2.SUB_ORDER_TYPE_SELL_LIMIT
+    # ✅ Pending operation-type enum values
+    OP = sub_pb2.SUB_ORDER_OPERATION_TYPE
+    PENDING = {
+        OP.SUB_OP_BUYLIMIT:  "BUY LIMIT",
+        OP.SUB_OP_SELLLIMIT: "SELL LIMIT",
+        OP.SUB_OP_BUYSTOP:   "BUY STOP",
+        OP.SUB_OP_SELLSTOP:  "SELL STOP",
+    }
 
     try:
-        print("Monitoring pending orders (filtered by state)...")
+        print("Monitoring pending orders...")
         print("-" * 70)
 
         async for trade_data in account.on_trade(cancellation_event=cancel_event):
             event = trade_data.event_data
 
-            # ✅ Process new orders - filter pending limit orders only
+            # ✅ New orders - keep pending ones only
             for order in event.new_orders:
-                if order.order_type in [ORDER_TYPE_BUY_LIMIT, ORDER_TYPE_SELL_LIMIT]:
-                    order_type_str = "BUY LIMIT" if order.order_type == ORDER_TYPE_BUY_LIMIT else "SELL LIMIT"
-                    print(f"[NEW PENDING] {order_type_str} #{order.ticket}: "
-                          f"{order.symbol} @ {order.price_open:.5f} "
-                          f"Vol={order.volume_initial:.2f} SL={order.stop_loss:.5f}")
+                label = PENDING.get(order.type)
+                if label:
+                    print(f"[NEW PENDING] {label} #{order.ticket}: "
+                          f"{order.symbol} @ {order.open_price:.5f} "
+                          f"lots={order.lots:.2f} SL={order.stop_loss:.5f}")
 
-            # ✅ Process state changed orders - show only filled or cancelled
-            for state_change in event.state_changed_orders:
-                current = state_change.current_order
-                previous = state_change.previous_order
+            # ✅ Updated orders - report SL/TP changes
+            for upd in event.updated_orders:
+                cur, prev = upd.current, upd.previous
+                if (cur.stop_loss, cur.take_profit) != (prev.stop_loss, prev.take_profit):
+                    print(f"[MODIFIED] #{cur.ticket} {cur.symbol}: "
+                          f"SL {prev.stop_loss:.5f} -> {cur.stop_loss:.5f}, "
+                          f"TP {prev.take_profit:.5f} -> {cur.take_profit:.5f}")
 
-                if current.state == ORDER_STATE_FILLED:
-                    print(f"[FILLED] Order #{current.ticket} was filled: "
-                          f"{current.symbol} @ {current.price_current:.5f}")
-
-                elif current.state == ORDER_STATE_CANCELED:
-                    print(f"[CANCELED] Order #{current.ticket} was cancelled: "
-                          f"{current.symbol}")
+            # ✅ Removed orders (filled or cancelled)
+            for order in event.removed_orders:
+                print(f"[REMOVED] #{order.ticket} {order.symbol}")
 
     finally:
         cancel_event.set()
@@ -815,7 +816,7 @@ async def filter_orders_by_state():
         except Exception as e:
             print(f"⚠️  Disconnect warning: {e}")
 
-asyncio.run(filter_orders_by_state())
+asyncio.run(filter_pending_orders())
 ```
 
 ---
@@ -826,7 +827,7 @@ asyncio.run(filter_orders_by_state())
 import asyncio
 from collections import defaultdict
 from datetime import datetime
-from MetaRpcMT4 import MT4Account
+from MetaRpcMT4.mt4_account import MT4Account
 
 async def aggregate_and_sort_ticks():
     """
@@ -906,7 +907,7 @@ asyncio.run(aggregate_and_sort_ticks())
 
 ```python
 import asyncio
-from MetaRpcMT4 import MT4Account
+from MetaRpcMT4.mt4_account import MT4Account
 
 async def multiple_concurrent_streams():
     """
@@ -940,15 +941,14 @@ async def multiple_concurrent_streams():
             print(f"[TRADE ERROR] {e}")
 
     async def stream_profits():
-        """Monitor position profits"""
+        """Monitor open-order profits"""
         try:
-            async for profit_data in account.on_position_profit(
-                interval_ms=2000,
-                ignore_empty=True,
+            async for profit_data in account.on_opened_orders_profit(
+                timer_period_milliseconds=2000,
                 cancellation_event=cancel_event
             ):
-                total_positions = len(profit_data.updated_positions)
-                print(f"[PROFIT] {total_positions} positions updated")
+                total_orders = len(profit_data.opened_orders_with_profit_updated)
+                print(f"[PROFIT] {total_orders} orders updated")
         except Exception as e:
             print(f"[PROFIT ERROR] {e}")
 
@@ -995,7 +995,7 @@ asyncio.run(multiple_concurrent_streams())
 
 **🔑 Critical Understanding:**
 
-**ALL streaming methods** (`on_symbol_tick`, `on_trade`, `on_position_profit`, `on_trade_transaction`, `on_positions_and_pending_orders_tickets`) internally use the **same hidden mechanism**: `execute_stream_with_reconnect`.
+**ALL streaming methods** (`on_symbol_tick`, `on_trade`, `on_opened_orders_tickets`, `on_opened_orders_profit`) internally use the **same hidden mechanism**: `execute_stream_with_reconnect`.
 
 This is why:
 - The while loop behavior applies to **ALL** streaming operations
@@ -1240,9 +1240,9 @@ async def debug_pending_tasks():
 
 ## See Also
 
-* **[Streaming Methods Overview](../API_Reference/MT4Account.md)** - Complete streaming methods documentation
-* **[on_symbol_tick](../API_Reference/MT4Account.md)** - Tick streaming reference
-* **[on_trade](../API_Reference/MT4Account.md)** - Trade events reference
+* **[Streaming Methods Overview](../MT4Account/MT4Account.Master.Overview.md)** - Complete streaming methods documentation
+* **[on_symbol_tick](../MT4Account/MT4Account.Master.Overview.md)** - Tick streaming reference
+* **[on_trade](../MT4Account/MT4Account.Master.Overview.md)** - Trade events reference
 * **[Python asyncio documentation](https://docs.python.org/3/library/asyncio.html)** - Official asyncio guide
 * **[gRPC Python](https://grpc.io/docs/languages/python/)** - Official gRPC Python guide
 

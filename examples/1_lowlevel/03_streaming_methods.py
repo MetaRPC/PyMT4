@@ -13,6 +13,7 @@
    - on_opened_orders_profit()  periodic P&L of open orders + account snapshot
    - on_opened_orders_tickets() periodic list of open position / pending tickets
    - on_trade()                 fires on trade events (open/modify/close)
+   - on_connect_state()         terminal connection-state changes
 
  HOW TO RUN:
    cd examples
@@ -141,6 +142,13 @@ async def run(account):
         max_items=2, timeout=12.0,
     )
     trigger.cancel()
+
+    print_method("5", "on_connect_state()", "terminal connection-state changes")
+    await sample(
+        lambda c: account.on_connect_state(cancellation_event=c),
+        "on_connect_state", lambda ev: print(f"     [CONNSTATE] {ev}"),
+        max_items=1, timeout=8.0,
+    )
 
 
 async def main():

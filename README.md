@@ -38,15 +38,19 @@ git clone https://github.com/MetaRPC/PyMT4.git
 cd PyMT4/examples
 pip install MetaRpcMT4
 
-# 1. Run with default TRIAL key:
+# Put your MT4 login/password in examples/0_common/settings.json
+# (api_key defaults to "TRIAL"; set your own key to lift the 1-terminal-per-IP limit)
+
+# 1. Interactive menu:
 python main.py
 
-# 2. Or pass your MetaRPC API key directly:
-python main.py your_api_key_here
+# 2. Or run one example directly (by number or alias):
+python main.py 1          # low-level general operations
+python main.py sugar      # sugar basics
 
-# 3. Or use the MRPC_API_KEY environment variable:
-export MRPC_API_KEY="your_api_key_here"        # Windows CMD: set MRPC_API_KEY=your_api_key_here
-python main.py                                # Windows PowerShell: $env:MRPC_API_KEY="your_api_key_here"
+# 3. Override the API key / server via environment (read by demo_helpers):
+export MRPC_API_KEY="your_api_key_here"        # Windows PowerShell: $env:MRPC_API_KEY="your_api_key_here"
+python main.py
 ```
 
 ---
@@ -55,7 +59,7 @@ python main.py                                # Windows PowerShell: $env:MRPC_AP
 
 ```python
 import asyncio
-from pymt4 import MT4Account
+from MetaRpcMT4.mt4_account import MT4Account
 
 async def main():
     # 1. Initialize account with your credentials
@@ -79,7 +83,7 @@ async def main():
     print(f"Free Margin: ${summary.account_margin_free:,.2f}")
 
     # 4. Fetch live quotes
-    quote = await account.get_quote("EURUSD")
+    quote = await account.quote("EURUSD")
     print(f"EURUSD Bid: {quote.bid} | Ask: {quote.ask}")
 
 if __name__ == "__main__":
@@ -123,7 +127,7 @@ Tested and verified with over 500+ MetaTrader server environments:
 - 📖 [Comprehensive Documentation](https://metarpc.github.io/PyMT4/)
 - 🚀 [10-Minute First Project Guide](https://metarpc.github.io/PyMT4/All_Guides/Your_First_Project/)
 - 📡 [Live Tick & Bar gRPC Streaming](https://metarpc.github.io/PyMT4/All_Guides/GRPC_STREAM_MANAGEMENT/)
-- 💼 [Order Execution & Position Management](https://metarpc.github.io/PyMT4/API_Reference/MT4Account/)
+- 💼 [Order Execution & Position Management](https://metarpc.github.io/PyMT4/MT4Account/MT4Account.Master.Overview/)
 - 💡 [Example Scripts & Strategies](https://github.com/MetaRPC/PyMT4/tree/main/examples)
 
 ---
