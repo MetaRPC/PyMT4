@@ -46,8 +46,10 @@ async def quote_history(
 message QuoteHistoryRequest {
   string symbol = 1;
   ENUM_QUOTE_HISTORY_TIMEFRAME timeframe = 2;
-  Timestamp fromTime = 3;      // (+ fromTimeUtc)
-  Timestamp toTime = 5;        // (+ toTimeUtc)
+  Timestamp fromTime = 3;      // note camelCase
+  Timestamp toTime = 4;
+  Timestamp fromTimeUtc = 5;
+  Timestamp toTimeUtc = 6;
 }
 ```
 
@@ -62,14 +64,14 @@ message HistoryQuote {
   string symbol = 1;
   int32 index = 2;
   Timestamp time = 3;
-  Timestamp time_utc = 4;
-  double open = 5;
-  double close = 6;
-  double high = 7;
-  double low = 8;
-  int64 real_volume = 9;
-  int64 tick_volume = 10;
-  int32 spread = 11;
+  double open = 4;
+  double close = 5;
+  double high = 6;
+  double low = 7;
+  int64 real_volume = 8;
+  int64 tick_volume = 9;
+  int32 spread = 10;
+  Timestamp time_utc = 11;
 }
 ```
 

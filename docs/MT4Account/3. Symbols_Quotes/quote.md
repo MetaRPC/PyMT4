@@ -53,9 +53,9 @@ message QuoteData {
   double bid = 2;
   double ask = 3;
   Timestamp date_time = 4;
-  Timestamp date_time_utc = 5;
-  double high = 6;      // session high
-  double low = 7;       // session low
+  double high = 5;      // session high
+  double low = 6;       // session low
+  Timestamp date_time_utc = 7;
 }
 ```
 

@@ -46,10 +46,10 @@ message ServerTimezoneRequest {
 
 ```protobuf
 message ServerTimezoneData {
-  string server = 1;             // server / timezone label
-  int32 utc_offset_seconds = 2;  // offset from UTC, in seconds
-  string source = 3;             // how the offset was determined
-  string validated_utc = 4;      // validation reference
+  string server = 1;                  // server / timezone label
+  int32 utc_offset_seconds = 2;       // offset from UTC, in seconds
+  SERVER_TIMEZONE_SOURCE source = 3;  // enum: how the offset was determined
+  Timestamp validated_utc = 4;        // when the offset was last validated (UTC)
 }
 ```
 
@@ -70,8 +70,22 @@ message ServerTimezoneData {
 |-------|-------------|-------------|
 | `server` | `str` | Server / timezone label |
 | `utc_offset_seconds` | `int` | Offset from UTC, in seconds (e.g. 3600 = UTC+1) |
-| `source` | `str` | How the offset was determined |
-| `validated_utc` | `str` | Validation reference |
+| `source` | `SERVER_TIMEZONE_SOURCE` (`int`) | How the offset was determined (enum, see below) |
+| `validated_utc` | `datetime` | When the offset was last validated (protobuf Timestamp — use `.ToDatetime()`) |
+
+---
+
+## 🧱 Related enums (from proto)
+
+### `SERVER_TIMEZONE_SOURCE` — field `source`
+
+| Constant | Value | Meaning |
+|----------|-------|---------|
+| `SERVER_TIMEZONE_SOURCE_UNKNOWN` | 0 | Source not known |
+| `SERVER_TIMEZONE_SOURCE_LIVE` | 1 | Offset read live from the server |
+| `SERVER_TIMEZONE_SOURCE_LAST_VALIDATED` | 2 | Last validated offset (cached) |
+
+> Access via `server_timezone_pb2.SERVER_TIMEZONE_SOURCE.SERVER_TIMEZONE_SOURCE_LIVE`.
 
 ---
 

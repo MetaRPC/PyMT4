@@ -39,7 +39,7 @@ async def on_opened_orders_tickets(
 
 ```protobuf
 message OnOpenedOrdersTicketsRequest {
-  int32 pullIntervalMilliseconds = 1;
+  int32 pull_interval_milliseconds = 1;
 }
 ```
 

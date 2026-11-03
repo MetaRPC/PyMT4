@@ -60,14 +60,14 @@ message OnTadeEventData {
 
 message OnTradeOrderInfo {
   int32 ticket = 2;
-  string symbol = 16;
-  double lots = 8;
-  double open_price = 10;
-  double stop_loss = 14;
-  double take_profit = 17;
-  double order_profit = 13;
-  SUB_ORDER_OPERATION_TYPE type = 18;
-  // ... is_history, comment, magic_number, close_price, close_time
+  double lots = 7;
+  double open_price = 9;
+  double order_profit = 11;
+  double stop_loss = 12;
+  string symbol = 14;
+  double take_profit = 15;
+  SUB_ORDER_OPERATION_TYPE type = 16;
+  // ... index, is_history, comment, commission, magic_number, open_time, swap, close_price, close_time, account_login
 }
 ```
 

@@ -39,7 +39,7 @@ async def on_opened_orders_profit(
 
 ```protobuf
 message OnOpenedOrdersProfitRequest {
-  int32 timerPeriodMilliseconds = 1;
+  int32 timer_period_milliseconds = 1;
 }
 ```
 
@@ -55,14 +55,14 @@ message OnOpenedOrdersProfitData {
 
 message OnOpenedOrdersProfitOrderInfo {
   int32 ticket = 2;
-  string symbol = 15;
-  double order_profit = 12;
-  double lots = 7;
-  double open_price = 9;
-  double stop_loss = 13;
-  double take_profit = 16;
-  SUB_ORDER_OPERATION_TYPE type = 18;
-  // ... comment, magic_number, swap, commission
+  double lots = 6;
+  double open_price = 8;
+  double order_profit = 10;
+  double stop_loss = 11;
+  string symbol = 13;
+  double take_profit = 14;
+  SUB_ORDER_OPERATION_TYPE type = 15;
+  // ... index, comment, commission, expiration, magic_number, open_time, swap
 }
 ```
 

@@ -47,10 +47,13 @@ async def orders_history(
 message OrdersHistoryRequest {
   EnumOrderHistorySortType input_sort_mode = 1;
   Timestamp input_from = 2;        // start of window
-  Timestamp input_to = 4;          // end of window
-  int32 page_number = 6;
-  int32 items_per_page = 7;
-  // ... input_from_utc / input_to_utc / page_token / page_size
+  Timestamp input_to = 3;          // end of window
+  int32 page_number = 4;
+  int32 items_per_page = 5;
+  string page_token = 6;
+  int32 page_size = 7;
+  Timestamp input_from_utc = 8;
+  Timestamp input_to_utc = 9;
 }
 ```
 
@@ -64,20 +67,28 @@ message OrdersHistoryData {
 }
 
 message HistoryOrderInfo {
-  string symbol = 11;
-  int32 ticket = 13;
-  OpenedOrderType order_type = 15;
-  double lots = 5;
-  double open_price = 7;
-  double close_price = 21;
-  double profit = 8;
-  double swap = 10;
-  double commision = 2;
-  int32 magic_number = 6;
   string comment = 1;
-  Timestamp open_time = 17;    // (+ open_time_utc)
-  Timestamp close_time = 19;   // (+ close_time_utc)
-  // ... stop_loss, take_profit, expiration_time, account_login
+  double commision = 2;            // proto spelling (single s)
+  Timestamp expiration_time = 3;
+  double lots = 4;
+  int32 magic_number = 5;
+  double open_price = 6;
+  double profit = 7;
+  double stop_loss = 8;
+  double swap = 9;
+  string symbol = 10;
+  double take_profit = 11;
+  int32 ticket = 12;
+  int32 position_index = 13;
+  OpenedOrderType order_type = 14;
+  int32 sort_index = 15;
+  Timestamp open_time = 16;
+  Timestamp close_time = 17;
+  double close_price = 18;
+  int64 account_login = 19;
+  Timestamp expiration_time_utc = 20;
+  Timestamp open_time_utc = 21;
+  Timestamp close_time_utc = 22;
 }
 ```
 
@@ -114,6 +125,7 @@ Each `HistoryOrderInfo` (adds close fields to the open-order shape):
 | `order_type` | `OpenedOrderType` (`int`) | Operation (`OO_OP_*`) |
 | `lots` | `float` | Volume |
 | `open_price` / `close_price` | `float` | Entry / exit price |
+| `stop_loss` / `take_profit` | `float` | SL / TP price (0 if unset) |
 | `profit` | `float` | Realized profit (excl. swap/commission) |
 | `swap` / `commision` | `float` | Costs (note proto spelling `commision`) |
 | `open_time` / `close_time` (+ `_utc`) | `datetime` | Entry / exit time |
