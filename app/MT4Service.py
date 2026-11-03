@@ -184,23 +184,51 @@ def _to_timeframe_enum(tf: Union[str, int]) -> int:
     return getattr(market_info_pb2.ENUM_QUOTE_HISTORY_TIMEFRAME, name)
 
 
+_OPENED_SORT_ALIASES = {
+    "open_asc": "SORT_BY_OPEN_TIME_ASC",
+    "open_desc": "SORT_BY_OPEN_TIME_DESC",
+    "ticket_asc": "SORT_BY_ORDER_TICKET_ID_ASC",
+    "ticket_desc": "SORT_BY_ORDER_TICKET_ID_DESC",
+}
+
+
 def _to_opened_sort(sort: Optional[Union[str, int]]) -> Optional[int]:
-    """Convert sort mode string/int to protobuf enum value for opened_orders sorting."""
+    """Convert sort mode string/int to protobuf enum value for opened_orders sorting.
+
+    Accepts friendly aliases ("open_asc", "open_desc", "ticket_asc", "ticket_desc"),
+    the raw enum member name (case-insensitive), or an int enum value.
+    """
     if sort is None:
         return None
     if isinstance(sort, int):
         return sort
-    name = sort.strip().upper()
+    key = sort.strip().lower()
+    name = _OPENED_SORT_ALIASES.get(key, sort.strip().upper())
     return getattr(account_helper_pb2.EnumOpenedOrderSortType, name)
 
 
+_HISTORY_SORT_ALIASES = {
+    "open_asc": "HISTORY_SORT_BY_OPEN_TIME_ASC",
+    "open_desc": "HISTORY_SORT_BY_OPEN_TIME_DESC",
+    "close_asc": "HISTORY_SORT_BY_CLOSE_TIME_ASC",
+    "close_desc": "HISTORY_SORT_BY_CLOSE_TIME_DESC",
+    "ticket_asc": "HISTORY_SORT_BY_ORDER_TICKET_ID_ASC",
+    "ticket_desc": "HISTORY_SORT_BY_ORDER_TICKET_ID_DESC",
+}
+
+
 def _to_history_sort(sort: Optional[Union[str, int]]) -> Optional[int]:
-    """Convert history sort mode string/int to protobuf enum value."""
+    """Convert history sort mode string/int to protobuf enum value.
+
+    Accepts friendly aliases ("open_asc"/"open_desc", "close_asc"/"close_desc",
+    "ticket_asc"/"ticket_desc"), the raw enum member name (case-insensitive), or an int.
+    """
     if sort is None:
         return None
     if isinstance(sort, int):
         return sort
-    name = sort.strip().upper()
+    key = sort.strip().lower()
+    name = _HISTORY_SORT_ALIASES.get(key, sort.strip().upper())
     return getattr(account_helper_pb2.EnumOrderHistorySortType, name)
 
 
