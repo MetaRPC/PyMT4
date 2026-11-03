@@ -84,7 +84,7 @@ from app.MT4Service import MT4Service, MT4ServiceTrade
 
 trade = MT4ServiceTrade(service)
 trade.set_trade_defaults(magic=777, deviation_pips=3, comment="my bot")
-# ticket = await trade.buy_market("EURUSD", lots=0.01, sl=..., tp=...)
+# ticket = await trade.buy_market(symbol="EURUSD", lots=0.01, sl=..., tp=...)
 ```
 
 They are documented in [4. Trading Operations](./4.%20Trading_Operations.md).
