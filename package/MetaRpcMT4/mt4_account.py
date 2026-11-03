@@ -17,6 +17,10 @@ import MetaRpcMT4.mt4_term_api_market_info_pb2 as market_info_pb2
 import MetaRpcMT4.mt4_term_api_market_info_pb2_grpc as market_info_pb2_grpc
 import MetaRpcMT4.mt4_term_api_subscriptions_pb2 as subscriptions_pb2
 import MetaRpcMT4.mt4_term_api_subscriptions_pb2_grpc as subscriptions_pb2_grpc
+import MetaRpcMT4.mt4_term_api_trade_stats_pb2 as trade_stats_pb2
+import MetaRpcMT4.mt4_term_api_trade_stats_pb2_grpc as trade_stats_pb2_grpc
+import MetaRpcMT4.mt4_term_api_server_timezone_pb2 as server_timezone_pb2
+import MetaRpcMT4.mt4_term_api_server_timezone_pb2_grpc as server_timezone_pb2_grpc
 import MetaRpcMT4.mt4_term_api_market_info_pb2 as market_info_pb2
 import MetaRpcMT4.mt4_term_api_market_info_pb2_grpc as market_info_pb2_grpc
 
@@ -41,6 +45,7 @@ class MT4Account:
         self.grpc_server = grpc_server or "mt4.mrpc.pro:443"   # default server
         self.id = id_
         self.api_key = api_key or "TRIAL"
+        self.name = None
 
         # Async gRPC secure channel (TLS)
         self.channel = grpc.aio.secure_channel(
@@ -54,6 +59,8 @@ class MT4Account:
         self.account_client = account_helper_pb2_grpc.AccountHelperStub(self.channel)
         self.trade_client = trading_helper_pb2_grpc.TradingHelperStub(self.channel)
         self.market_info_client = market_info_pb2_grpc.MarketInfoStub(self.channel)
+        self.trade_stats_client = trade_stats_pb2_grpc.TradeStatsStub(self.channel)
+        self.server_timezone_client = server_timezone_pb2_grpc.ServerTimezoneStub(self.channel)
 
         # Connection state
         self.host = None
@@ -70,13 +77,13 @@ class MT4Account:
         headers.append(("apikey", str(getattr(self, "api_key", None) or "TRIAL")))
         return headers
 
-    async def disconnect(self):
+    async def disconnect(self, delete: bool = False):
         """
         Disconnect from MT4 server by sending Disconnect request, then close the gRPC channel.
         """
         try:
             if hasattr(self, 'connection_client') and self.connection_client:
-                request = connection_pb2.DisconnectRequest()
+                request = connection_pb2.DisconnectRequest(delete=delete)
                 await self.connection_client.Disconnect(request, metadata=self.get_headers(), timeout=10)
         except Exception:
             pass
@@ -95,10 +102,11 @@ class MT4Account:
 
     # === Utility: reconnect ===
     async def reconnect(self, deadline: Optional[datetime] = None):
+        name = getattr(self, "name", None)
         if self.server_name:
-            await self.connect_by_server_name(self.server_name, True, self.connect_timeout_seconds, deadline)
+            await self.connect_by_server_name(self.server_name, True, self.connect_timeout_seconds, deadline, name=name)
         elif self.host:
-            await self.connect_by_host_port(self.host, self.port or 443, True, self.connect_timeout_seconds, deadline)
+            await self.connect_by_host_port(self.host, self.port or 443, True, self.connect_timeout_seconds, deadline, name=name)
 
     # === Core retry wrapper ===
     async def execute_with_reconnect(
@@ -141,9 +149,17 @@ class MT4Account:
         timeout_seconds: int = 30,
         deadline: Optional[datetime] = None,
         base_chart_symbol: Optional[str] = None,
+        name: Optional[str] = None,
+        expiration: Optional[int] = None,
         *args,
         **kwargs,
     ):
+        """
+        Connects by broker host:port. `name` is the human-readable terminal label shown in
+        the MRPC portal / `Accounts` list; `expiration` is an optional terminal lifetime in
+        seconds. The `id` (terminal instance guid) and `apikey` headers are always sent, so a
+        stable `id_` passed to the constructor re-attaches to the same terminal on every run.
+        """
         if isinstance(wait_for_terminal_is_alive, str):
             wait_for_terminal_is_alive = True
 
@@ -155,17 +171,18 @@ class MT4Account:
             port=port,
             timeout_seconds=timeout_seconds,
         )
+        if name:
+            request.name = name
+            self.name = name
+        if expiration is not None:
+            request.expiration = int(expiration)
 
-        headers = []
-        if self.id:
-            headers.append(("id", str(self.id)))
-        
         res = await self.connection_client.Connect(
             request,
-            metadata=headers,
-            timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
+            metadata=self.get_headers(),
+            timeout=float(timeout_seconds) + 30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
-        
+
         if res.HasField("error") and res.error.error_message:
             raise ApiExceptionMT4(res.error)
 
@@ -173,7 +190,9 @@ class MT4Account:
         self.host = host
         self.port = port
         self.connect_timeout_seconds = timeout_seconds
-        self.id = getattr(res.data, "terminal_instance_guid", getattr(res.data, "terminalInstanceGuid", None))
+        guid = getattr(res.data, "terminal_instance_guid", None)
+        if guid:
+            self.id = guid
 
     async def connect_by_server_name(
         self,
@@ -182,9 +201,18 @@ class MT4Account:
         timeout_seconds: int = 30,
         deadline: Optional[datetime] = None,
         base_chart_symbol: Optional[str] = None,
+        name: Optional[str] = None,
+        expiration: Optional[int] = None,
         *args,
         **kwargs,
     ):
+        """
+        Connects by broker server (cluster) name, e.g. "AMarkets-Demo" (ConnectEx).
+        `name` is the human-readable terminal label shown in the MRPC portal / `Accounts`
+        list; `expiration` is an optional terminal lifetime in seconds. The `id` (terminal
+        instance guid) and `apikey` headers are always sent, so a stable `id_` passed to the
+        constructor re-attaches to the same terminal on every run instead of creating a new one.
+        """
         if isinstance(wait_for_terminal_is_alive, str):
             wait_for_terminal_is_alive = True
 
@@ -195,14 +223,16 @@ class MT4Account:
             mt_cluster_name=server_name,
             timeout_seconds=timeout_seconds,
         )
+        if name:
+            request.name = name
+            self.name = name
+        if expiration is not None:
+            request.expiration = int(expiration)
 
-        headers = []
-        if self.id:
-            headers.append(("id", str(self.id)))
         res = await self.connection_client.ConnectEx(
             request,
-            metadata=headers,
-            timeout=30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
+            metadata=self.get_headers(),
+            timeout=float(timeout_seconds) + 30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
 
         if res.HasField("error") and res.error.error_message:
@@ -211,12 +241,14 @@ class MT4Account:
         # Save state
         self.server_name = server_name
         self.connect_timeout_seconds = timeout_seconds
-        self.id = res.data.terminal_instance_guid
+        guid = getattr(res.data, "terminal_instance_guid", None)
+        if guid:
+            self.id = guid
 
 
 #
 #    Account helper --------------------------------------------------------------------------------------------------------
-#    
+#
 
     async def account_summary(
         self,
@@ -446,7 +478,7 @@ class MT4Account:
 
         Returns:
             SymbolParamsManyData: The result containing symbol parameters.
-        
+
         Raises:
             ConnectExceptionMT4: If the account is not connected before calling this method.
             ApiExceptionMT4: If the server returns an error in the response.
@@ -491,7 +523,7 @@ class MT4Account:
         Args:
             symbol_names (list[str]): List of symbol names.
 
-        Returns: 
+        Returns:
             TickValueWithSizeData: The result containing tick values and sizes.
 
         Raises:
@@ -525,9 +557,217 @@ class MT4Account:
 
         return res.data
 
+    async def trade_stats(
+        self,
+        from_time: Optional[datetime] = None,
+        deadline: Optional[datetime] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Gets aggregated trade statistics (open/closed counts, profit by period, drawdowns).
+
+        Args:
+            from_time (datetime, optional): Start of the statistics window. Omit for full history.
+            deadline (datetime, optional): Deadline after which the request is canceled.
+            cancellation_event (asyncio.Event, optional): Event to cancel the request.
+
+        Returns:
+            TradeStatsData: The aggregated trade statistics.
+
+        Raises:
+            ConnectExceptionMT4: If the account is not connected before calling this method.
+            ApiExceptionMT4: If the server returns an error in the response.
+            grpc.aio.AioRpcError: If the gRPC call fails due to communication or protocol errors.
+        """
+        if not (self.host or self.server_name or self.id):
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = trade_stats_pb2.TradeStatsRequest()
+        if from_time is not None:
+            setattr(request, "from", from_time.isoformat())
+
+        async def grpc_call(headers):
+            timeout = None
+            if deadline:
+                timeout = (deadline - datetime.utcnow()).total_seconds()
+                if timeout < 0:
+                    timeout = 0
+            return await self.trade_stats_client.TradeStats(
+                request,
+                metadata=headers,
+                timeout=timeout,
+            )
+
+        res = await self.execute_with_reconnect(
+            grpc_call=grpc_call,
+            error_selector=lambda r: getattr(r, "error", None),
+            deadline=deadline,
+            cancellation_event=cancellation_event,
+        )
+
+        return res.data
+
+    async def trade_stats_equity_history(
+        self,
+        from_time: Optional[datetime] = None,
+        exclude_same_bars: Optional[bool] = None,
+        deadline: Optional[datetime] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Gets trade statistics together with equity-chart points and the trade list in one call.
+
+        Args:
+            from_time (datetime, optional): Start of the window. Omit for full history.
+            exclude_same_bars (bool, optional): Collapse consecutive equal equity points.
+            deadline (datetime, optional): Deadline after which the request is canceled.
+            cancellation_event (asyncio.Event, optional): Event to cancel the request.
+
+        Returns:
+            TradeStatsEquityHistoryData: Stats + equity points + trades.
+
+        Raises:
+            ConnectExceptionMT4: If the account is not connected before calling this method.
+            ApiExceptionMT4: If the server returns an error in the response.
+            grpc.aio.AioRpcError: If the gRPC call fails due to communication or protocol errors.
+        """
+        if not (self.host or self.server_name or self.id):
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = trade_stats_pb2.TradeStatsEquityHistoryRequest()
+        if from_time is not None:
+            setattr(request, "from", from_time.isoformat())
+        if exclude_same_bars is not None:
+            request.exclude_same_bars = exclude_same_bars
+
+        async def grpc_call(headers):
+            timeout = None
+            if deadline:
+                timeout = (deadline - datetime.utcnow()).total_seconds()
+                if timeout < 0:
+                    timeout = 0
+            return await self.trade_stats_client.TradeStatsEquityHistory(
+                request,
+                metadata=headers,
+                timeout=timeout,
+            )
+
+        res = await self.execute_with_reconnect(
+            grpc_call=grpc_call,
+            error_selector=lambda r: getattr(r, "error", None),
+            deadline=deadline,
+            cancellation_event=cancellation_event,
+        )
+
+        return res.data
+
+    async def equity_history(
+        self,
+        from_time: Optional[datetime] = None,
+        exclude_same_bars: Optional[bool] = None,
+        deadline: Optional[datetime] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Gets the equity/balance time series (equity curve) with running drawdowns.
+
+        Args:
+            from_time (datetime, optional): Start of the window. Omit for full history.
+            exclude_same_bars (bool, optional): Collapse consecutive equal equity points.
+            deadline (datetime, optional): Deadline after which the request is canceled.
+            cancellation_event (asyncio.Event, optional): Event to cancel the request.
+
+        Returns:
+            EquityHistoryData: The equity-curve points.
+
+        Raises:
+            ConnectExceptionMT4: If the account is not connected before calling this method.
+            ApiExceptionMT4: If the server returns an error in the response.
+            grpc.aio.AioRpcError: If the gRPC call fails due to communication or protocol errors.
+        """
+        if not (self.host or self.server_name or self.id):
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = trade_stats_pb2.EquityHistoryRequest()
+        if from_time is not None:
+            setattr(request, "from", from_time.isoformat())
+        if exclude_same_bars is not None:
+            request.exclude_same_bars = exclude_same_bars
+
+        async def grpc_call(headers):
+            timeout = None
+            if deadline:
+                timeout = (deadline - datetime.utcnow()).total_seconds()
+                if timeout < 0:
+                    timeout = 0
+            return await self.trade_stats_client.EquityHistory(
+                request,
+                metadata=headers,
+                timeout=timeout,
+            )
+
+        res = await self.execute_with_reconnect(
+            grpc_call=grpc_call,
+            error_selector=lambda r: getattr(r, "error", None),
+            deadline=deadline,
+            cancellation_event=cancellation_event,
+        )
+
+        return res.data
+
+    async def trade_unrealized_pl(
+        self,
+        from_time: Optional[datetime] = None,
+        deadline: Optional[datetime] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Gets per-open-order unrealized P/L extrema (best/worst floating P/L with timestamps).
+
+        Args:
+            from_time (datetime, optional): Start of the window. Omit for full history.
+            deadline (datetime, optional): Deadline after which the request is canceled.
+            cancellation_event (asyncio.Event, optional): Event to cancel the request.
+
+        Returns:
+            TradeUnrealizedPLData: Unrealized-P/L extrema per open order.
+
+        Raises:
+            ConnectExceptionMT4: If the account is not connected before calling this method.
+            ApiExceptionMT4: If the server returns an error in the response.
+            grpc.aio.AioRpcError: If the gRPC call fails due to communication or protocol errors.
+        """
+        if not (self.host or self.server_name or self.id):
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = trade_stats_pb2.TradeUnrealizedPLRequest()
+        if from_time is not None:
+            setattr(request, "from", from_time.isoformat())
+
+        async def grpc_call(headers):
+            timeout = None
+            if deadline:
+                timeout = (deadline - datetime.utcnow()).total_seconds()
+                if timeout < 0:
+                    timeout = 0
+            return await self.trade_stats_client.TradeUnrealizedPL(
+                request,
+                metadata=headers,
+                timeout=timeout,
+            )
+
+        res = await self.execute_with_reconnect(
+            grpc_call=grpc_call,
+            error_selector=lambda r: getattr(r, "error", None),
+            deadline=deadline,
+            cancellation_event=cancellation_event,
+        )
+
+        return res.data
+
 #
 #    Streams --------------------------------------------------------------------------------------------------------
-#    
+#
 
     async def execute_stream_with_reconnect(
         self,
@@ -574,7 +814,7 @@ class MT4Account:
                         reconnect_required = True
                         break
 
-                    if error and getattr(error, "message", None):
+                    if error and (getattr(error, "error_message", None) or getattr(error, "error_code", None)):
                         raise ApiExceptionMT4(error)
 
                     data = get_data(reply)
@@ -1195,3 +1435,130 @@ class MT4Account:
             cancellation_event=cancellation_event,
         )
         return res.data
+
+    async def symbol_select(
+        self,
+        symbol: str,
+        select: bool = True,
+        deadline: Optional[datetime] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Adds a symbol to (or removes it from) Market Watch.
+
+        Args:
+            symbol (str): The symbol name.
+            select (bool): True to add to Market Watch, False to remove.
+            deadline (datetime, optional): Deadline after which the request is canceled.
+            cancellation_event (asyncio.Event, optional): Event to cancel the request.
+
+        Returns:
+            SymbolSelectData: The result of the select operation.
+
+        Raises:
+            ConnectExceptionMT4: If the account is not connected before calling this method.
+            ApiExceptionMT4: If the server returns an error in the response.
+            grpc.aio.AioRpcError: If the gRPC call fails due to communication or protocol errors.
+        """
+        if not (self.host or self.server_name or self.id):
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = market_info_pb2.SymbolSelectRequest(symbol=symbol, select=select)
+
+        async def grpc_call(headers):
+            timeout = None
+            if deadline:
+                timeout = max((deadline - datetime.utcnow()).total_seconds(), 0)
+            return await self.market_info_client.SymbolSelect(
+                request,
+                metadata=headers,
+                timeout=timeout,
+            )
+
+        res = await self.execute_with_reconnect(
+            grpc_call=grpc_call,
+            error_selector=lambda r: getattr(r, "error", None),
+            deadline=deadline,
+            cancellation_event=cancellation_event,
+        )
+        return res.data
+
+    async def server_timezone(
+        self,
+        deadline: Optional[datetime] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Gets the trade server timezone / UTC offset.
+
+        Args:
+            deadline (datetime, optional): Deadline after which the request is canceled.
+            cancellation_event (asyncio.Event, optional): Event to cancel the request.
+
+        Returns:
+            ServerTimezoneData: The server timezone information.
+
+        Raises:
+            ConnectExceptionMT4: If the account is not connected before calling this method.
+            ApiExceptionMT4: If the server returns an error in the response.
+            grpc.aio.AioRpcError: If the gRPC call fails due to communication or protocol errors.
+        """
+        if not (self.host or self.server_name or self.id):
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = server_timezone_pb2.ServerTimezoneRequest()
+
+        async def grpc_call(headers):
+            timeout = None
+            if deadline:
+                timeout = max((deadline - datetime.utcnow()).total_seconds(), 0)
+            return await self.server_timezone_client.ServerTimezone(
+                request,
+                metadata=headers,
+                timeout=timeout,
+            )
+
+        res = await self.execute_with_reconnect(
+            grpc_call=grpc_call,
+            error_selector=lambda r: getattr(r, "error", None),
+            deadline=deadline,
+            cancellation_event=cancellation_event,
+        )
+        return res.data
+
+    async def on_connect_state(
+        self,
+        terminal_ids: Optional[list[str]] = None,
+        cancellation_event: Optional[asyncio.Event] = None,
+    ):
+        """
+        Subscribes to terminal connection-state changes.
+
+        Args:
+            terminal_ids (list[str], optional): Restrict to specific terminal ids;
+                omit to use the current session.
+            cancellation_event (asyncio.Event, optional): Event to cancel streaming.
+
+        Yields:
+            OnConnectStateData: Connection-state change events.
+
+        Raises:
+            ConnectExceptionMT4: If the account is not connected before calling this method.
+            ApiExceptionMT4: If the server returns an error in the stream.
+            grpc.aio.AioRpcError: If the stream fails due to communication or protocol errors.
+        """
+        if not self.id:
+            raise ConnectExceptionMT4("Please call connect method first")
+
+        request = connection_pb2.OnConnectStateRequest()
+        if terminal_ids:
+            request.terminal_ids.extend(terminal_ids)
+
+        async for data in self.execute_stream_with_reconnect(
+            request=request,
+            stream_invoker=lambda req, headers: self.connection_client.OnConnectState(req, metadata=headers),
+            get_error=lambda reply: reply.error,
+            get_data=lambda reply: reply.data,
+            cancellation_event=cancellation_event,
+        ):
+            yield data
