@@ -156,7 +156,6 @@ import MetaRpcMT4.mt4_term_api_market_info_pb2 as market_info_pb2
 import MetaRpcMT4.mt4_term_api_admin_pb2 as admin_pb2
 import MetaRpcMT4.mt4_term_api_trading_helper_pb2 as trading_helper_pb2
 import MetaRpcMT4.mt4_term_api_subscriptions_pb2 as subscriptions_pb2
-import MetaRpcMT4.mt4_term_api_charts_pb2 as charts_pb2
 import MetaRpcMT4.mt4_term_api_connection_pb2 as connection_pb2
 from google.protobuf.message import Message
 from google.protobuf.descriptor import FieldDescriptor, EnumDescriptor
@@ -182,7 +181,6 @@ class ProtobufInspector:
             admin_pb2,
             trading_helper_pb2,
             subscriptions_pb2,
-            charts_pb2,
             connection_pb2,
         ]
 
