@@ -404,7 +404,6 @@ The Protobuf Inspector uses Python reflection to:
 - `mt4_term_api_admin_pb2`
 - `mt4_term_api_trading_helper_pb2`
 - `mt4_term_api_subscriptions_pb2` (streaming events)
-- `mt4_term_api_charts_pb2` (chart / EA operations)
 - `mt4_term_api_connection_pb2` (connection management)
 
 ---
