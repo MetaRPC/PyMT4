@@ -130,9 +130,3 @@ Tested and verified with over 500+ MetaTrader server environments:
 - 💼 [Order Execution & Position Management](https://metarpc.github.io/PyMT4/MT4Account/MT4Account.Master.Overview/)
 - 💡 [Example Scripts & Strategies](https://github.com/MetaRPC/PyMT4/tree/main/examples)
 
----
-
-## 📄 License
-
-This SDK is open-sourced under the [MIT License](LICENSE).  
-Cloud infrastructure and API services are operated by [MetaRPC](https://mrpc.pro).
