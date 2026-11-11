@@ -173,9 +173,68 @@ class MT4Sugar:
                 data = await self._svc.symbol_params_many([key])
             except Exception as e:
                 raise map_backend_error(e, context="symbol_params_many", payload={"symbol": key})
-            params = (data or {}).get(key) or {}
+            # service.symbol_params_many() may return a mapping {symbol: {...}},
+            # a list of per-symbol items, or an object exposing .symbol_infos —
+            # normalize whatever we got down to a single dict for `key`.
+            params = self._params_to_dict(self._select_symbol_item(data, key))
             self._sym_cache[key] = params
         return params
+
+    @staticmethod
+    def _select_symbol_item(data: Any, key: str) -> Any:
+        """Pick the entry for `key` out of a mapping / list / reply object."""
+        if data is None:
+            return None
+        if isinstance(data, dict):
+            return data.get(key) or data.get(key.upper()) or data.get(key.lower())
+        seq = data
+        for attr in ("symbol_infos", "SymbolInfos", "symbolInfos"):
+            if hasattr(data, attr):
+                seq = getattr(data, attr)
+                break
+        if isinstance(seq, (list, tuple)):
+            if not seq:
+                return None
+            for it in seq:
+                name = (
+                    getattr(it, "SymbolName", None)
+                    or getattr(it, "symbol_name", None)
+                    or getattr(it, "symbol", None)
+                    or (it.get("SymbolName") or it.get("symbol_name") or it.get("symbol")
+                        if isinstance(it, dict) else None)
+                )
+                if name and str(name).upper() == key.upper():
+                    return it
+            return seq[0]
+        return seq
+
+    @staticmethod
+    def _params_to_dict(item: Any) -> dict:
+        """Convert a symbol-params item (protobuf / object / dict) to a plain dict."""
+        if item is None:
+            return {}
+        if isinstance(item, dict):
+            return item
+        desc = getattr(item, "DESCRIPTOR", None)
+        if desc is not None and hasattr(desc, "fields"):
+            out = {}
+            for f in desc.fields:
+                try:
+                    out[f.name] = getattr(item, f.name)
+                except Exception:
+                    pass
+            return out
+        out = {}
+        for n in dir(item):
+            if n.startswith("_"):
+                continue
+            try:
+                v = getattr(item, n)
+            except Exception:
+                continue
+            if not callable(v):
+                out[n] = v
+        return out
 
     async def ensure_symbol(
         self,
