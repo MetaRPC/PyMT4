@@ -1,23 +1,50 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 13_grid_dca.py - ORCHESTRATOR: Grid DCA with a common Stop Loss
 
-  ⚠️  Places real 0.01 pending orders on your DEMO account; cleaned up at the end.
+ PURPOSE:
+   Lay a Dollar-Cost-Averaging grid of limit orders spaced by step_pips and
+   manage the whole ladder under ONE shared Stop Loss once legs start filling.
+   Averages into a position instead of betting on a single entry.
 
- Strategy: a Dollar-Cost-Averaging grid of limit orders spaced by `step_pips`,
- managed under one common Stop Loss once legs start filling.
+ 🎯 WHO SHOULD USE THIS:
+   • Traders who scale into a level with multiple limit legs
+   • Bots that average down/up under a single risk cap
+   • Learning multi-leg (grid/DCA) position construction
 
-     result = await run_grid_dca_common_sl(
-         service, strategy, risk, side="buy",
-         steps=3, step_pips=10, risk_mode="split_total", risk_total_percent=1.0)
+ 📚 WHAT THIS DEMO COVERS:
 
- The limits sit away from the market, so in a short demo they usually don't
- fill — we cap the run and cancel the grid afterwards.
+   ORCHESTRATOR:
+      • run_grid_dca_common_sl(service, strategy, risk, side,
+            steps, step_pips, risk_mode, risk_total_percent)
+        -> places `steps` limit legs spaced by step_pips under a common SL;
+           returns a result dict (ticket/leg info)
 
- HOW TO RUN:
+   INPUTS (Strategy/presets/):
+      • StrategyPreset(symbol, use_market=False, lots, magic,
+                       deviation_pips, comment)          - grid base (pending)
+      • RiskPreset(risk_percent, sl_pips, tp_pips)        - shared risk envelope
+
+   STEPS:
+      1. RUN     - build the grid, capped at RUN_CAP_S seconds
+                   (legs sit off-market and usually don't fill in the demo)
+      2. CLEANUP - cancel the grid and close any positions for the symbol
+
+ 🔄 API LEVELS:
+   ORCHESTRATOR - THIS FILE: multi-step strategy built ON TOP of the stack
+   HIGH-LEVEL  (MT4Sugar)   - one-liner trading used under the hood
+   MID-LEVEL   (MT4Service) - handed to the orchestrator, which drives it
+   LOW-LEVEL   (MT4Account) - raw gRPC client beneath the service
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py grid             (or select [13] from the menu)
-==============================================================================
+
+ ⚠️  WARNING: this demo PLACES REAL 0.01 PENDING ORDERS on your account!
+   • Uses the minimum lot size (0.01) per leg
+   • Cancels the grid / closes positions at the end
+   • Run on a DEMO account first
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -67,6 +94,16 @@ async def main():
     risk = RiskPreset(risk_percent=1.0, sl_pips=60, tp_pips=None)
 
     try:
+        # region RUN
+        # ═══════════════════════════════════════════════════════════════
+        # 1. RUN THE ORCHESTRATOR
+        # ═══════════════════════════════════════════════════════════════
+        #    run_grid_dca_common_sl(service, strategy, risk, side, ...)
+        #    Places a REAL 3-leg BUY grid (10 pip spacing) under one
+        #    shared SL. Capped at RUN_CAP_S for the demo (legs usually
+        #    stay pending).
+        #    Returns: result dict (leg/ticket info).
+        #    ⚠️  sends REAL pending orders.
         print_step(1, "Run the orchestrator (3-leg BUY grid, 10 pip spacing)")
         try:
             result = await asyncio.wait_for(
@@ -80,14 +117,22 @@ async def main():
             print_success(f"orchestrator returned keys: {list(result.keys())}")
         except asyncio.TimeoutError:
             print_info("demo cap reached (grid waiting for fills) — cancelling the grid")
+        # endregion
     except Exception as e:
         print_if_error(e, "run_grid_dca_common_sl")
     finally:
+        # region CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        # 2. CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        #    Cancel the grid and close any positions for the symbol.
+        #    Best-effort (_cleanup swallows errors), then disconnect.
         print_step(2, "Cleanup")
         await _cleanup(service)
         print_success("grid cancelled / positions cleared")
         await service.disconnect()
         print_success("Disconnected")
+        # endregion
 
 
 if __name__ == "__main__":

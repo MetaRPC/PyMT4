@@ -1,23 +1,51 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 12_bracket_trailing.py - ORCHESTRATOR: Bracket + Trailing Activation
 
-  ⚠️  Opens a real 0.01 position on your DEMO account; cleaned up at the end.
+ PURPOSE:
+   Open a bracketed position (SL/TP) and leave it alone until it reaches a
+   profit threshold; only then switch on a trailing stop. Entry protection
+   first, trailing only once the trade is "paying for itself".
 
- Strategy: open a position with a bracket (SL/TP), then once it reaches a
- profit threshold, switch on a trailing stop.
+ 🎯 WHO SHOULD USE THIS:
+   • Traders who want a trailing stop that arms only in profit
+   • Bots combining a fixed bracket with conditional trailing
+   • Learning staged/conditional position management
 
-     result = await run_bracket_with_trailing_activation(
-         service, strategy, risk, side="buy",
-         activate_trailing_at_pips=..., trailing_distance_pips=...)
+ 📚 WHAT THIS DEMO COVERS:
 
- In this short demo the position usually won't reach the activation threshold,
- so we cap the run and then close whatever was opened.
+   ORCHESTRATOR:
+      • run_bracket_with_trailing_activation(service, strategy, risk,
+            side, activate_trailing_at_pips, trailing_distance_pips,
+            poll_interval_s)
+        -> market entry + bracket, then trailing once profit >= threshold;
+           returns {ticket, activated, ...}
 
- HOW TO RUN:
+   INPUTS (Strategy/presets/):
+      • StrategyPreset(symbol, use_market, entry_price, lots, magic,
+                       deviation_pips, comment)          - what / where to enter
+      • RiskPreset(risk_percent, sl_pips, tp_pips, trailing_pips, ...)  - risk
+
+   STEPS:
+      1. RUN     - run the orchestrator, capped at RUN_CAP_S seconds
+                   (trailing usually won't activate within the demo window)
+      2. CLEANUP - close positions and cancel pendings for the symbol
+
+ 🔄 API LEVELS:
+   ORCHESTRATOR - THIS FILE: multi-step strategy built ON TOP of the stack
+   HIGH-LEVEL  (MT4Sugar)   - one-liner trading used under the hood
+   MID-LEVEL   (MT4Service) - handed to the orchestrator, which drives it
+   LOW-LEVEL   (MT4Account) - raw gRPC client beneath the service
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py trailing         (or select [12] from the menu)
-==============================================================================
+
+ ⚠️  WARNING: this demo OPENS A REAL 0.01 POSITION on your account!
+   • Uses the minimum lot size (0.01)
+   • Closes positions / cancels pendings at the end
+   • Run on a DEMO account first
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -70,6 +98,16 @@ async def main():
     risk = RiskPreset(risk_percent=1.0, sl_pips=40, tp_pips=120, trailing_pips=20)
 
     try:
+        # region RUN
+        # ═══════════════════════════════════════════════════════════════
+        # 1. RUN THE ORCHESTRATOR
+        # ═══════════════════════════════════════════════════════════════
+        #    run_bracket_with_trailing_activation(service, strategy, risk, ...)
+        #    Opens a REAL bracketed position; arms a trailing stop only
+        #    after +activate_trailing_at_pips. Capped at RUN_CAP_S for
+        #    the demo (activation usually won't be reached in time).
+        #    Returns: dict with ticket, activated.
+        #    ⚠️  sends a REAL order.
         print_step(1, "Run the orchestrator (market entry + trailing-on-profit)")
         print_info(f"activate trailing at +8 pips, distance {risk.trailing_pips} pips; "
                    f"capped at {RUN_CAP_S}s for the demo")
@@ -86,14 +124,22 @@ async def main():
             print_success(f"orchestrator returned: { {k: result.get(k) for k in ('ticket', 'activated')} }")
         except asyncio.TimeoutError:
             print_info("demo cap reached before trailing activated — closing the position")
+        # endregion
     except Exception as e:
         print_if_error(e, "run_bracket_with_trailing_activation")
     finally:
+        # region CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        # 2. CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        #    Close positions and cancel pendings for the symbol.
+        #    Best-effort (_cleanup swallows errors), then disconnect.
         print_step(2, "Cleanup")
         await _cleanup(service)
         print_success("positions/pendings cleared")
         await service.disconnect()
         print_success("Disconnected")
+        # endregion
 
 
 if __name__ == "__main__":

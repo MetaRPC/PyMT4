@@ -1,22 +1,48 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 08_sugar_positions.py - HIGH-LEVEL (MT4Sugar) - PART 3/3: POSITIONS & STREAMS
 
-  ⚠️  Opens ONE small test order so the queries/streams have data; closes it.
+ PURPOSE:
+   Demonstrates the POSITION/QUERY side of MT4Sugar and its callback-based
+   streams. Unlike the MT4Account/MT4Service streams (async generators),
+   MT4Sugar streams take a callback and return a subscription id you later
+   pass to unwatch().
 
- Covers the position/query side and the callback-based streams of MT4Sugar:
-   - Queries:  exposure_summary, positions_value, orders_for_symbol,
-               find_orders, diag_snapshot
-   - Streams:  watch_ticks / watch_profit / watch_tickets /
-               watch_opened_orders / watch_trades  (+ unwatch)
+ 🎯 WHO SHOULD USE THIS:
+   • Dashboards / monitors that poll exposure and open positions
+   • Bots that react to ticks, P&L or trade events via callbacks
+   • Anyone needing a quick diagnostics snapshot of the account
 
- Unlike the MT4Account/MT4Service streams (async generators), MT4Sugar streams
- take a callback and return a subscription id you later pass to unwatch().
+ 📚 WHAT THIS DEMO COVERS (2 regions):
 
- HOW TO RUN:
+   REGION 1: QUERIES (5 methods)
+      • exposure_summary()  - net exposure, grouped by symbol
+      • positions_value()   - total value of open positions
+      • orders_for_symbol() - orders on one symbol
+      • find_orders()       - filter orders by state
+      • diag_snapshot()     - one-shot diagnostics snapshot
+
+   REGION 2: WATCH STREAMS (5 methods, callback-based)
+      • watch_ticks()         - callback per tick
+      • watch_profit()        - callback with periodic P&L
+      • watch_tickets()       - callback with ticket snapshots
+      • watch_opened_orders() - callback on opened-orders changes
+      • watch_trades()        - callback on trade events
+        (each returns a sub id — stop it with unwatch())
+
+ 🔄 API LEVELS:
+   HIGH-LEVEL  (MT4Sugar)   - THIS FILE: callbacks + sub ids, smart defaults
+   MID-LEVEL   (MT4Service) - async-generator streams, more control
+   LOW-LEVEL   (MT4Account) - raw gRPC streaming
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py sugar08          (or select [8] from the menu)
-==============================================================================
+
+ ⚠️  WARNING: opens ONE small 0.01 test order on your account so the
+   queries/streams have data (and fires one trade for watch_trades).
+   Everything is closed again; run on a DEMO account first.
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -38,12 +64,18 @@ SYMBOL = "EURUSD"
 LOT = 0.01
 
 
-# =============================================================================
-# REGION 1 - QUERIES
-# =============================================================================
+# region QUERIES
+# ═══════════════════════════════════════════════════════════════════════════════
+# 1. QUERIES
+# ═══════════════════════════════════════════════════════════════════════════════
 async def region_queries(sugar: MT4Sugar):
     print_step(1, "Queries (positions, exposure, diagnostics)")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.1  sugar.exposure_summary(by_symbol=)
+    #      Net exposure across open positions, optionally per symbol.
+    #      Returns: a dict/summary of exposure.
+    # ───────────────────────────────────────────────────────────────
     print_method("1.1", "sugar.exposure_summary()", "net exposure, grouped by symbol")
     try:
         exp = await sugar.exposure_summary(by_symbol=True)
@@ -51,12 +83,22 @@ async def region_queries(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "exposure_summary")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.2  sugar.positions_value()
+    #      Combined market value of all open positions.
+    #      Returns: value in account currency (float).
+    # ───────────────────────────────────────────────────────────────
     print_method("1.2", "sugar.positions_value()", "total value of open positions")
     try:
         print(f"   positions_value(all) = {await sugar.positions_value()}")
     except Exception as e:
         print_if_error(e, "positions_value")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.3  sugar.orders_for_symbol(symbol)
+    #      All open orders/positions for a single symbol.
+    #      Returns: a list of orders.
+    # ───────────────────────────────────────────────────────────────
     print_method("1.3", "sugar.orders_for_symbol()", f"orders on {SYMBOL}")
     try:
         orders = await sugar.orders_for_symbol(SYMBOL)
@@ -64,6 +106,11 @@ async def region_queries(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "orders_for_symbol")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.4  sugar.find_orders(state=, ...)
+    #      Filter orders by state (e.g. only open market orders).
+    #      Returns: a list of matching orders.
+    # ───────────────────────────────────────────────────────────────
     print_method("1.4", "sugar.find_orders()", "filter orders (open market orders)")
     try:
         found = await sugar.find_orders(state="open")
@@ -71,6 +118,11 @@ async def region_queries(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "find_orders")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.5  sugar.diag_snapshot()
+    #      One-shot diagnostics snapshot of the account/session.
+    #      Returns: a dict of diagnostic fields.
+    # ───────────────────────────────────────────────────────────────
     print_method("1.5", "sugar.diag_snapshot()", "one-shot diagnostics snapshot")
     try:
         snap = await sugar.diag_snapshot()
@@ -80,9 +132,14 @@ async def region_queries(sugar: MT4Sugar):
         print_if_error(e, "diag_snapshot")
 
 
-# =============================================================================
-# REGION 2 - WATCH STREAMS (callback-based)
-# =============================================================================
+# endregion
+
+
+# region WATCH STREAMS
+# ═══════════════════════════════════════════════════════════════════════════════
+# 2. WATCH STREAMS (callback-based)
+# ═══════════════════════════════════════════════════════════════════════════════
+# Helper: start a callback watcher, collect callbacks for a while, then unwatch.
 async def _watch(sugar, start, label, seconds=8.0):
     """Start a callback watcher, collect for `seconds`, then unwatch."""
     hits = {"n": 0}
@@ -107,18 +164,44 @@ async def _watch(sugar, start, label, seconds=8.0):
 async def region_streams(sugar: MT4Sugar):
     print_step(2, "Watch streams (callbacks + unwatch)")
 
+    # ───────────────────────────────────────────────────────────────
+    # 2.1  sugar.watch_ticks(symbol, cb, throttle_ms=)
+    #      Fire a callback on every tick (throttled).
+    #      Returns: a subscription id (pass to unwatch()).
+    # ───────────────────────────────────────────────────────────────
     print_method("2.1", "sugar.watch_ticks()", "callback per tick")
     await _watch(sugar, lambda cb: sugar.watch_ticks(SYMBOL, cb, throttle_ms=200), "watch_ticks", 8.0)
 
+    # ───────────────────────────────────────────────────────────────
+    # 2.2  sugar.watch_profit(cb, timer_period_ms=)
+    #      Fire a callback on a timer with the current P&L.
+    #      Returns: a subscription id (pass to unwatch()).
+    # ───────────────────────────────────────────────────────────────
     print_method("2.2", "sugar.watch_profit()", "callback with periodic P&L")
     await _watch(sugar, lambda cb: sugar.watch_profit(cb, timer_period_ms=1000), "watch_profit", 6.0)
 
+    # ───────────────────────────────────────────────────────────────
+    # 2.3  sugar.watch_tickets(cb, pull_interval_ms=)
+    #      Fire a callback with periodic open-ticket snapshots.
+    #      Returns: a subscription id (pass to unwatch()).
+    # ───────────────────────────────────────────────────────────────
     print_method("2.3", "sugar.watch_tickets()", "callback with ticket snapshots")
     await _watch(sugar, lambda cb: sugar.watch_tickets(cb, pull_interval_ms=1000), "watch_tickets", 6.0)
 
+    # ───────────────────────────────────────────────────────────────
+    # 2.4  sugar.watch_opened_orders(cb)
+    #      Fire a callback whenever the opened-orders set changes.
+    #      Returns: a subscription id (pass to unwatch()).
+    # ───────────────────────────────────────────────────────────────
     print_method("2.4", "sugar.watch_opened_orders()", "callback on opened-orders changes")
     await _watch(sugar, lambda cb: sugar.watch_opened_orders(cb), "watch_opened_orders", 5.0)
 
+    # ───────────────────────────────────────────────────────────────
+    # 2.5  sugar.watch_trades(cb)
+    #      Fire a callback on trade events (this demo triggers one by
+    #      opening and closing a small order in the background).
+    #      Returns: a subscription id (pass to unwatch()).
+    # ───────────────────────────────────────────────────────────────
     print_method("2.5", "sugar.watch_trades()", "callback on trade events (we trigger one)")
 
     async def trigger():
@@ -133,6 +216,7 @@ async def region_streams(sugar: MT4Sugar):
     tr = asyncio.create_task(trigger())
     await _watch(sugar, lambda cb: sugar.watch_trades(cb), "watch_trades", 8.0)
     tr.cancel()
+# endregion
 
 
 async def main():

@@ -1,23 +1,49 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 16_presets.py - STRATEGY & RISK PRESETS
 
- The orchestrators are driven by two small dataclasses from Strategy/presets/:
+ PURPOSE:
+   Show the two small dataclasses that drive every orchestrator and the
+   ready-made presets / factories around them. This file only BUILDS and
+   PRINTS presets — no connection, no trading.
 
-   StrategyPreset(symbol, use_market, entry_price, lots, magic, deviation_pips, comment)
-   RiskPreset(risk_percent, sl_pips, tp_pips, trailing_pips, be_trigger_pips, be_plus_pips)
+ 🎯 WHO SHOULD USE THIS:
+   • Anyone wiring up orchestrators 11-15 and choosing inputs
+   • Users who want ready-made presets or templates to copy
+   • Learning how StrategyPreset / RiskPreset are shaped
 
- You pass them straight into any orchestrator:
+ 📚 WHAT THIS DEMO COVERS (3 steps):
 
-   result = await run_market_one_shot(service, strategy, risk)
+   STEP 1: STRATEGY PRESETS - what / where to enter
+      • ready-made         - MarketEURUSD, LimitEURUSD(), BreakoutBuy()
+      • per-symbol limits  - strategy_symbols.LimitGBPUSD(), LimitXAUUSD(), REGISTRY
+      • custom             - build your own StrategyPreset(...)
 
- This file just builds and prints the ready-made presets and factories — no
- connection and no trading. Use them as-is or as templates for your own.
+   STEP 2: RISK PRESETS - how much to risk / protect
+      • ready-made         - Conservative
+      • profiles           - risk_profiles.ScalperEURUSD(), SwingEURUSD()
+      • custom             - build your own RiskPreset(...)
 
- HOW TO RUN:
+   STEP 3: USE THEM
+      • pass StrategyPreset + RiskPreset straight into an orchestrator, e.g.
+        run_market_one_shot(service, StrategyPreset(...), RiskPreset(...))
+
+   The dataclasses (Strategy/presets/):
+      StrategyPreset(symbol, use_market, entry_price, lots, magic,
+                     deviation_pips, comment)
+      RiskPreset(risk_percent, sl_pips, tp_pips, trailing_pips,
+                 be_trigger_pips, be_plus_pips)
+
+ 🔄 API LEVELS:
+   These presets are the INPUTS orchestrators consume; the orchestrators sit
+   ON TOP of MT4Service > MT4Account. No API calls are made in this file.
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py presets          (or select [16] from the menu)
-==============================================================================
+
+ ℹ️  SAFE: read-only — builds and prints presets, no connection, no orders.
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -43,38 +69,72 @@ async def main():
     print("STRATEGY & RISK PRESETS")
     print("=" * 78)
 
-    # --- Strategy presets ---------------------------------------------------
+    # region STRATEGY PRESETS
+    # ═══════════════════════════════════════════════════════════════════
+    # 1. STRATEGY PRESETS - what / where to enter
+    # ═══════════════════════════════════════════════════════════════════
     print_step(1, "Strategy presets (what / where to enter)")
+    # ───────────────────────────────────────────────────────
+    # 1.1  Ready-made presets (Strategy/presets/strategy.py)
+    # ───────────────────────────────────────────────────────
     print_method("1.1", "ready-made", "Strategy/presets/strategy.py")
     show("MarketEURUSD", MarketEURUSD)
     show("LimitEURUSD(1.0900)", LimitEURUSD(1.0900))
     show("BreakoutBuy('EURUSD',10)", BreakoutBuy("EURUSD", 10.0))
 
+    # ───────────────────────────────────────────────────────
+    # 1.2  Per-symbol limit factories (strategy_symbols.py)
+    # ───────────────────────────────────────────────────────
     print_method("1.2", "per-symbol limit factories", "Strategy/presets/strategy_symbols.py")
     show("LimitGBPUSD(1.2600)", strategy_symbols.LimitGBPUSD(1.2600))
     show("LimitXAUUSD(3900.0)", strategy_symbols.LimitXAUUSD(3900.0))
     print_info(f"registry symbols: {list(strategy_symbols.REGISTRY.keys())}")
 
+    # ───────────────────────────────────────────────────────
+    # 1.3  Custom — build your own StrategyPreset(...)
+    # ───────────────────────────────────────────────────────
     print_method("1.3", "custom", "build your own StrategyPreset")
     show("custom", StrategyPreset(symbol="USDJPY", use_market=True, lots=0.02,
                                   magic=1234, deviation_pips=4.0, comment="my strategy"))
 
-    # --- Risk presets -------------------------------------------------------
+    # endregion
+
+    # region RISK PRESETS
+    # ═══════════════════════════════════════════════════════════════════
+    # 2. RISK PRESETS - how much to risk / protect
+    # ═══════════════════════════════════════════════════════════════════
     print_step(2, "Risk presets (how much to risk / protect)")
+    # ───────────────────────────────────────────────────────
+    # 2.1  Ready-made preset (Strategy/presets/risk.py)
+    # ───────────────────────────────────────────────────────
     print_method("2.1", "ready-made", "Strategy/presets/risk.py")
     show("Conservative", Conservative)
 
+    # ───────────────────────────────────────────────────────
+    # 2.2  Profiles (Strategy/presets/risk_profiles.py)
+    # ───────────────────────────────────────────────────────
     print_method("2.2", "profiles", "Strategy/presets/risk_profiles.py")
     show("ScalperEURUSD()", risk_profiles.ScalperEURUSD())
     show("SwingEURUSD()", risk_profiles.SwingEURUSD())
 
+    # ───────────────────────────────────────────────────────
+    # 2.3  Custom — build your own RiskPreset(...)
+    # ───────────────────────────────────────────────────────
     print_method("2.3", "custom", "build your own RiskPreset")
     show("custom", RiskPreset(risk_percent=1.0, sl_pips=30, tp_pips=60,
                               trailing_pips=20, be_trigger_pips=20, be_plus_pips=1))
 
+    # endregion
+
+    # region USE THEM
+    # ═══════════════════════════════════════════════════════════════════
+    # 3. USE THEM
+    # ═══════════════════════════════════════════════════════════════════
+    #    Pass a StrategyPreset + a RiskPreset straight into any orchestrator.
     print_step(3, "Use them")
     print_info("await run_market_one_shot(service, StrategyPreset(...), RiskPreset(...))")
     print_info("See orchestrators 11-15 for live examples.")
+    # endregion
 
 
 if __name__ == "__main__":

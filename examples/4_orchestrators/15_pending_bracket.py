@@ -1,21 +1,49 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 15_pending_bracket.py - ORCHESTRATOR: Pending order + bracket
 
-  ⚠️  Places a real 0.01 pending order on your DEMO account; cleaned up at the end.
+ PURPOSE:
+   "Set your price and let the market come to you" — place a single limit
+   order at a chosen price with automatic bracket (SL/TP) protection attached
+   for when it fills.
 
- Strategy: "set your price and wait for the market to come to you" — place a
- limit order at a chosen price with automatic bracket (SL/TP) protection.
+ 🎯 WHO SHOULD USE THIS:
+   • Traders who work a specific entry level instead of chasing price
+   • Bots that arm a protected pending order and wait
+   • Learning pending-entry + bracket management
 
-     result = await run_pending_bracket(service, strategy, risk, timeout_s=...)
+ 📚 WHAT THIS DEMO COVERS:
 
- The limit sits below the market, so in a short demo it won't fill — we use a
- short timeout and then cancel it.
+   ORCHESTRATOR:
+      • run_pending_bracket(service, strategy, risk, timeout_s)
+        -> places a limit order (from strategy.entry_price) with SL/TP;
+           waits up to timeout_s; returns a result dict
 
- HOW TO RUN:
+   INPUTS (Strategy/presets/):
+      • StrategyPreset(symbol, use_market=False, entry_price, lots, magic,
+                       deviation_pips, comment)          - the pending entry
+      • RiskPreset(risk_percent, sl_pips, tp_pips)        - bracket protection
+
+   STEPS:
+      1. RUN     - place the BUY LIMIT ~30 pips below mid, 12s window
+                   (it sits off-market and won't fill during the demo)
+      2. CLEANUP - cancel the pending and close any positions for the symbol
+
+ 🔄 API LEVELS:
+   ORCHESTRATOR - THIS FILE: multi-step strategy built ON TOP of the stack
+   HIGH-LEVEL  (MT4Sugar)   - one-liner trading used under the hood
+   MID-LEVEL   (MT4Service) - handed to the orchestrator, which drives it
+   LOW-LEVEL   (MT4Account) - raw gRPC client beneath the service
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py pending          (or select [15] from the menu)
-==============================================================================
+
+ ⚠️  WARNING: this demo PLACES A REAL 0.01 PENDING ORDER on your account!
+   • Uses the minimum lot size (0.01)
+   • Cancels the pending / closes positions at the end
+   • Run on a DEMO account first
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -68,6 +96,15 @@ async def main():
     risk = RiskPreset(risk_percent=1.0, sl_pips=25, tp_pips=50)
 
     try:
+        # region RUN
+        # ═══════════════════════════════════════════════════════════════
+        # 1. RUN THE ORCHESTRATOR
+        # ═══════════════════════════════════════════════════════════════
+        #    run_pending_bracket(service, strategy, risk, timeout_s=12)
+        #    Places a REAL BUY LIMIT ~30 pips below mid with a bracket,
+        #    then waits 12s. It sits off-market and won't fill in the demo.
+        #    Returns: result dict.
+        #    ⚠️  sends a REAL pending order.
         print_step(1, "Run the orchestrator (BUY LIMIT + bracket)")
         print_info(f"limit @ {entry} (mid {mid:.5f}), 12s window")
         try:
@@ -75,12 +112,20 @@ async def main():
             print_success(f"orchestrator returned keys: {list(result.keys())}")
         except Exception as e:
             print_if_error(e, "run_pending_bracket")
+        # endregion
     finally:
+        # region CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        # 2. CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        #    Cancel the pending and close any positions for the symbol.
+        #    Best-effort (_cleanup swallows errors), then disconnect.
         print_step(2, "Cleanup")
         await _cleanup(service)
         print_success("pending cancelled / positions cleared")
         await service.disconnect()
         print_success("Disconnected")
+        # endregion
 
 
 if __name__ == "__main__":

@@ -1,24 +1,42 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 03_streaming_methods.py - LOW-LEVEL STREAMING (MT4Account)
 
-  ⚠️  Opens ONE small test order (0.01) so the P&L / tickets streams have
-      something to show, then closes it at the end. Demo accounts only.
+ PURPOSE:
+   Demonstrates the real-time STREAMS of the low-level gRPC client MT4Account.
+   Every stream is an async generator consumed with `async for`; pass a
+   cancellation_event (and/or wrap in asyncio.wait_for) to stop it cleanly.
 
- Shows the real-time streams of the low-level gRPC client MT4Account.
- Every stream is an async generator consumed with `async for`; pass a
- cancellation_event (and/or wrap in asyncio.wait_for) to stop it cleanly.
+ 🎯 WHO SHOULD USE THIS:
+   • Anyone building live dashboards / tick or P&L monitors
+   • Reacting to trade and connection events in real time
+   • Learning how MT4Account streaming generators are consumed
 
-   - on_symbol_tick()           live Bid/Ask ticks for symbols
-   - on_opened_orders_profit()  periodic P&L of open orders + account snapshot
-   - on_opened_orders_tickets() periodic list of open position / pending tickets
-   - on_trade()                 fires on trade events (open/modify/close)
-   - on_connect_state()         terminal connection-state changes
+ 📚 WHAT THIS DEMO COVERS (3 regions):
 
- HOW TO RUN:
+   REGION 1: MARKET STREAM (1 method)
+      • on_symbol_tick()           - live Bid/Ask ticks for symbols
+
+   REGION 2: ACCOUNT & ORDER STREAMS (2 methods)
+      • on_opened_orders_profit()  - periodic P&L of open orders + snapshot
+      • on_opened_orders_tickets() - periodic list of open / pending tickets
+
+   REGION 3: TRADE & CONNECTION EVENTS (2 methods)
+      • on_trade()                 - fires on trade events (open/modify/close)
+      • on_connect_state()         - terminal connection-state changes
+
+ 🔄 API LEVELS:
+   LOW-LEVEL   (MT4Account) - THIS FILE: raw async-generator streams
+   MID-LEVEL   (MT4Service) - typed streaming wrappers
+   HIGH-LEVEL  (MT4Sugar)   - callback-based watch helpers
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py streaming        (or select [3] from the menu)
-==============================================================================
+
+ ⚠️  WARNING: opens ONE small test order (0.01) so the P&L / tickets / trade
+     streams have something to show, then closes it at the end. Demo accounts only.
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -71,7 +89,16 @@ async def sample(stream, label, handle, valid=None, max_items=5, timeout=12.0):
 
 
 async def run(account):
-    # ---- 1. Symbol ticks ----------------------------------------------------
+    # region MARKET STREAM
+    # ═══════════════════════════════════════════════════════════════════════
+    # MARKET STREAM
+    # ═══════════════════════════════════════════════════════════════════════
+
+    # ───────────────────────────────────────────────────────────────
+    # 1  account.on_symbol_tick(symbols=, cancellation_event=)
+    #      Live Bid/Ask ticks for a set of symbols.
+    #      Yields: tick data (td.symbol_tick.bid / .ask).
+    # ───────────────────────────────────────────────────────────────
     print_method("1", "on_symbol_tick()", "live Bid/Ask ticks")
 
     await sample(
@@ -82,8 +109,18 @@ async def run(account):
         valid=lambda td: td.symbol_tick.symbol != "",
         max_items=6, timeout=15.0,
     )
+    # endregion
 
-    # ---- 2. Open orders P&L -------------------------------------------------
+    # region ACCOUNT & ORDER STREAMS
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACCOUNT & ORDER STREAMS
+    # ═══════════════════════════════════════════════════════════════════════
+
+    # ───────────────────────────────────────────────────────────────
+    # 2  account.on_opened_orders_profit(timer_period_milliseconds=, cancellation_event=)
+    #      Periodic P&L of open orders plus an account snapshot.
+    #      Yields: account_info + opened_orders_with_profit_updated.
+    # ───────────────────────────────────────────────────────────────
     print_method("2", "on_opened_orders_profit()", "periodic P&L + account snapshot")
 
     def on_profit(upd):
@@ -101,7 +138,11 @@ async def run(account):
         max_items=2, timeout=12.0,
     )
 
-    # ---- 3. Open order tickets ---------------------------------------------
+    # ───────────────────────────────────────────────────────────────
+    # 3  account.on_opened_orders_tickets(pull_interval_milliseconds=, cancellation_event=)
+    #      Periodic snapshot of open position / pending ticket numbers.
+    #      Yields: position_tickets + pending_order_tickets.
+    # ───────────────────────────────────────────────────────────────
     print_method("3", "on_opened_orders_tickets()", "periodic ticket snapshot")
 
     await sample(
@@ -112,8 +153,20 @@ async def run(account):
         valid=lambda t: len(t.position_tickets) > 0 or len(t.pending_order_tickets) > 0,
         max_items=1, timeout=10.0,
     )
+    # endregion
 
-    # ---- 4. Trade events ----------------------------------------------------
+    # region TRADE & CONNECTION EVENTS
+    # ═══════════════════════════════════════════════════════════════════════
+    # TRADE & CONNECTION EVENTS
+    # ═══════════════════════════════════════════════════════════════════════
+
+    # ───────────────────────────────────────────────────────────────
+    # 4  account.on_trade(cancellation_event=)
+    #      Fires whenever an order opens / changes / closes. This demo
+    #      opens + closes a tiny 0.01 order in parallel to trigger one.
+    #      Yields: event_data (new / updated / removed orders).
+    #      ⚠️  fires a REAL 0.01 trade (closed right after).
+    # ───────────────────────────────────────────────────────────────
     print_method("4", "on_trade()", "fires when an order opens / changes / closes")
     print_info("Firing a quick 0.01 trade in parallel so an event arrives...")
 
@@ -143,12 +196,18 @@ async def run(account):
     )
     trigger.cancel()
 
+    # ───────────────────────────────────────────────────────────────
+    # 5  account.on_connect_state(cancellation_event=)
+    #      Terminal connection-state changes (connected / dropped / ...).
+    #      Yields: connection-state events.
+    # ───────────────────────────────────────────────────────────────
     print_method("5", "on_connect_state()", "terminal connection-state changes")
     await sample(
         lambda c: account.on_connect_state(cancellation_event=c),
         "on_connect_state", lambda ev: print(f"     [CONNSTATE] {ev}"),
         max_items=1, timeout=8.0,
     )
+    # endregion
 
 
 async def main():

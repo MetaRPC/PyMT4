@@ -1,6 +1,6 @@
-"""==============================================================================
-FILE: examples/0_common/16_protobuf_inspector.py
-      INTERACTIVE PROTOBUF TYPES INSPECTOR
+"""
+═══════════════════════════════════════════════════════════════════════════════
+ FILE: 16_protobuf_inspector.py - INTERACTIVE PROTOBUF TYPES INSPECTOR
 
 PURPOSE:
   Interactive developer utility to explore MT4 protobuf types, fields,
@@ -133,11 +133,11 @@ FEATURES:
   - Protobuf field numbers         - Shows field #N for each field
   - Smart error messages           - Suggests alternatives when type not found
 
-USAGE:
+🚀 HOW TO RUN:
   cd examples
-  python main.py inspect
-
-=============================================================================="""
+  python main.py inspect           (or select [18] from the menu)
+═══════════════════════════════════════════════════════════════════════════════
+"""
 
 import sys
 import os
@@ -164,6 +164,10 @@ from google.protobuf.descriptor import FieldDescriptor, EnumDescriptor
 class ProtobufInspector:
     """Interactive protobuf types inspector for MT5 API"""
 
+    # region SETUP & DISCOVERY
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 1. SETUP & TYPE DISCOVERY
+    # ═══════════════════════════════════════════════════════════════════════════
     def __init__(self):
         self.types: Dict[str, Type[Message]] = {}
         self.enums: Dict[str, EnumDescriptor] = {}
@@ -230,6 +234,12 @@ class ProtobufInspector:
             except:
                 pass
 
+    # endregion
+
+    # region OUTPUT & HELP
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 2. OUTPUT & HELP
+    # ═══════════════════════════════════════════════════════════════════════════
     def print_header(self):
         """Print welcome header"""
         print("=" * 59)
@@ -274,6 +284,12 @@ class ProtobufInspector:
         print("  > stats                - Show all statistics")
         print()
 
+    # endregion
+
+    # region LISTING, SEARCH & FIND
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 3. LISTING, SEARCH & FIND
+    # ═══════════════════════════════════════════════════════════════════════════
     def list_all_types(self, filter_arg: str = ""):
         """List all available protobuf types with optional filter"""
         print()
@@ -479,6 +495,12 @@ class ProtobufInspector:
                 for field_name in sorted(fields):
                     print(f"    - {field_name}")
 
+    # endregion
+
+    # region STATS & EXPORT
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 4. STATS & JSON EXPORT
+    # ═══════════════════════════════════════════════════════════════════════════
     def show_stats(self):
         """Show detailed statistics"""
         print()
@@ -591,6 +613,12 @@ class ProtobufInspector:
         print("=" * 59)
         print(json.dumps(export_data, indent=2))
 
+    # endregion
+
+    # region INSPECTION
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 5. ENUM & TYPE INSPECTION
+    # ═══════════════════════════════════════════════════════════════════════════
     def inspect_enum(self, enum_name: str):
         """Show all values of an enum"""
         # Try exact match first
@@ -725,6 +753,12 @@ class ProtobufInspector:
         else:
             return "unknown"
 
+    # endregion
+
+    # region INTERACTIVE LOOP
+    # ═══════════════════════════════════════════════════════════════════════════
+    # 6. INTERACTIVE REPL LOOP
+    # ═══════════════════════════════════════════════════════════════════════════
     def run(self):
         """Main REPL loop"""
         self.print_header()
@@ -801,6 +835,7 @@ class ProtobufInspector:
                 break
             except Exception as e:
                 print(f"\n[X] Error: {e}")
+    # endregion
 
 
 def run_protobuf_inspector():

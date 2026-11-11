@@ -1,23 +1,49 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 11_market_one_shot.py - ORCHESTRATOR: Market One-Shot
 
-  ⚠️  Opens a real 0.01 position on your DEMO account, then closes it.
+ PURPOSE:
+   Fire-and-manage a single market entry: open one position, attach its risk
+   envelope (SL/TP, optional trailing stop and auto break-even), let it manage
+   itself for a few seconds, then tear everything down.
 
- Strategy: fast market entry with automatic management (SL/TP, optional
- trailing stop and auto break-even). The orchestrator is a plain async
- function that takes an MT4Service + a StrategyPreset + a RiskPreset:
+ 🎯 WHO SHOULD USE THIS:
+   • Anyone wanting a one-call "enter + auto-manage" building block
+   • Bots that open a position and hand management to the orchestrator
+   • Learning how StrategyPreset + RiskPreset drive an orchestrator
 
-     result = await run_market_one_shot(service, strategy, risk)
+ 📚 WHAT THIS DEMO COVERS:
 
- Presets (Strategy/presets/):
-   StrategyPreset(symbol, use_market, entry_price, lots, magic, deviation_pips, comment)
-   RiskPreset(risk_percent, sl_pips, tp_pips, trailing_pips, be_trigger_pips, be_plus_pips)
+   ORCHESTRATOR:
+      • run_market_one_shot(service, strategy, risk)
+        -> opens a market position and wires up its management tasks;
+           returns {ticket, subscriptions, filled, ...}
 
- HOW TO RUN:
+   INPUTS (Strategy/presets/):
+      • StrategyPreset(symbol, use_market, entry_price, lots, magic,
+                       deviation_pips, comment)          - what / where to enter
+      • RiskPreset(risk_percent, sl_pips, tp_pips, trailing_pips,
+                   be_trigger_pips, be_plus_pips)         - how much to risk
+
+   STEPS:
+      1. RUN     - run the orchestrator, then let it manage for ~3s
+      2. CLEANUP - stop trailing / auto-BE subscriptions and close the position
+
+ 🔄 API LEVELS:
+   ORCHESTRATOR - THIS FILE: multi-step strategy built ON TOP of the stack
+   HIGH-LEVEL  (MT4Sugar)   - one-liner trading used under the hood
+   MID-LEVEL   (MT4Service) - handed to the orchestrator, which drives it
+   LOW-LEVEL   (MT4Account) - raw gRPC client beneath the service
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py market           (or select [11] from the menu)
-==============================================================================
+
+ ⚠️  WARNING: this demo OPENS A REAL 0.01 POSITION on your account!
+   • Uses the minimum lot size (0.01)
+   • Closes the position and stops its subscriptions at the end
+   • Run on a DEMO account first
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -64,6 +90,15 @@ async def main():
 
     ticket = None
     try:
+        # region RUN
+        # ═══════════════════════════════════════════════════════════════
+        # 1. RUN THE ORCHESTRATOR
+        # ═══════════════════════════════════════════════════════════════
+        #    run_market_one_shot(service, strategy, risk)
+        #    Opens a REAL market position and attaches SL/TP (+ optional
+        #    trailing / auto break-even), then lets it manage for ~3s.
+        #    Returns: dict with ticket, subscriptions, filled.
+        #    ⚠️  sends a REAL order.
         print_step(1, "Run the orchestrator")
         print_info(f"buy_market {strategy.symbol} {strategy.lots} lot, "
                    f"SL {risk.sl_pips} / TP {risk.tp_pips} pips, trailing {risk.trailing_pips}")
@@ -75,9 +110,16 @@ async def main():
 
         # let it manage for a few seconds, then tear down
         await asyncio.sleep(3)
+        # endregion
     except Exception as e:
         print_if_error(e, "run_market_one_shot")
     finally:
+        # region CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        # 2. CLEANUP
+        # ═══════════════════════════════════════════════════════════════
+        #    Stop trailing / auto-BE subscriptions and close the position.
+        #    Best-effort: ignores errors so teardown always completes.
         print_step(2, "Cleanup")
         sugar = service.sugar
         # stop any trailing / auto-be subscriptions this run created
@@ -97,6 +139,7 @@ async def main():
                 print_if_error(e, "close")
         await service.disconnect()
         print_success("Disconnected")
+        # endregion
 
 
 if __name__ == "__main__":

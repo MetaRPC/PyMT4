@@ -1,22 +1,64 @@
 """
-==============================================================================
+═══════════════════════════════════════════════════════════════════════════════
  FILE: 07_sugar_trading.py - HIGH-LEVEL (MT4Sugar) - PART 2/3: TRADING
 
-  ⚠️  SENDS REAL 0.01 ORDERS ON YOUR DEMO ACCOUNT. Everything is cleaned up.
+ PURPOSE:
+   Demonstrates the TRADING side of MT4Sugar: the ultra-simple one-liner
+   methods for opening, modifying and closing orders on an MT4 account.
 
- Covers the trading side of MT4Sugar:
-   - Market orders (buy/sell_market, place_order)
-   - Pending orders (buy/sell_limit, buy/sell_stop) + cancel_pendings
-   - Modify SL/TP (by pips and by price)
-   - Close variants (close, close_partial, close_by, close_by_tickets,
-                     close_by_breakeven, close_all)
-   - Trailing & auto (set/unset_trailing_stop, auto_breakeven)
-   - Waits (wait_filled, wait_closed)
+ 🎯 WHO SHOULD USE THIS:
+   • Quick trading scripts and bots
+   • Simple order execution without boilerplate
+   • Learning the basic trading flow (open → modify → close)
 
- HOW TO RUN:
+ 📚 WHAT THIS DEMO COVERS (6 regions):
+
+   REGION 1: MARKET ORDERS (3 methods)
+      • buy_market()   - instant BUY at market (optional SL/TP in pips)
+      • sell_market()  - instant SELL at market
+      • place_order()  - generic builder (side / type / symbol / lots)
+
+   REGION 2: PENDING ORDERS (5 methods)
+      • buy_limit()    - BUY when price drops to a level
+      • sell_limit()   - SELL when price rises to a level
+      • buy_stop()     - BUY when price rises to a level
+      • sell_stop()    - SELL when price drops to a level
+      • cancel_pendings() - delete pending orders
+
+   REGION 3: MODIFY SL/TP (2 methods)
+      • modify_sl_tp_by_pips()  - set SL/TP measured in pips
+      • modify_sl_tp_by_price() - set SL/TP at explicit prices
+
+   REGION 4: CLOSE VARIANTS (5 methods)
+      • close_partial()      - close part of a position
+      • close_by()           - close one position by an opposite one
+      • close_by_tickets()   - same, addressed by tickets
+      • close_by_breakeven() - close once the position is at break-even
+      • close_all()          - close everything on a symbol
+
+   REGION 5: TRAILING & AUTO (3 methods)
+      • set_trailing_stop()   - start a trailing-stop background task
+      • unset_trailing_stop() - stop it
+      • auto_breakeven()      - arm auto break-even
+
+   REGION 6: WAITS (2 methods)
+      • wait_filled()  - block until a market/pending order is filled
+      • wait_closed()  - block until a position is closed
+
+ 🔄 API LEVELS:
+   HIGH-LEVEL  (MT4Sugar)   - THIS FILE: one-liner trading, smart defaults
+   MID-LEVEL   (MT4Service) - more parameters, custom settings
+   LOW-LEVEL   (MT4Account) - full control, manual order construction
+
+ 🚀 HOW TO RUN:
    cd examples
    python main.py sugar07          (or select [7] from the menu)
-==============================================================================
+
+ ⚠️  WARNING: this demo SENDS REAL 0.01 ORDERS on your account!
+   • Uses the minimum lot size (0.01)
+   • Closes / cancels everything it opens
+   • Run on a DEMO account first
+═══════════════════════════════════════════════════════════════════════════════
 """
 
 import asyncio
@@ -45,12 +87,19 @@ async def _safe_close(sugar, ticket):
         pass
 
 
-# =============================================================================
-# REGION 1 - MARKET ORDERS
-# =============================================================================
+# region MARKET ORDERS
+# ═══════════════════════════════════════════════════════════════════════════════
+# 1. MARKET ORDERS
+# ═══════════════════════════════════════════════════════════════════════════════
 async def region_market(sugar: MT4Sugar):
     print_step(1, "Market orders")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.1  sugar.buy_market(symbol, lots, sl_pips=, tp_pips=)
+    #      Open a BUY at market; SL/TP are optional, given in pips.
+    #      Returns: ticket (int) of the opened position.
+    #      ⚠️  sends a REAL order (closed right after).
+    # ───────────────────────────────────────────────────────────────
     print_method("1.1", "sugar.buy_market()", f"BUY {LOT} {SYMBOL} with SL/TP in pips")
     try:
         t = await sugar.buy_market(SYMBOL, lots=LOT, sl_pips=50, tp_pips=80)
@@ -60,6 +109,12 @@ async def region_market(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "buy_market")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.2  sugar.sell_market(symbol=, lots=)
+    #      Open a SELL at market (keyword-only call style).
+    #      Returns: ticket (int) of the opened position.
+    #      ⚠️  sends a REAL order (closed right after).
+    # ───────────────────────────────────────────────────────────────
     print_method("1.2", "sugar.sell_market()", f"SELL {LOT} {SYMBOL} (keyword-only)")
     try:
         t = await sugar.sell_market(symbol=SYMBOL, lots=LOT)
@@ -67,6 +122,13 @@ async def region_market(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "sell_market")
 
+    # ───────────────────────────────────────────────────────────────
+    # 1.3  sugar.place_order(side=, order_type=, symbol=, lots=)
+    #      Generic order builder — one entry point for every order
+    #      kind (here: a market BUY).
+    #      Returns: ticket (int) of the resulting order/position.
+    #      ⚠️  sends a REAL order (closed right after).
+    # ───────────────────────────────────────────────────────────────
     print_method("1.3", "sugar.place_order()", "generic order builder (market buy)")
     try:
         t = await sugar.place_order(side="buy", order_type="market", symbol=SYMBOL, lots=LOT)
@@ -75,13 +137,24 @@ async def region_market(sugar: MT4Sugar):
         print_if_error(e, "place_order")
 
 
-# =============================================================================
-# REGION 2 - PENDING ORDERS
-# =============================================================================
+# endregion
+
+
+# region PENDING ORDERS
+# ═══════════════════════════════════════════════════════════════════════════════
+# 2. PENDING ORDERS
+# ═══════════════════════════════════════════════════════════════════════════════
 async def region_pending(sugar: MT4Sugar):
     print_step(2, "Pending orders")
     mid = await sugar.mid_price(SYMBOL)
 
+    # ───────────────────────────────────────────────────────────────
+    # 2.1-2.4  sugar.buy_limit() / sell_limit() / buy_stop() / sell_stop()
+    #      Place the four pending-order kinds 1 pip-block off mid price.
+    #      Signature: fn(symbol=, price=, lots=)
+    #      Returns: ticket (int) of the pending order.
+    #      ⚠️  places REAL pending orders (cancelled in 2.5).
+    # ───────────────────────────────────────────────────────────────
     specs = [
         ("2.1", "buy_limit",  sugar.buy_limit,  round(mid - 0.0100, 5)),
         ("2.2", "sell_limit", sugar.sell_limit, round(mid + 0.0100, 5)),
@@ -98,6 +171,11 @@ async def region_pending(sugar: MT4Sugar):
         except Exception as e:
             print_if_error(e, name)
 
+    # ───────────────────────────────────────────────────────────────
+    # 2.5  sugar.cancel_pendings(symbol=)
+    #      Delete all pending orders for a symbol in one call.
+    #      Returns: None (raises on failure).
+    # ───────────────────────────────────────────────────────────────
     print_method("2.5", "sugar.cancel_pendings()", "delete all pending orders")
     try:
         await sugar.cancel_pendings(symbol=SYMBOL)
@@ -106,18 +184,32 @@ async def region_pending(sugar: MT4Sugar):
         print_if_error(e, "cancel_pendings")
 
 
-# =============================================================================
-# REGION 3 - MODIFY SL/TP
-# =============================================================================
+# endregion
+
+
+# region MODIFY SL/TP
+# ═══════════════════════════════════════════════════════════════════════════════
+# 3. MODIFY SL / TP
+# ═══════════════════════════════════════════════════════════════════════════════
 async def region_modify(sugar: MT4Sugar):
     print_step(3, "Modify SL / TP")
     t = None
     try:
         t = await sugar.buy_market(SYMBOL, lots=LOT)
+        # ───────────────────────────────────────────────────────────
+        # 3.1  sugar.modify_sl_tp_by_pips(ticket, sl_pips=, tp_pips=)
+        #      Move SL/TP on an open position, distances given in pips.
+        #      Returns: None (raises on failure).
+        # ───────────────────────────────────────────────────────────
         print_method("3.1", "sugar.modify_sl_tp_by_pips()", "SL 60 / TP 90 pips")
         await sugar.modify_sl_tp_by_pips(t, sl_pips=60, tp_pips=90)
         print_success("modified by pips")
 
+        # ───────────────────────────────────────────────────────────
+        # 3.2  sugar.modify_sl_tp_by_price(ticket, sl_price=, tp_price=)
+        #      Move SL/TP on an open position to explicit price levels.
+        #      Returns: None (raises on failure).
+        # ───────────────────────────────────────────────────────────
         print_method("3.2", "sugar.modify_sl_tp_by_price()", "SL/TP at explicit prices")
         q = await sugar.last_quote(SYMBOL)
         await sugar.modify_sl_tp_by_price(t, sl_price=round(q["bid"] - 0.0070, 5),
@@ -131,12 +223,21 @@ async def region_modify(sugar: MT4Sugar):
             print_success(f"closed #{t}")
 
 
-# =============================================================================
-# REGION 4 - CLOSE VARIANTS
-# =============================================================================
+# endregion
+
+
+# region CLOSE VARIANTS
+# ═══════════════════════════════════════════════════════════════════════════════
+# 4. CLOSE VARIANTS
+# ═══════════════════════════════════════════════════════════════════════════════
 async def region_close(sugar: MT4Sugar):
     print_step(4, "Close variants")
 
+    # ───────────────────────────────────────────────────────────────
+    # 4.1  sugar.close_partial(ticket, lots)
+    #      Close only part of a position's volume.
+    #      Returns: None (raises on failure).
+    # ───────────────────────────────────────────────────────────────
     print_method("4.1", "sugar.close_partial()", "open 0.02, close 0.01, then the rest")
     try:
         t = await sugar.buy_market(SYMBOL, lots=0.02)
@@ -147,6 +248,11 @@ async def region_close(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "close_partial")
 
+    # ───────────────────────────────────────────────────────────────
+    # 4.2  sugar.close_by(ticket, opposite_ticket)
+    #      Close a position against an opposite one (MT4 "close by").
+    #      Returns: None (raises on failure).
+    # ───────────────────────────────────────────────────────────────
     print_method("4.2", "sugar.close_by()", "open BUY + SELL, close one by the other")
     try:
         b = await sugar.buy_market(SYMBOL, lots=LOT)
@@ -156,6 +262,11 @@ async def region_close(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "close_by")
 
+    # ───────────────────────────────────────────────────────────────
+    # 4.3  sugar.close_by_tickets(ticket, opposite_ticket)
+    #      Same as close_by(), addressed explicitly by ticket numbers.
+    #      Returns: None (raises on failure).
+    # ───────────────────────────────────────────────────────────────
     print_method("4.3", "sugar.close_by_tickets()", "same, via close_by_tickets()")
     try:
         b = await sugar.buy_market(SYMBOL, lots=LOT)
@@ -165,6 +276,12 @@ async def region_close(sugar: MT4Sugar):
     except Exception as e:
         print_if_error(e, "close_by_tickets")
 
+    # ───────────────────────────────────────────────────────────────
+    # 4.4  sugar.close_by_breakeven(ticket, plus_pips=)
+    #      Close a position only once it has reached break-even
+    #      (rejected if it is not there yet — expected in this demo).
+    #      Returns: None (raises on failure).
+    # ───────────────────────────────────────────────────────────────
     print_method("4.4", "sugar.close_by_breakeven()", "close a position once it's at break-even")
     be_t = None
     try:
@@ -179,6 +296,11 @@ async def region_close(sugar: MT4Sugar):
         if be_t:
             await _safe_close(sugar, be_t)
 
+    # ───────────────────────────────────────────────────────────────
+    # 4.5  sugar.close_all(symbol=)
+    #      Close every open position (optionally filtered by symbol).
+    #      Returns: number of positions closed (int).
+    # ───────────────────────────────────────────────────────────────
     print_method("4.5", "sugar.close_all()", "open 2, then close them all by symbol")
     try:
         await sugar.buy_market(SYMBOL, lots=LOT)
@@ -189,24 +311,44 @@ async def region_close(sugar: MT4Sugar):
         print_if_error(e, "close_all")
 
 
-# =============================================================================
-# REGION 5 - TRAILING & AUTO
-# =============================================================================
+# endregion
+
+
+# region TRAILING & AUTO
+# ═══════════════════════════════════════════════════════════════════════════════
+# 5. TRAILING STOP & AUTO BREAK-EVEN
+# ═══════════════════════════════════════════════════════════════════════════════
 async def region_trailing(sugar: MT4Sugar):
     print_step(5, "Trailing stop & auto break-even")
     t = None
     try:
         t = await sugar.buy_market(SYMBOL, lots=LOT)
 
+        # ───────────────────────────────────────────────────────────
+        # 5.1  sugar.set_trailing_stop(ticket, distance_pips=, step_pips=)
+        #      Start a background task that trails the SL behind price.
+        #      Returns: a subscription handle (pass it to unset).
+        # ───────────────────────────────────────────────────────────
         print_method("5.1", "sugar.set_trailing_stop()", "start a trailing stop (bg task)")
         sub = await sugar.set_trailing_stop(t, distance_pips=20, step_pips=5)
         print_success(f"trailing started -> {sub}")
         await asyncio.sleep(2)
 
+        # ───────────────────────────────────────────────────────────
+        # 5.2  sugar.unset_trailing_stop(sub)
+        #      Stop a trailing-stop task started by set_trailing_stop().
+        #      Returns: None (raises on failure).
+        # ───────────────────────────────────────────────────────────
         print_method("5.2", "sugar.unset_trailing_stop()", "stop it")
         await sugar.unset_trailing_stop(sub)
         print_success("trailing stopped")
 
+        # ───────────────────────────────────────────────────────────
+        # 5.3  sugar.auto_breakeven(ticket, trigger_pips=, plus_pips=)
+        #      Arm a watcher that moves SL to break-even once price has
+        #      moved trigger_pips in profit.
+        #      Returns: a subscription handle (pass it to unwatch).
+        # ───────────────────────────────────────────────────────────
         print_method("5.3", "sugar.auto_breakeven()", "arm auto break-even")
         sub2 = await sugar.auto_breakeven(t, trigger_pips=20, plus_pips=1)
         print_success(f"auto_breakeven armed -> {sub2}")
@@ -222,11 +364,21 @@ async def region_trailing(sugar: MT4Sugar):
             print_success(f"closed #{t}")
 
 
-# =============================================================================
-# REGION 6 - WAITS
-# =============================================================================
+# endregion
+
+
+# region WAITS
+# ═══════════════════════════════════════════════════════════════════════════════
+# 6. WAITS
+# ═══════════════════════════════════════════════════════════════════════════════
 async def region_waits(sugar: MT4Sugar):
     print_step(6, "Waits")
+    # ───────────────────────────────────────────────────────────────
+    # 6.1  sugar.wait_filled(ticket, timeout_s=) / wait_closed(ticket, timeout_s=)
+    #      Block until an order is filled / a position is closed, with
+    #      a timeout cap.
+    #      Returns: True if the event happened in time, else False.
+    # ───────────────────────────────────────────────────────────────
     print_method("6.1", "sugar.wait_filled() / wait_closed()", "open market, wait, close, wait")
     try:
         t = await sugar.buy_market(SYMBOL, lots=LOT)
@@ -237,6 +389,7 @@ async def region_waits(sugar: MT4Sugar):
         print_success(f"wait_closed(#{t}) -> {closed}")
     except Exception as e:
         print_if_error(e, "waits")
+# endregion
 
 
 async def main():
