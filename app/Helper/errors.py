@@ -38,6 +38,28 @@ class RateLimitExceeded(MT4Error):
     pass
 
 
+class TradeOutcomeUnknown(MT4Error):
+    """
+    A trade call failed in transport after it may have reached the terminal
+    (MetaRpcMT4.TradeOutcomeUnknownError). It may or may not have been executed and
+    was NOT re-sent: check open orders before retrying. Deliberately not an
+    OrderRejected/ModifyRejected - the trade was not (known to be) rejected.
+
+    Attributes: error_code ("TRADE_OUTCOME_UNKNOWN"), operation, transport_error (the
+    original grpc error: transport_error.code() / .details()), details (the SDK exception,
+    also __cause__), payload.
+    """
+
+    error_code = "TRADE_OUTCOME_UNKNOWN"
+
+    def __init__(self, message: str, *, sdk_error: Exception, payload: Any = None) -> None:
+        super().__init__(message, details=sdk_error)
+        self.operation = getattr(sdk_error, "operation", None)
+        self.transport_error = getattr(sdk_error, "transport_error", sdk_error)
+        self.payload = payload
+        self.__cause__ = sdk_error
+
+
 # --- optional helpers to map backend / pb errors into our classes ---
 
 def map_backend_error(
@@ -64,6 +86,11 @@ def map_backend_error(
     msg = reason or (str(raw_exc) if raw_exc else "MT4 backend error")
     if context:
         msg = f"{context}: {msg}"
+
+    # A trade with an unknown outcome is not a rejection: never map it to OrderRejected /
+    # ModifyRejected (callers would treat it as "not executed" and may send it again).
+    if raw_exc is not None and getattr(raw_exc, "error_code", None) == TradeOutcomeUnknown.error_code:
+        return TradeOutcomeUnknown(msg, sdk_error=raw_exc, payload=payload)
 
     # If you have stable pb codes, put precise mapping here:
     PB_CODE_MAP = {

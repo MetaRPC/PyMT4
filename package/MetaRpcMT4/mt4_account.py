@@ -23,6 +23,7 @@ import MetaRpcMT4.mt4_term_api_server_timezone_pb2 as server_timezone_pb2
 import MetaRpcMT4.mt4_term_api_server_timezone_pb2_grpc as server_timezone_pb2_grpc
 import MetaRpcMT4.mt4_term_api_market_info_pb2 as market_info_pb2
 import MetaRpcMT4.mt4_term_api_market_info_pb2_grpc as market_info_pb2_grpc
+import MetaRpcMT4.mrpc_mt4_error_pb2 as error_pb2
 
 
 
@@ -35,6 +36,85 @@ class ApiExceptionMT4(Exception):
     def __init__(self, error):
         super().__init__(str(error))
         self.error = error
+
+
+TRADE_OUTCOME_UNKNOWN = "TRADE_OUTCOME_UNKNOWN"
+
+# Transport statuses after which a trade request may already have reached the terminal.
+TRADE_OUTCOME_UNKNOWN_STATUS_CODES = frozenset({
+    grpc.StatusCode.UNAVAILABLE,
+    grpc.StatusCode.DEADLINE_EXCEEDED,
+    grpc.StatusCode.UNKNOWN,
+    grpc.StatusCode.INTERNAL,
+})
+
+# A refused API key never succeeds on retry: fail fast instead of reconnecting.
+_API_KEY_REFUSAL_CODES = ("API_KEY_INVALID", "API_KEY_REQUIRED")
+
+
+def _call_or_none(obj, name: str):
+    fn = getattr(obj, name, None)
+    if not callable(fn):
+        return None
+    try:
+        return fn()
+    except Exception:
+        return None
+
+
+def _is_api_key_refusal(ex) -> bool:
+    details = _call_or_none(ex, "details")
+    return bool(details) and any(c in details for c in _API_KEY_REFUSAL_CODES)
+
+
+class TradeOutcomeUnknownError(ApiExceptionMT4, grpc.aio.AioRpcError):
+    """
+    A trade call (OrderSend / OrderModify / OrderCloseDelete / OrderCloseBy) failed at the
+    transport level (gRPC UNAVAILABLE, DEADLINE_EXCEEDED, UNKNOWN or INTERNAL) after the
+    request may already have reached the terminal. The trade may or may not have been executed.
+
+    The SDK does NOT re-send such a request automatically: check open orders before retrying.
+
+    It is both an ApiExceptionMT4 (error.error_code "TRADE_OUTCOME_UNKNOWN") and a
+    grpc.aio.AioRpcError / grpc.RpcError whose code()/details() are the original transport
+    status, so existing ``except ApiExceptionMT4`` and ``except grpc.RpcError`` handlers still
+    catch it.
+
+    Attributes:
+        error_code: "TRADE_OUTCOME_UNKNOWN".
+        operation: gRPC method name, e.g. "OrderSend".
+        transport_error: the original grpc.RpcError (also set as __cause__).
+    """
+
+    def __init__(self, operation: str, transport_error):
+        code = _call_or_none(transport_error, "code") or grpc.StatusCode.UNKNOWN
+        grpc.aio.AioRpcError.__init__(
+            self,
+            code,
+            _call_or_none(transport_error, "initial_metadata"),
+            _call_or_none(transport_error, "trailing_metadata"),
+            _call_or_none(transport_error, "details"),
+            _call_or_none(transport_error, "debug_error_string"),
+        )
+        status_name = getattr(code, "name", str(code))
+        message = (
+            f"{TRADE_OUTCOME_UNKNOWN}: {operation} failed with gRPC {status_name} after the request "
+            f"may have reached the terminal; the trade may or may not have been executed. It was NOT "
+            f"re-sent automatically: check open positions/orders before retrying."
+        )
+        self.error = error_pb2.Error(error_code=TRADE_OUTCOME_UNKNOWN, error_message=message)
+        self.error_code = TRADE_OUTCOME_UNKNOWN
+        self.operation = operation
+        self.transport_error = transport_error
+        self.message = message
+        self.args = (message,)
+        self.__cause__ = transport_error
+
+    def __str__(self) -> str:
+        return self.message
+
+    def __repr__(self) -> str:
+        return f"TradeOutcomeUnknownError({self.message!r})"
 
 
 # === MT5Account Class ===
@@ -115,12 +195,27 @@ class MT4Account:
         error_selector: Callable[[Any], Optional[Any]],
         deadline: Optional[datetime] = None,
         cancellation_event: Optional[asyncio.Event] = None,
+        trade_operation: Optional[str] = None,
     ):
+        """
+        Runs a unary call; on gRPC UNAVAILABLE (or an in-band TERMINAL_INSTANCE_NOT_FOUND /
+        TERMINAL_REGISTRY_TERMINAL_NOT_FOUND) reconnects and re-sends it.
+
+        trade_operation: set by trade calls (e.g. "OrderSend"). A trade that fails with gRPC
+        UNAVAILABLE, DEADLINE_EXCEEDED, UNKNOWN or INTERNAL may already have been executed, so
+        it is NOT re-sent: TradeOutcomeUnknownError is raised instead. An in-band
+        TERMINAL_INSTANCE_NOT_FOUND (answered before any terminal was reached) still reconnects
+        and re-sends. A refused API key (API_KEY_INVALID / API_KEY_REQUIRED) never reconnects.
+        """
         while cancellation_event is None or not cancellation_event.is_set():
             headers = self.get_headers()
             try:
                 res = await grpc_call(headers)
             except grpc.aio.AioRpcError as ex:
+                if _is_api_key_refusal(ex):
+                    raise
+                if trade_operation and ex.code() in TRADE_OUTCOME_UNKNOWN_STATUS_CODES:
+                    raise TradeOutcomeUnknownError(trade_operation, ex) from ex
                 if ex.code() == grpc.StatusCode.UNAVAILABLE:
                     await asyncio.sleep(0.5)
                     await self.reconnect(deadline)
@@ -133,7 +228,7 @@ class MT4Account:
                 await self.reconnect(deadline)
                 continue
 
-            if res.HasField("error") and res.error.error_message:
+            if res.HasField("error") and (res.error.error_code or res.error.error_message):
                 raise ApiExceptionMT4(res.error)
 
             return res
@@ -183,7 +278,7 @@ class MT4Account:
             timeout=float(timeout_seconds) + 30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
 
-        if res.HasField("error") and res.error.error_message:
+        if res.HasField("error") and (res.error.error_code or res.error.error_message):
             raise ApiExceptionMT4(res.error)
 
         # Save state
@@ -235,7 +330,7 @@ class MT4Account:
             timeout=float(timeout_seconds) + 30.0 if deadline is None else (deadline - datetime.utcnow()).total_seconds(),
         )
 
-        if res.HasField("error") and res.error.error_message:
+        if res.HasField("error") and (res.error.error_code or res.error.error_message):
             raise ApiExceptionMT4(res.error)
 
         # Save state
@@ -1064,6 +1159,7 @@ class MT4Account:
             error_selector=lambda r: getattr(r, "error", None),
             deadline=deadline,
             cancellation_event=cancellation_event,
+            trade_operation="OrderSend",
         )
         return res.data
 
@@ -1125,6 +1221,7 @@ class MT4Account:
             error_selector=lambda r: getattr(r, "error", None),
             deadline=deadline,
             cancellation_event=cancellation_event,
+            trade_operation="OrderModify",
         )
         return res.data
 
@@ -1180,6 +1277,7 @@ class MT4Account:
             error_selector=lambda r: getattr(r, "error", None),
             deadline=deadline,
             cancellation_event=cancellation_event,
+            trade_operation="OrderCloseDelete",
         )
         return res.data
 
@@ -1228,6 +1326,7 @@ class MT4Account:
             error_selector=lambda r: getattr(r, "error", None),
             deadline=deadline,
             cancellation_event=cancellation_event,
+            trade_operation="OrderCloseBy",
         )
         return res.data
 
