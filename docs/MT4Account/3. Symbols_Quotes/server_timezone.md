@@ -131,11 +131,11 @@ async def utc_to_server(account, utc_dt):
 Gate trading around the broker's week using server-local time.
 
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 async def is_weekend_server(account) -> bool:
     tz = await account.server_timezone()
-    server_now = datetime.utcnow() + timedelta(seconds=tz.utc_offset_seconds)
+    server_now = datetime.now(timezone.utc) + timedelta(seconds=tz.utc_offset_seconds)
     return server_now.weekday() >= 5   # Sat/Sun in server time
 ```
 

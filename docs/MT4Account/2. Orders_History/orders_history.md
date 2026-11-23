@@ -166,11 +166,11 @@ Each `HistoryOrderInfo` (adds close fields to the open-order shape):
 ### 1) Last 30 days — closed trades table
 
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import MetaRpcMT4.mt4_term_api_account_helper_pb2 as ah
 
 async def recent_history(account, days: int = 30):
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     hist = await account.orders_history(from_time=end - timedelta(days=days), to_time=end)
     print(f"{hist.total_count} closed order(s) in {days}d")
     for o in hist.orders_info[:20]:
@@ -183,10 +183,10 @@ async def recent_history(account, days: int = 30):
 ### 2) Realized P/L and win rate for a window
 
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 async def window_pnl(account, days: int = 7):
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     hist = await account.orders_history(from_time=end - timedelta(days=days), to_time=end)
     trades = [o for o in hist.orders_info]
     realized = sum(o.profit + o.swap + o.commision for o in trades)
@@ -201,10 +201,10 @@ async def window_pnl(account, days: int = 7):
 Use `total_count` + `items_per_page` to walk every page.
 
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 async def all_history(account, days: int = 365, page_size: int = 100):
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     start = end - timedelta(days=days)
     out, page = [], 0
     while True:

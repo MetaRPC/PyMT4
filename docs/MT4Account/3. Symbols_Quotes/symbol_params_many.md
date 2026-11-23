@@ -55,7 +55,7 @@ message SymbolParamsManyData {
 }
 ```
 
-`SymbolParamsManyInfo` has ~75 fields; the trading-relevant ones are below.
+`SymbolParamsManyInfo` has 67 fields; the trading-relevant ones are below.
 
 ---
 

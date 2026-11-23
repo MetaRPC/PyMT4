@@ -182,10 +182,10 @@ async def markets_by_profit(account, top: int = 5):
 Scope the stats to the current month and flag a weak profit factor.
 
 ```python
-from datetime import datetime
+from datetime import datetime, timezone
 
 async def month_health(account, min_profit_factor: float = 1.2) -> bool:
-    start = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    start = datetime.now(timezone.utc).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     s = await account.trade_stats(from_time=start)
     ok = s.profit_factor >= min_profit_factor
     print(f"MTD: trades={s.trades} PF={s.profit_factor:.2f} "

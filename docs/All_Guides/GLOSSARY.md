@@ -825,10 +825,10 @@ Retrieving past orders for analysis.
 
 **Low-level (MT4Account):**
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from MetaRpcMT4 import mt4_term_api_account_helper_pb2 as account_helper_pb2
 
-to_time = datetime.utcnow()
+to_time = datetime.now(timezone.utc)
 from_time = to_time - timedelta(days=30)
 
 history = await account.orders_history(

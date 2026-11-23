@@ -143,11 +143,11 @@ message HistoryQuote {
 ### 1) Fetch the last N hourly bars
 
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import MetaRpcMT4.mt4_term_api_market_info_pb2 as mi
 
 async def recent_bars(account, symbol: str = "EURUSD", hours: int = 48):
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     data = await account.quote_history(
         symbol, mi.ENUM_QUOTE_HISTORY_TIMEFRAME.QH_PERIOD_H1,
         end - timedelta(hours=hours), end,
@@ -163,11 +163,11 @@ async def recent_bars(account, symbol: str = "EURUSD", hours: int = 48):
 ### 2) Simple moving average of closes
 
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import MetaRpcMT4.mt4_term_api_market_info_pb2 as mi
 
 async def sma(account, symbol: str, period: int = 20):
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     data = await account.quote_history(
         symbol, mi.ENUM_QUOTE_HISTORY_TIMEFRAME.QH_PERIOD_H1,
         end - timedelta(hours=period * 2), end,
@@ -185,11 +185,11 @@ async def sma(account, symbol: str, period: int = 20):
 A quick ATR-style volatility read from daily bars.
 
 ```python
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import MetaRpcMT4.mt4_term_api_market_info_pb2 as mi
 
 async def avg_daily_range(account, symbol: str = "EURUSD", days: int = 14):
-    end = datetime.utcnow()
+    end = datetime.now(timezone.utc)
     data = await account.quote_history(
         symbol, mi.ENUM_QUOTE_HISTORY_TIMEFRAME.QH_PERIOD_D1,
         end - timedelta(days=days * 2), end,
